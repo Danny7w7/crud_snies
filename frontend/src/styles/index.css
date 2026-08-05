@@ -1,0 +1,533 @@
+@import './tailwind.css';
+@import './theme.css';
+
+@keyframes erp-skeleton-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes erp-page-reveal {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes erp-modal-backdrop-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes erp-modal-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem) scale(0.975);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes erp-puc-tree-row-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(-0.3rem) scaleY(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scaleY(1);
+  }
+}
+
+@keyframes erp-puc-control-icon {
+  from {
+    opacity: 0;
+    transform: scale(0.75) rotate(-8deg);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+  }
+}
+
+@keyframes erp-toast-countdown {
+  from {
+    transform: scaleX(1);
+  }
+
+  to {
+    transform: scaleX(0);
+  }
+}
+
+.erp-toast[data-sonner-toast][data-styled='true'] {
+  overflow: hidden;
+  border-color: color-mix(in srgb, var(--border) 72%, transparent);
+  border-radius: 0.875rem;
+  box-shadow:
+    0 18px 45px rgb(15 23 42 / 14%),
+    0 4px 12px rgb(15 23 42 / 8%);
+}
+
+.erp-toast[data-sonner-toast] [data-content]::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  content: '';
+  background: var(--brand-ink);
+  transform-origin: left center;
+  animation: erp-toast-countdown var(--erp-toast-duration, 5000ms) linear forwards;
+}
+
+.erp-toast[data-sonner-toast][data-type='loading'] [data-content]::after {
+  display: none;
+}
+
+.erp-toaster[data-sonner-toaster]:hover .erp-toast [data-content]::after {
+  animation-play-state: paused;
+}
+
+.recharts-default-tooltip {
+  border: 1px solid var(--border) !important;
+  border-radius: 0.75rem !important;
+  background: var(--popover) !important;
+  color: var(--popover-foreground) !important;
+  box-shadow: 0 12px 32px rgb(15 23 42 / 16%);
+}
+
+.recharts-tooltip-label,
+.recharts-tooltip-item,
+.recharts-legend-item-text {
+  color: var(--foreground) !important;
+}
+
+.recharts-cartesian-axis-tick text {
+  fill: var(--muted-foreground);
+}
+
+.recharts-cartesian-grid line {
+  stroke: var(--border);
+  stroke-opacity: 0.55;
+}
+
+.dark .recharts-tooltip-cursor {
+  fill: color-mix(in srgb, var(--foreground) 7%, transparent);
+  stroke: var(--border);
+}
+
+/*
+ * Los estados heredados usan paletas claras de Tailwind. Esta capa semántica
+ * conserva el color del estado en modo oscuro sin dejar tarjetas o badges con
+ * fondos blancos saturados.
+ */
+.dark :where(
+  [class~='bg-emerald-50'], [class~='bg-emerald-50/60'], [class~='bg-emerald-50/70'], [class~='bg-emerald-50/80'], [class~='bg-emerald-100'],
+  [class~='bg-green-50'], [class~='bg-green-100'], [class~='bg-green-200']
+) {
+  background-color: rgb(6 78 59 / 34%);
+}
+
+.dark :where(
+  [class~='text-emerald-600'], [class~='text-emerald-600/80'], [class~='text-emerald-700'], [class~='text-emerald-800'], [class~='text-emerald-900'], [class~='text-emerald-950'],
+  [class~='text-green-600'], [class~='text-green-700'], [class~='text-green-800']
+) {
+  color: rgb(167 243 208);
+}
+
+.dark :where([class~='border-emerald-200']) {
+  border-color: rgb(52 211 153 / 38%);
+}
+
+.dark :where(
+  [class~='bg-amber-50'], [class~='bg-amber-50/60'], [class~='bg-amber-50/70'], [class~='bg-amber-50/80'], [class~='bg-amber-100'], [class~='bg-amber-100/70'],
+  [class~='bg-yellow-50'], [class~='bg-yellow-100'], [class~='bg-yellow-200'],
+  [class~='bg-orange-50'], [class~='bg-orange-100'], [class~='bg-orange-200']
+) {
+  background-color: rgb(120 53 15 / 30%);
+}
+
+.dark :where(
+  [class~='text-amber-600'], [class~='text-amber-600/80'], [class~='text-amber-700'], [class~='text-amber-800'], [class~='text-amber-900'], [class~='text-amber-950'],
+  [class~='text-yellow-600'], [class~='text-yellow-700'], [class~='text-yellow-800'],
+  [class~='text-orange-700'], [class~='text-orange-800'], [class~='text-orange-900']
+) {
+  color: rgb(253 230 138);
+}
+
+.dark :where(
+  [class~='border-amber-200'], [class~='border-amber-300'], [class~='border-orange-200']
+) {
+  border-color: rgb(251 191 36 / 38%);
+}
+
+.dark :where(
+  [class~='bg-red-50'], [class~='bg-red-50/70'], [class~='bg-red-50/80'], [class~='bg-red-100'], [class~='bg-red-200'],
+  [class~='bg-rose-50'], [class~='bg-rose-50/70'], [class~='bg-rose-50/80'], [class~='bg-rose-100']
+) {
+  background-color: rgb(127 29 29 / 32%);
+}
+
+.dark :where(
+  [class~='text-red-600'], [class~='text-red-700'], [class~='text-red-800'], [class~='text-red-900'], [class~='text-red-950'],
+  [class~='text-rose-600'], [class~='text-rose-600/80'], [class~='text-rose-700'], [class~='text-rose-800'], [class~='text-rose-950']
+) {
+  color: rgb(254 205 211);
+}
+
+.dark :where([class~='border-red-200'], [class~='border-red-300'], [class~='border-rose-200'], [class~='border-rose-300']) {
+  border-color: rgb(251 113 133 / 38%);
+}
+
+.dark :where(
+  [class~='bg-blue-50'], [class~='bg-blue-50/50'], [class~='bg-blue-50/60'], [class~='bg-blue-50/90'], [class~='bg-blue-100'], [class~='bg-blue-200'],
+  [class~='bg-sky-50'], [class~='bg-sky-100']
+) {
+  background-color: rgb(30 58 138 / 30%);
+}
+
+.dark :where(
+  [class~='text-blue-600'], [class~='text-blue-600/70'], [class~='text-blue-700'], [class~='text-blue-800'],
+  [class~='text-sky-700'], [class~='text-sky-800']
+) {
+  color: rgb(186 230 253);
+}
+
+.dark :where([class~='border-blue-200'], [class~='border-blue-200/80'], [class~='border-sky-200']) {
+  border-color: rgb(96 165 250 / 38%);
+}
+
+.dark :where(
+  [class~='bg-purple-50'], [class~='bg-purple-200'],
+  [class~='bg-violet-50'], [class~='bg-violet-50/90'], [class~='bg-violet-100']
+) {
+  background-color: rgb(76 29 149 / 30%);
+}
+
+.dark :where([class~='text-purple-700'], [class~='text-violet-800']) {
+  color: rgb(221 214 254);
+}
+
+.dark :where([class~='border-violet-200/80']) {
+  border-color: rgb(167 139 250 / 38%);
+}
+
+.erp-page-reveal {
+  min-height: 100%;
+  animation: erp-page-reveal 180ms ease-out;
+}
+
+.erp-modal-overlay {
+  z-index: 100;
+  isolation: isolate;
+  overscroll-behavior: contain;
+  background: rgb(2 6 23 / 58%);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  animation: erp-modal-backdrop-in 160ms ease-out both;
+}
+
+.erp-modal-overlay > :not(.absolute) {
+  max-height: calc(100dvh - 2rem);
+  animation: erp-modal-panel-in 210ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.erp-modal-overlay > .absolute.inset-0 {
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.erp-puc-tree-row-reveal {
+  transform-origin: top;
+  animation: erp-puc-tree-row-reveal 220ms ease-out both;
+}
+
+.erp-puc-tree-skeleton-row {
+  animation: erp-page-reveal 160ms ease-out;
+}
+
+.erp-puc-control-icon {
+  display: inline-flex;
+  animation: erp-puc-control-icon 180ms ease-out both;
+}
+
+.erp-skeleton,
+.erp-inline-skeleton {
+  position: relative;
+  overflow: hidden;
+}
+
+.erp-skeleton::after,
+.erp-inline-skeleton::after {
+  position: absolute;
+  inset: 0;
+  content: '';
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--foreground) 7%, transparent),
+    transparent
+  );
+  animation: erp-skeleton-shimmer 1.55s ease-in-out infinite;
+}
+
+.erp-inline-skeleton {
+  display: inline-block;
+  width: 1.75rem;
+  height: 0.55rem;
+  flex: none;
+  border-radius: 999px;
+  background: color-mix(in srgb, currentColor 24%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .erp-page-reveal,
+  .erp-modal-overlay,
+  .erp-modal-overlay > :not(.absolute),
+  .erp-puc-tree-row-reveal,
+  .erp-puc-tree-skeleton-row,
+  .erp-puc-control-icon,
+  .erp-skeleton::after,
+  .erp-inline-skeleton::after {
+    animation: none;
+  }
+
+  .erp-toast[data-sonner-toast] [data-content]::after {
+    display: none;
+  }
+}
+
+.detail-accent-borders :where(.border, .border-2, .border-t, .border-b, .border-l, .border-r, .border-dashed) {
+  border-color: var(--foreground);
+}
+
+.detail-accent-borders :where(.border-2) {
+  border-color: var(--accent);
+}
+
+.detail-accent-borders :where(.border-white) {
+  border-color: #ffffff;
+}
+
+.detail-accent-borders :where(.border-transparent) {
+  border-color: transparent;
+}
+
+.dark table thead.bg-primary,
+.dark table tr.bg-primary,
+.dark [data-slot='table-header'] {
+  background-color: #383837;
+  color: #ffffff;
+}
+
+/*
+ * Sistema "glass" del ERP.
+ * Replica la atmósfera visual de Login/Aspirantes (glassmorphism)
+ * para que todas las vistas compartan la misma filosofía de diseño.
+ */
+
+/*
+ * La sombra vive en un wrapper externo (erp-glass-card-shadow) para que el
+ * header con backdrop-filter no cree un stacking context que pinte su sombra
+ * por encima de los contenedores siguientes (orden de pintura CSS).
+ */
+.erp-glass-card {
+  position: relative;
+  border: 1px solid color-mix(in srgb, #ffffff 55%, transparent);
+  border-radius: 2rem;
+  background-color: color-mix(in srgb, var(--card) 95%, transparent);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+.erp-glass-card-shadow {
+  border-radius: 2rem;
+  box-shadow: 0 32px 90px -28px rgb(15 31 58 / 55%);
+}
+
+.dark .erp-glass-card {
+  border-color: color-mix(in srgb, #ffffff 10%, transparent);
+  background-color: color-mix(in srgb, var(--card) 90%, transparent);
+}
+
+.erp-glass-panel {
+  position: relative;
+  border: 1px solid color-mix(in srgb, #ffffff 40%, transparent);
+  border-radius: 1.25rem;
+  background-color: color-mix(in srgb, var(--card) 80%, transparent);
+  box-shadow:
+    0 12px 40px -16px rgb(15 31 58 / 30%),
+    0 2px 10px -4px rgb(15 31 58 / 10%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.dark .erp-glass-panel {
+  border-color: color-mix(in srgb, #ffffff 10%, transparent);
+  background-color: color-mix(in srgb, var(--card) 70%, transparent);
+}
+
+.erp-glass-table {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, #ffffff 40%, transparent);
+  border-radius: 1.5rem;
+  background-color: color-mix(in srgb, var(--card) 88%, transparent);
+  box-shadow:
+    0 18px 55px -24px rgb(15 31 58 / 38%),
+    0 2px 10px -4px rgb(15 31 58 / 10%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.dark .erp-glass-table {
+  border-color: color-mix(in srgb, #ffffff 10%, transparent);
+  background-color: color-mix(in srgb, var(--card) 82%, transparent);
+}
+
+/*
+ * Marco único para tablas de gestión. Mantiene el mismo radio, borde, fondo y
+ * scrollbar tanto en tablas HTML heredadas como en el componente Table.
+ */
+.erp-table-frame {
+  position: relative;
+  overflow-x: auto;
+  border: 1px solid color-mix(in srgb, var(--border) 72%, transparent);
+  border-radius: 1rem;
+  background-color: color-mix(in srgb, var(--card) 92%, transparent);
+}
+
+.dark .erp-table-frame {
+  border-color: color-mix(in srgb, #ffffff 10%, transparent);
+  background-color: color-mix(in srgb, var(--card) 84%, transparent);
+}
+
+.erp-table-frame > table,
+.erp-table-frame > [data-slot='table-container'],
+.erp-table-frame > [data-slot='table-container'] > table {
+  width: 100%;
+}
+
+.erp-table-frame > [data-slot='table-container'] {
+  overflow: visible;
+}
+
+@supports not selector(::-webkit-scrollbar) {
+  .erp-table-frame {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, var(--foreground) 22%, transparent) transparent;
+  }
+}
+
+.erp-table-frame::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.erp-table-frame::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.erp-table-frame::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.erp-table-frame::-webkit-scrollbar-thumb {
+  border-radius: 9999px;
+  background-color: color-mix(in srgb, var(--foreground) 22%, transparent);
+}
+
+.erp-table-frame::-webkit-scrollbar-thumb:hover {
+  background-color: color-mix(in srgb, var(--foreground) 40%, transparent);
+}
+
+.erp-glass-header {
+  border-bottom: 1px solid color-mix(in srgb, #ffffff 40%, transparent);
+  background-color: color-mix(in srgb, var(--card) 78%, transparent);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.dark .erp-glass-header {
+  border-color: color-mix(in srgb, #ffffff 10%, transparent);
+  background-color: color-mix(in srgb, var(--card) 70%, transparent);
+}
+
+/*
+ * Superficie común del app (header, sidebar y contenido).
+ * Un mismo velo sobre la atmósfera para que el gradiente
+ * se vea continuo y las uniones entre regiones sean perfectas.
+ */
+.erp-app-surface {
+  background-color: color-mix(in srgb, var(--card) 60%, transparent);
+}
+
+.dark .erp-app-surface {
+  background-color: color-mix(in srgb, var(--card) 60%, transparent);
+}
+
+/*
+ * Scrollbar elegante para paneles glass (sidebar y contenedores con overflow).
+ * Thumb fino, redondeado y semitransparente; se intensifica al hover.
+ *
+ * Nota: en Chromium/Windows (Chrome 121+) declarar scrollbar-color/scrollbar-width
+ * hace que el navegador IGNORE los scrollbar-webkit y dibuje el clásico con flchas.
+ * Por eso las propiedades estándar van aisladas en @supports (solo Firefox),
+ * y Chromium/WebKit usan los pseudo-elementos ::-webkit-scrollbar sin flechas.
+ */
+@supports not selector(::-webkit-scrollbar) {
+  .erp-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, var(--foreground) 22%, transparent) transparent;
+  }
+}
+
+.erp-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.erp-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.erp-scrollbar::-webkit-scrollbar-button {
+  display: none;
+  height: 0;
+  width: 0;
+}
+
+.erp-scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 9999px;
+  background-color: color-mix(in srgb, var(--foreground) 22%, transparent);
+}
+
+.erp-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: color-mix(in srgb, var(--foreground) 40%, transparent);
+}
+
+
+.dark table thead.bg-primary :where(th),
+.dark table tr.bg-primary :where(th),
+.dark [data-slot='table-header'] :where(th) {
+  background-color: #383837;
+  color: #ffffff;
+}

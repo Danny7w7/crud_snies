@@ -282,7 +282,11 @@ function ConsultaPasswordGate({ onSuccess }) {
 
 function ConsultarPersonas() {
   const [query, setQuery] = useState('')
-  const [results, setResults] = useState(null)
+  const [results, setResults] = useState([])
+  const [count, setCount] = useState(0)
+  const [page, setPage] = useState(1)
+  const [hasNext, setHasNext] = useState(false)
+  const [hasPrev, setHasPrev] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
@@ -292,23 +296,27 @@ function ConsultarPersonas() {
   )
 
   const runSearch = useCallback(
-    async (q) => {
+    async (q, pageNumber = 1) => {
       setLoading(true)
       setError('')
       try {
-        const url = q
-          ? `${API_PERSONAS_URL}?q=${encodeURIComponent(q)}`
-          : API_PERSONAS_URL
-        const res = await fetch(url, { headers })
+        const params = new URLSearchParams({ page: String(pageNumber) })
+        if (q) params.set('q', q)
+        const res = await fetch(`${API_PERSONAS_URL}?${params}`, { headers })
         if (res.status === 403) {
           throw new Error('Contraseña de consulta inválida. Vuelve a ingresarla.')
         }
         if (!res.ok) throw new Error('Error al consultar los datos')
         const data = await res.json()
-        setResults(data)
+        setResults(data.results)
+        setCount(data.count)
+        setPage(pageNumber)
+        setHasNext(Boolean(data.next))
+        setHasPrev(Boolean(data.previous))
       } catch (err) {
         setError(err.message)
         setResults([])
+        setCount(0)
       } finally {
         setLoading(false)
       }
@@ -317,12 +325,16 @@ function ConsultarPersonas() {
   )
 
   useEffect(() => {
-    runSearch('')
+    runSearch('', 1)
   }, [runSearch])
 
   function handleSubmit(e) {
     e.preventDefault()
-    runSearch(query.trim())
+    runSearch(query.trim(), 1)
+  }
+
+  function goToPage(pageNumber) {
+    runSearch(query.trim(), pageNumber)
   }
 
   return (
@@ -369,7 +381,7 @@ function ConsultarPersonas() {
               className="h-12"
               onClick={() => {
                 setQuery('')
-                runSearch('')
+                runSearch('', 1)
               }}
             >
               <X className="h-4 w-4" />
@@ -389,8 +401,13 @@ function ConsultarPersonas() {
         <p className="text-sm text-muted-foreground">
           {loading
             ? 'Consultando...'
-            : `${results.length} registro${results.length === 1 ? '' : 's'} encontrado${results.length === 1 ? '' : 's'}`}
+            : `${count} registro${count === 1 ? '' : 's'} encontrado${count === 1 ? '' : 's'}`}
         </p>
+        {!loading && count > 0 && (
+          <p className="text-xs text-muted-foreground">
+            Página {page}
+          </p>
+        )}
       </div>
 
       {loading ? (
@@ -455,6 +472,32 @@ function ConsultarPersonas() {
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {!loading && count > 0 && (
+        <div className="mt-4 flex items-center justify-between gap-3">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            disabled={!hasPrev}
+            onClick={() => goToPage(page - 1)}
+          >
+            Anterior
+          </Button>
+          <p className="text-xs text-muted-foreground">
+            Mostrando {results.length} de {count} · Página {page}
+          </p>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            disabled={!hasNext}
+            onClick={() => goToPage(page + 1)}
+          >
+            Siguiente
+          </Button>
         </div>
       )}
     </div>

@@ -3,6 +3,7 @@ import hmac
 from django.conf import settings
 from django.db.models import OuterRef, Q, Subquery
 from rest_framework import viewsets
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import BasePermission
 
 from .models import Departamento, Estudiante, EstudianteSwa, Municipio, Persona
@@ -46,10 +47,15 @@ class DepartamentoViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = DepartamentoSerializer
 
 
+class PersonaPageNumberPagination(PageNumberPagination):
+    page_size = 20
+
+
 class PersonaViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Persona.objects.all()
     serializer_class = PersonaSerializer
     permission_classes = [ConsultaPasswordPermission]
+    pagination_class = PersonaPageNumberPagination
 
     def get_queryset(self):
         personas_estudiantes = EstudianteSwa.objects.values('persona')

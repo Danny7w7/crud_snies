@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Departamento, Estudiante, Municipio, Persona
+from .models import Departamento, Estudiante, EstudianteSwa, Municipio
 
 
 class EstudianteSerializer(serializers.ModelSerializer):
@@ -34,10 +34,25 @@ class DepartamentoSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class PersonaSerializer(serializers.ModelSerializer):
-    codigo_estudiante = serializers.CharField(read_only=True)
+    """Serializa un registro de 'estudiante' con los datos de su 'persona'.
+
+    Mantiene los mismos nombres de campo que consumia el serializador
+    anterior (basado en Persona) para no romper el frontend.
+    """
+
+    id = serializers.CharField(source='codigo', read_only=True)
+    codigo_estudiante = serializers.CharField(source='codigo', read_only=True)
+    identificacion = serializers.CharField(source='persona.identificacion', default=None, read_only=True)
+    tipo_identificacion = serializers.IntegerField(source='persona.tipo_identificacion', default=None, read_only=True)
+    nombre = serializers.CharField(source='persona.nombre', default=None, read_only=True)
+    apellido = serializers.CharField(source='persona.apellido', default=None, read_only=True)
+    direccion = serializers.CharField(source='persona.direccion', default=None, read_only=True)
+    telefono = serializers.CharField(source='persona.telefono', default=None, read_only=True)
+    email = serializers.CharField(source='persona.email', default=None, read_only=True)
+    sexo = serializers.CharField(source='persona.sexo', default=None, read_only=True)
 
     class Meta:
-        model = Persona
+        model = EstudianteSwa
         fields = [
             'id',
             'identificacion',

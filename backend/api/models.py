@@ -50,7 +50,10 @@ class Estudiante(models.Model):
     municipio_nacimiento = models.ForeignKey(
         Municipio, on_delete=models.SET_NULL, null=True, blank=True, related_name='estudiantes_nacimiento'
     )
-    periodo_primer_semestre = models.CharField(max_length=20, blank=True)
+    periodo_anio = models.IntegerField(null=True, blank=True)
+    periodo_semestre = models.IntegerField(
+        null=True, blank=True, choices=[(1, '1'), (2, '2')]
+    )
 
     class Meta:
         verbose_name = 'Estudiante'

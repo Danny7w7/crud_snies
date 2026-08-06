@@ -57,8 +57,15 @@ const INITIAL_FORM = {
   municipio: '',
   pais_nacimiento: '',
   municipio_nacimiento: '',
-  periodo_primer_semestre: '',
+  periodo_anio: '',
+  periodo_semestre: '',
 }
+
+const ANIO_ACTUAL = new Date().getFullYear()
+const aniosOptions = Array.from(
+  { length: ANIO_ACTUAL + 1 - 2000 + 1 },
+  (_, i) => 2000 + i,
+)
 
 const TIPO_DOCUMENTO_LABELS = {
   0: 'Por definir',
@@ -101,7 +108,8 @@ function personaToForm(persona) {
     municipio: '',
     pais_nacimiento: '',
     municipio_nacimiento: '',
-    periodo_primer_semestre: '',
+    periodo_anio: '',
+    periodo_semestre: '',
   }
 }
 
@@ -858,7 +866,7 @@ function RegistrarPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-3 gap-3">
           <div className="space-y-2">
             <Label htmlFor="municipio" className="text-sm font-medium text-foreground">
               Municipio
@@ -880,20 +888,45 @@ function RegistrarPage() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="periodo_primer_semestre" className="text-sm font-medium text-foreground">
+            <Label htmlFor="periodo_anio" className="text-sm font-medium text-foreground">
               Periodo que cursó 1er semestre
             </Label>
             <div className="group relative">
               <Calendar className={`${inputIconClass} group-focus-within:text-accent`} />
-              <Input
-                id="periodo_primer_semestre"
-                name="periodo_primer_semestre"
-                value={form.periodo_primer_semestre}
+              <select
+                id="periodo_anio"
+                name="periodo_anio"
+                value={form.periodo_anio}
                 onChange={handleChange}
-                maxLength={20}
-                placeholder="Ej: 2026-1"
-                className={inputWithIconClass}
-              />
+                className={`${inputWithIconClass} focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] flex h-12 w-full min-w-0 cursor-pointer rounded-xl border border-input bg-input-background px-3 text-base text-foreground outline-none transition-[color,box-shadow] md:text-sm dark:bg-input/30`}
+              >
+                <option value="">Año...</option>
+                {aniosOptions.map((anio) => (
+                  <option key={anio} value={anio}>
+                    {anio}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="periodo_semestre" className="text-sm font-medium text-foreground">
+              Semestre
+            </Label>
+            <div className="group relative">
+              <Calendar className={`${inputIconClass} group-focus-within:text-accent`} />
+              <select
+                id="periodo_semestre"
+                name="periodo_semestre"
+                value={form.periodo_semestre}
+                onChange={handleChange}
+                className={`${inputWithIconClass} focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] flex h-12 w-full min-w-0 cursor-pointer rounded-xl border border-input bg-input-background px-3 text-base text-foreground outline-none transition-[color,box-shadow] md:text-sm dark:bg-input/30`}
+              >
+                <option value="">Semestre...</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+              </select>
             </div>
           </div>
         </div>

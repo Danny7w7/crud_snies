@@ -1,12 +1,12 @@
 import hmac
 
 from django.conf import settings
-from django.db.models import OuterRef, Q, Subquery
+from django.db.models import Q
 from rest_framework import viewsets
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import BasePermission
 
-from .models import Departamento, Estudiante, EstudianteSwa, Municipio, Persona
+from .models import Departamento, Estudiante, EstudianteSwa, Municipio
 from .serializers import (
     DepartamentoSerializer,
     EstudianteSerializer,
@@ -52,29 +52,24 @@ class PersonaPageNumberPagination(PageNumberPagination):
 
 
 class PersonaViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Persona.objects.all()
+    """Consulta desde la tabla 'estudiante' de produccion hacia 'persona'."""
+
+    queryset = (
+        EstudianteSwa.objects.select_related('persona')
+        .exclude(Q(persona__isnull=True) | Q(codigo__isnull=True) | Q(codigo=''))
+    )
     serializer_class = PersonaSerializer
     permission_classes = [ConsultaPasswordPermission]
     pagination_class = PersonaPageNumberPagination
 
     def get_queryset(self):
-        personas_estudiantes = EstudianteSwa.objects.values('persona')
-        codigos = (
-            EstudianteSwa.objects.filter(persona=OuterRef('pk'))
-            .exclude(Q(codigo__isnull=True) | Q(codigo=''))
-            .values('codigo')[:1]
-        )
-        qs = Persona.objects.filter(id__in=personas_estudiantes).annotate(
-            codigo_estudiante=Subquery(codigos)
-        )
-
         search = self.request.query_params.get('q', '').strip()
         if not search:
-            return qs.order_by('apellido', 'nombre')
+            return self.queryset.order_by('persona__apellido', 'persona__nombre')
 
-        return qs.filter(
-            Q(nombre__icontains=search)
-            | Q(apellido__icontains=search)
-            | Q(identificacion__icontains=search)
-            | Q(codigo_estudiante__icontains=search)
-        ).order_by('apellido', 'nombre')
+        return self.queryset.filter(
+            Q(codigo__icontains=search)
+            | Q(persona__nombre__icontains=search)
+            | Q(persona__apellido__icontains=search)
+            | Q(persona__identificacion__icontains=search)
+        ).order_by('persona__apellido', 'persona__nombre')

@@ -11,6 +11,14 @@ class EstudianteSerializer(serializers.ModelSerializer):
         model = Estudiante
         fields = '__all__'
 
+    def validate_codigo_estudiante(self, value):
+        if not EstudianteSwa.objects.filter(codigo=value).exists():
+            raise serializers.ValidationError(
+                'El estudiante no existe en la base institucional. '
+                'No se permite guardar información.'
+            )
+        return value
+
     def get_municipio_detalle(self, obj):
         if obj.municipio:
             return f'{obj.municipio.nombre} - {obj.municipio.codigo}'

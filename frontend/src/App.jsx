@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Link, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
+import { Link, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import {
   Moon,
   Sun,
@@ -21,6 +21,7 @@ import {
   MapPin,
   Globe,
   Calendar,
+  Locate,
 } from 'lucide-react'
 import countryList from 'react-select-country-list'
 import { Button } from './components/ui/button'
@@ -167,9 +168,9 @@ function PageShell({ active, children, wide = false }) {
 
   const nav = (
     <nav className="mb-8 inline-flex w-full rounded-2xl border border-white/40 bg-secondary/60 p-1.5 dark:border-white/10">
-      <Link to="/registrar" className={navClass('registrar')}>
-        <UserPlus className="h-4 w-4" />
-        Registrar
+      <Link to="/ubicar" className={navClass('ubicar')}>
+        <Locate className="h-4 w-4" />
+        Ubicar
       </Link>
       <Link to="/consulta" className={navClass('consulta')}>
         <Search className="h-4 w-4" />
@@ -600,11 +601,11 @@ function ConsultarPersonas() {
                         variant="outline"
                         size="sm"
                         onClick={() =>
-                          navigate('/registrar', { state: { persona: p } })
+                          navigate('/ubicar', { state: { persona: p } })
                         }
                       >
-                        <UserPlus className="h-3.5 w-3.5" />
-                        Llenar registro
+                        <Locate className="h-3.5 w-3.5" />
+                        Ubicar
                       </Button>
                     </div>
                   </td>
@@ -658,15 +659,16 @@ function ConsultaPage() {
   )
 }
 
-function RegistrarPage() {
+function UbicarPage() {
   const location = useLocation()
-  const [form, setForm] = useState(() => {
-    const persona = location.state?.persona
-    return persona ? personaToForm(persona) : INITIAL_FORM
-  })
+  const persona = location.state?.persona
+  const [form, setForm] = useState(() =>
+    persona ? personaToForm(persona) : INITIAL_FORM,
+  )
   const [editingId, setEditingId] = useState(null)
   const [aceptaTratamiento, setAceptaTratamiento] = useState(false)
   const [error, setError] = useState('')
+  const [saved, setSaved] = useState(false)
   const [municipios, setMunicipios] = useState([])
   const [loadingMunicipios, setLoadingMunicipios] = useState(true)
   const [programas, setProgramas] = useState([])
@@ -716,13 +718,48 @@ function RegistrarPage() {
     loadProgramas()
   }, [])
 
+  useEffect(() => {
+    if (!persona?.codigo_estudiante) return
+    let cancelled = false
+    async function buscarRegistroLocal() {
+      try {
+        const res = await fetch(API_URL)
+        if (!res.ok) throw new Error('Error al consultar los registros locales')
+        const lista = await res.json()
+        if (cancelled) return
+        const local = lista.find(
+          (e) => e.codigo_estudiante === persona.codigo_estudiante,
+        )
+        if (local) {
+          setEditingId(local.id)
+          setForm({
+            ...personaToForm(persona),
+            programa: local.programa || '',
+            municipio: local.municipio ?? '',
+            municipio_nacimiento: local.municipio_nacimiento ?? '',
+            periodo_anio: local.periodo_anio ?? '',
+            periodo_semestre: local.periodo_semestre ?? '',
+          })
+        }
+      } catch (err) {
+        if (!cancelled) setError(err.message)
+      }
+    }
+    buscarRegistroLocal()
+    return () => {
+      cancelled = true
+    }
+  }, [persona])
+
   function handleChange(e) {
+    setSaved(false)
     setForm({ ...form, [e.target.name]: e.target.value })
   }
 
   async function handleSubmit(e) {
     e.preventDefault()
     setError('')
+    setSaved(false)
 
     if (!aceptaTratamiento) {
       setError('Debes aceptar la autorización para el tratamiento de datos personales')
@@ -742,21 +779,13 @@ function RegistrarPage() {
         const msg = Object.values(data)
           .flat()
           .join(', ')
-        throw new Error(msg || 'Error al guardar el estudiante')
+        throw new Error(msg || 'Error al guardar la información del estudiante')
       }
-      setForm(INITIAL_FORM)
-      setEditingId(null)
       setAceptaTratamiento(false)
+      setSaved(true)
     } catch (err) {
       setError(err.message)
     }
-  }
-
-  function handleCancelEdit() {
-    setEditingId(null)
-    setForm(INITIAL_FORM)
-    setAceptaTratamiento(false)
-    setError('')
   }
 
   const inputIconClass =
@@ -764,21 +793,38 @@ function RegistrarPage() {
   const inputWithIconClass = 'pl-12 h-12'
 
   return (
-    <PageShell active="registrar">
+    <PageShell active="ubicar">
       <div className="mb-8">
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
           CRUD SNIES
         </p>
         <h2 className="mt-3 text-3xl font-semibold tracking-tight text-foreground">
-          {editingId ? 'Editar estudiante' : 'Registrar estudiante'}
+          Ubicar estudiante
         </h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          {editingId
-            ? 'Actualiza los datos del estudiante y guarda los cambios'
-            : 'Completa el formulario con la información de identificación'}
+          Completa la información del estudiante ubicado en la consulta. Solo se
+          puede guardar si el estudiante existe en la base institucional.
         </p>
       </div>
 
+      {!persona ? (
+        <div className="flex flex-col items-center gap-3 rounded-2xl border border-white/40 bg-secondary/40 px-6 py-14 text-center dark:border-white/10">
+          <Locate className="h-10 w-10 text-muted-foreground" />
+          <p className="font-medium text-foreground">Aún no has ubicado un estudiante</p>
+          <p className="max-w-md text-sm leading-relaxed text-muted-foreground">
+            Primero busca al estudiante en la pestaña <span className="font-semibold">Consultar</span>{' '}
+            y pulsa el botón <span className="font-semibold">Ubicar</span> en la fila del
+            resultado. No es posible ingresar estudiantes nuevos: solo se guarda
+            información de quienes existen en la base institucional.
+          </p>
+          <Button asChild variant="outline" size="lg" className="mt-2 h-12">
+            <Link to="/consulta">
+              <Search className="h-4 w-4" />
+              Ir a Consultar
+            </Link>
+          </Button>
+        </div>
+      ) : (
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-5 gap-3">
           <div className="col-span-2 space-y-2">
@@ -1064,6 +1110,12 @@ function RegistrarPage() {
           </Label>
         </div>
 
+        {saved && (
+          <p className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-800">
+            Información guardada correctamente.
+          </p>
+        )}
+
         {error && (
           <p className="rounded-lg border border-destructive/40 bg-destructive/20 px-3 py-2 text-sm text-destructive-foreground">
             {error}
@@ -1077,22 +1129,11 @@ function RegistrarPage() {
             className="h-12 flex-1"
           >
             <Save className="h-4 w-4" />
-            {editingId ? 'Guardar cambios' : 'Registrar estudiante'}
+            Guardar información
           </Button>
-          {editingId && (
-            <Button
-              type="button"
-              variant="outline"
-              size="lg"
-              className="h-12"
-              onClick={handleCancelEdit}
-            >
-              <X className="h-4 w-4" />
-              Cancelar
-            </Button>
-          )}
         </div>
       </form>
+      )}
     </PageShell>
   )
 }
@@ -1101,10 +1142,11 @@ function App() {
   return (
     <ThemeProvider>
       <Routes>
-        <Route path="/" element={<RegistrarPage />} />
-        <Route path="/registrar" element={<RegistrarPage />} />
+        <Route path="/" element={<UbicarPage />} />
+        <Route path="/ubicar" element={<UbicarPage />} />
+        <Route path="/registrar" element={<Navigate to="/ubicar" replace />} />
         <Route path="/consulta" element={<ConsultaPage />} />
-        <Route path="*" element={<RegistrarPage />} />
+        <Route path="*" element={<UbicarPage />} />
       </Routes>
     </ThemeProvider>
   )

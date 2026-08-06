@@ -35,8 +35,12 @@ class ConsultaPasswordPermission(BasePermission):
 
 
 class EstudianteViewSet(viewsets.ModelViewSet):
+    """CRUD local de estudiantes, sin borrado y solo para estudiantes
+    que existen en la base institucional (validado en el serializer)."""
+
     queryset = Estudiante.objects.all()
     serializer_class = EstudianteSerializer
+    http_method_names = ['get', 'post', 'put', 'patch', 'head', 'options']
 
 
 class MunicipioViewSet(viewsets.ReadOnlyModelViewSet):

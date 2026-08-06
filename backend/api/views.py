@@ -1,12 +1,13 @@
 import hmac
 
 from django.conf import settings
-from django.db.models import Q
+from django.db import connections
+from django.db.models import BooleanField, Case, Exists, OuterRef, Q, Value, When
 from rest_framework import viewsets
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import BasePermission
 
-from .models import Departamento, Estudiante, EstudianteSwa, Municipio
+from .models import Departamento, Estudiante, EstudianteSwa, Historico, Municipio
 from .serializers import (
     DepartamentoSerializer,
     EstudianteSerializer,
@@ -51,6 +52,29 @@ class PersonaPageNumberPagination(PageNumberPagination):
     page_size = 20
 
 
+def _reintegro_codes():
+    """Codigos de estudiante que son reintegro: hay un gap de >=1 semestre
+    entre periodos de matricula REAL (estado 'M') en la tabla historico.
+
+    El estado 'P' (pagado sin matricula) se excluye porque no representa una
+    matricula real y no debe influir en la deteccion.
+    """
+    sql = """
+        SELECT DISTINCT estudiante FROM (
+            SELECT estudiante, periodo,
+                   LAG(periodo) OVER (PARTITION BY estudiante ORDER BY periodo) AS prev
+            FROM historico
+            WHERE estado = 'M'
+        ) t
+        WHERE t.prev IS NOT NULL
+          AND ((t.periodo / 10) * 2 + (t.periodo % 10 - 1))
+              - ((t.prev / 10) * 2 + (t.prev % 10 - 1)) > 1
+    """
+    with connections['produccion'].cursor() as cursor:
+        cursor.execute(sql)
+        return {row[0] for row in cursor.fetchall()}
+
+
 class PersonaViewSet(viewsets.ReadOnlyModelViewSet):
     """Consulta desde la tabla 'estudiante' de produccion hacia 'persona'."""
 
@@ -63,13 +87,35 @@ class PersonaViewSet(viewsets.ReadOnlyModelViewSet):
     pagination_class = PersonaPageNumberPagination
 
     def get_queryset(self):
-        search = self.request.query_params.get('q', '').strip()
-        if not search:
-            return self.queryset.order_by('persona__apellido', 'persona__nombre')
+        reintegro = _reintegro_codes()
+        has_matricula = Historico.objects.filter(
+            estudiante=OuterRef('codigo'), estado='M'
+        )
+        qs = (
+            self.queryset
+            .filter(Exists(has_matricula))
+            .annotate(
+                es_reintegro=Case(
+                    When(codigo__in=reintegro, then=Value(True)),
+                    default=Value(False),
+                    output_field=BooleanField(),
+                )
+            )
+        )
 
-        return self.queryset.filter(
-            Q(codigo__icontains=search)
-            | Q(persona__nombre__icontains=search)
-            | Q(persona__apellido__icontains=search)
-            | Q(persona__identificacion__icontains=search)
-        ).order_by('persona__apellido', 'persona__nombre')
+        search = self.request.query_params.get('q', '').strip()
+        if search:
+            qs = qs.filter(
+                Q(codigo__icontains=search)
+                | Q(persona__nombre__icontains=search)
+                | Q(persona__apellido__icontains=search)
+                | Q(persona__identificacion__icontains=search)
+            )
+
+        reintegro_filter = self.request.query_params.get('reintegro', '').strip()
+        if reintegro_filter == '1':
+            qs = qs.filter(es_reintegro=True)
+        elif reintegro_filter == '0':
+            qs = qs.filter(es_reintegro=False)
+
+        return qs.order_by('persona__apellido', 'persona__nombre')

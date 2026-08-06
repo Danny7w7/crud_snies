@@ -42,6 +42,7 @@ class PersonaSerializer(serializers.ModelSerializer):
 
     id = serializers.CharField(source='codigo', read_only=True)
     codigo_estudiante = serializers.CharField(source='codigo', read_only=True)
+    es_reintegro = serializers.BooleanField(read_only=True)
     identificacion = serializers.CharField(source='persona.identificacion', default=None, read_only=True)
     tipo_identificacion = serializers.IntegerField(source='persona.tipo_identificacion', default=None, read_only=True)
     nombre = serializers.CharField(source='persona.nombre', default=None, read_only=True)
@@ -60,6 +61,7 @@ class PersonaSerializer(serializers.ModelSerializer):
             'nombre',
             'apellido',
             'codigo_estudiante',
+            'es_reintegro',
             'direccion',
             'telefono',
             'email',

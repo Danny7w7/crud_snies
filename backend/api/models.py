@@ -115,3 +115,25 @@ class EstudianteSwa(models.Model):
 
     def __str__(self):
         return f'{self.codigo}'
+
+
+class Historico(models.Model):
+    """Tabla 'historico' de produccion (historial de matricula por periodo).
+
+    Estado: 'M' (matriculado), 'P' (pagado sin matricula real), 'A'.
+    Para la deteccion de reintegro solo se consideran matricula real ('M').
+    """
+
+    periodo = models.IntegerField(blank=True, null=True)
+    programa = models.IntegerField(blank=True, null=True)
+    estudiante = models.CharField(max_length=50, blank=True, null=True)
+    estado = models.CharField(max_length=50, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'historico'
+        verbose_name = 'Historial académico'
+        verbose_name_plural = 'Historiales académicos'
+
+    def __str__(self):
+        return f'{self.estudiante} - {self.periodo}'

@@ -199,10 +199,6 @@ function PageShell({ active, children, wide = false }) {
               <h1 className="mt-4 text-4xl font-semibold leading-tight xl:text-5xl">
                 Gestión de Estudiantes
               </h1>
-              <p className="mt-4 text-sm leading-relaxed text-white/55">
-                Administra la información de identificación de los estudiantes:
-                registro, consulta, actualización y baja de datos.
-              </p>
               <div className="mt-8 h-1 w-20 rounded-full bg-accent" />
             </div>
 
@@ -337,6 +333,7 @@ function ConsultaPasswordGate({ onSuccess }) {
 
 function ConsultarPersonas() {
   const [query, setQuery] = useState('')
+  const [reintegro, setReintegro] = useState('')
   const [results, setResults] = useState([])
   const [count, setCount] = useState(0)
   const [page, setPage] = useState(1)
@@ -354,7 +351,7 @@ function ConsultarPersonas() {
   )
 
   const runSearch = useCallback(
-    async (q, pageNumber = 1) => {
+    async (q, pageNumber = 1, reintegroValue = reintegro) => {
       controllerRef.current?.abort()
       const controller = new AbortController()
       controllerRef.current = controller
@@ -363,6 +360,7 @@ function ConsultarPersonas() {
       try {
         const params = new URLSearchParams({ page: String(pageNumber) })
         if (q) params.set('q', q)
+        if (reintegroValue) params.set('reintegro', reintegroValue)
         const res = await fetch(`${API_PERSONAS_URL}?${params}`, {
           headers,
           signal: controller.signal,
@@ -386,25 +384,25 @@ function ConsultarPersonas() {
         setLoading(false)
       }
     },
-    [headers],
+    [headers, reintegro],
   )
 
   useEffect(() => {
     debounceRef.current = setTimeout(() => {
-      runSearch(query.trim(), 1)
+      runSearch(query.trim(), 1, reintegro)
     }, 400)
     return () => clearTimeout(debounceRef.current)
-  }, [query, runSearch])
+  }, [query, reintegro, runSearch])
 
   function handleSubmit(e) {
     e.preventDefault()
     clearTimeout(debounceRef.current)
-    runSearch(query.trim(), 1)
+    runSearch(query.trim(), 1, reintegro)
   }
 
   function goToPage(pageNumber) {
     clearTimeout(debounceRef.current)
-    runSearch(query.trim(), pageNumber)
+    runSearch(query.trim(), pageNumber, reintegro)
   }
 
   return (
@@ -438,25 +436,48 @@ function ConsultarPersonas() {
             />
           </div>
         </div>
-        <div className="flex gap-3">
-          <Button type="submit" size="lg" className="h-12 flex-1">
-            <Search className="h-4 w-4" />
-            Buscar
-          </Button>
-          {query && (
-            <Button
-              type="button"
-              variant="outline"
-              size="lg"
-              className="h-12"
-              onClick={() => {
-                setQuery('')
-              }}
-            >
-              <X className="h-4 w-4" />
-              Limpiar
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div className="space-y-2">
+            <Label htmlFor="filtro_reintegro" className="text-sm font-medium text-foreground">
+              Reintegro
+            </Label>
+            <div className="group relative">
+              <GraduationCap className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground transition-colors z-20 group-focus-within:text-accent" />
+              <SearchableSelect
+                id="filtro_reintegro"
+                value={reintegro}
+                onValueChange={setReintegro}
+                options={[
+                  { value: '', label: 'Todos' },
+                  { value: '1', label: 'Sí' },
+                  { value: '0', label: 'No' },
+                ]}
+                placeholder="Todos"
+                className="pl-12 h-12"
+              />
+            </div>
+          </div>
+          <div className="flex items-end">
+            <Button type="submit" size="lg" className="h-12 flex-1">
+              <Search className="h-4 w-4" />
+              Buscar
             </Button>
-          )}
+            {query && (
+              <Button
+                type="button"
+                variant="outline"
+                size="lg"
+                className="ml-3 h-12"
+                onClick={() => {
+                  setQuery('')
+                  setReintegro('')
+                }}
+              >
+                <X className="h-4 w-4" />
+                Limpiar
+              </Button>
+            )}
+          </div>
         </div>
       </form>
 
@@ -498,6 +519,7 @@ function ConsultarPersonas() {
                 <th className="px-4 py-3 text-left font-medium">Documento</th>
                 <th className="px-4 py-3 text-left font-medium">Nombre</th>
                 <th className="px-4 py-3 text-left font-medium">Apellido</th>
+                <th className="px-4 py-3 text-left font-medium">Reintegro</th>
                 <th className="hidden px-4 py-3 text-left font-medium md:table-cell">
                   Teléfono
                 </th>
@@ -526,6 +548,17 @@ function ConsultarPersonas() {
                   </td>
                   <td className="px-4 py-3 text-foreground">{p.nombre}</td>
                   <td className="px-4 py-3 text-foreground">{p.apellido}</td>
+                  <td className="px-4 py-3">
+                    {p.es_reintegro ? (
+                      <span className="inline-flex items-center gap-1.5 rounded-md bg-accent/20 px-2 py-0.5 text-xs font-medium text-accent">
+                        Sí
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1.5 rounded-md bg-secondary px-2 py-0.5 text-xs text-muted-foreground">
+                        No
+                      </span>
+                    )}
+                  </td>
                   <td className="hidden px-4 py-3 text-muted-foreground md:table-cell">
                     <span className="inline-flex items-center gap-1.5">
                       <Phone className="h-3.5 w-3.5" />
@@ -713,20 +746,16 @@ function RegistrarPage() {
             </Label>
             <div className="group relative">
               <IdCard className={`${inputIconClass} group-focus-within:text-accent`} />
-              <select
+              <SearchableSelect
                 id="tipo_identificacion"
-                name="tipo_identificacion"
                 value={form.tipo_identificacion}
-                onChange={handleChange}
-                required
-                className={`${inputWithIconClass} focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] flex h-12 w-full min-w-0 cursor-pointer rounded-xl border border-input bg-input-background px-3 text-base text-foreground outline-none transition-[color,box-shadow] md:text-sm dark:bg-input/30`}
-              >
-                {TIPOS_IDENTIFICACION.map((tipo) => (
-                  <option key={tipo.value} value={tipo.value}>
-                    {tipo.label}
-                  </option>
-                ))}
-              </select>
+                onValueChange={(value) =>
+                  setForm({ ...form, tipo_identificacion: value })
+                }
+                options={TIPOS_IDENTIFICACION}
+                placeholder="Selecciona un tipo"
+                className={inputWithIconClass}
+              />
             </div>
           </div>
 
@@ -893,20 +922,20 @@ function RegistrarPage() {
             </Label>
             <div className="group relative">
               <Calendar className={`${inputIconClass} group-focus-within:text-accent`} />
-              <select
+              <SearchableSelect
                 id="periodo_anio"
-                name="periodo_anio"
                 value={form.periodo_anio}
-                onChange={handleChange}
-                className={`${inputWithIconClass} focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] flex h-12 w-full min-w-0 cursor-pointer rounded-xl border border-input bg-input-background px-3 text-base text-foreground outline-none transition-[color,box-shadow] md:text-sm dark:bg-input/30`}
-              >
-                <option value="">Año...</option>
-                {aniosOptions.map((anio) => (
-                  <option key={anio} value={anio}>
-                    {anio}
-                  </option>
-                ))}
-              </select>
+                onValueChange={(value) =>
+                  setForm({ ...form, periodo_anio: value })
+                }
+                options={aniosOptions.map((anio) => ({
+                  value: String(anio),
+                  label: String(anio),
+                }))}
+                placeholder="Año..."
+                searchPlaceholder="Buscar año..."
+                className={inputWithIconClass}
+              />
             </div>
           </div>
 
@@ -916,17 +945,19 @@ function RegistrarPage() {
             </Label>
             <div className="group relative">
               <Calendar className={`${inputIconClass} group-focus-within:text-accent`} />
-              <select
+              <SearchableSelect
                 id="periodo_semestre"
-                name="periodo_semestre"
                 value={form.periodo_semestre}
-                onChange={handleChange}
-                className={`${inputWithIconClass} focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] flex h-12 w-full min-w-0 cursor-pointer rounded-xl border border-input bg-input-background px-3 text-base text-foreground outline-none transition-[color,box-shadow] md:text-sm dark:bg-input/30`}
-              >
-                <option value="">Semestre...</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-              </select>
+                onValueChange={(value) =>
+                  setForm({ ...form, periodo_semestre: value })
+                }
+                options={[
+                  { value: '1', label: '1' },
+                  { value: '2', label: '2' },
+                ]}
+                placeholder="Semestre..."
+                className={inputWithIconClass}
+              />
             </div>
           </div>
         </div>

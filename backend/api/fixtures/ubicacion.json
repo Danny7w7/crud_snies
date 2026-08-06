@@ -1,0 +1,10364 @@
+[
+  {
+    "model": "api.departamento",
+    "pk": 1,
+    "fields": {
+      "nombre": "ANTIOQUIA",
+      "codigo": "05"
+    }
+  },
+  {
+    "model": "api.departamento",
+    "pk": 2,
+    "fields": {
+      "nombre": "ATLÁNTICO",
+      "codigo": "08"
+    }
+  },
+  {
+    "model": "api.departamento",
+    "pk": 3,
+    "fields": {
+      "nombre": "BOGOTÁ, D.C.",
+      "codigo": "11"
+    }
+  },
+  {
+    "model": "api.departamento",
+    "pk": 4,
+    "fields": {
+      "nombre": "BOLÍVAR",
+      "codigo": "13"
+    }
+  },
+  {
+    "model": "api.departamento",
+    "pk": 5,
+    "fields": {
+      "nombre": "BOYACÁ",
+      "codigo": "15"
+    }
+  },
+  {
+    "model": "api.departamento",
+    "pk": 6,
+    "fields": {
+      "nombre": "CALDAS",
+      "codigo": "17"
+    }
+  },
+  {
+    "model": "api.departamento",
+    "pk": 7,
+    "fields": {
+      "nombre": "CAQUETÁ",
+      "codigo": "18"
+    }
+  },
+  {
+    "model": "api.departamento",
+    "pk": 8,
+    "fields": {
+      "nombre": "CAUCA",
+      "codigo": "19"
+    }
+  },
+  {
+    "model": "api.departamento",
+    "pk": 9,
+    "fields": {
+      "nombre": "CESAR",
+      "codigo": "20"
+    }
+  },
+  {
+    "model": "api.departamento",
+    "pk": 10,
+    "fields": {
+      "nombre": "CÓRDOBA",
+      "codigo": "23"
+    }
+  },
+  {
+    "model": "api.departamento",
+    "pk": 11,
+    "fields": {
+      "nombre": "CUNDINAMARCA",
+      "codigo": "25"
+    }
+  },
+  {
+    "model": "api.departamento",
+    "pk": 12,
+    "fields": {
+      "nombre": "CHOCÓ",
+      "codigo": "27"
+    }
+  },
+  {
+    "model": "api.departamento",
+    "pk": 13,
+    "fields": {
+      "nombre": "HUILA",
+      "codigo": "41"
+    }
+  },
+  {
+    "model": "api.departamento",
+    "pk": 14,
+    "fields": {
+      "nombre": "LA GUAJIRA",
+      "codigo": "44"
+    }
+  },
+  {
+    "model": "api.departamento",
+    "pk": 15,
+    "fields": {
+      "nombre": "MAGDALENA",
+      "codigo": "47"
+    }
+  },
+  {
+    "model": "api.departamento",
+    "pk": 16,
+    "fields": {
+      "nombre": "META",
+      "codigo": "50"
+    }
+  },
+  {
+    "model": "api.departamento",
+    "pk": 17,
+    "fields": {
+      "nombre": "NARIÑO",
+      "codigo": "52"
+    }
+  },
+  {
+    "model": "api.departamento",
+    "pk": 18,
+    "fields": {
+      "nombre": "NORTE DE SANTANDER",
+      "codigo": "54"
+    }
+  },
+  {
+    "model": "api.departamento",
+    "pk": 19,
+    "fields": {
+      "nombre": "QUINDÍO",
+      "codigo": "63"
+    }
+  },
+  {
+    "model": "api.departamento",
+    "pk": 20,
+    "fields": {
+      "nombre": "RISARALDA",
+      "codigo": "66"
+    }
+  },
+  {
+    "model": "api.departamento",
+    "pk": 21,
+    "fields": {
+      "nombre": "SANTANDER",
+      "codigo": "68"
+    }
+  },
+  {
+    "model": "api.departamento",
+    "pk": 22,
+    "fields": {
+      "nombre": "SUCRE",
+      "codigo": "70"
+    }
+  },
+  {
+    "model": "api.departamento",
+    "pk": 23,
+    "fields": {
+      "nombre": "TOLIMA",
+      "codigo": "73"
+    }
+  },
+  {
+    "model": "api.departamento",
+    "pk": 24,
+    "fields": {
+      "nombre": "VALLE DEL CAUCA",
+      "codigo": "76"
+    }
+  },
+  {
+    "model": "api.departamento",
+    "pk": 25,
+    "fields": {
+      "nombre": "ARAUCA",
+      "codigo": "81"
+    }
+  },
+  {
+    "model": "api.departamento",
+    "pk": 26,
+    "fields": {
+      "nombre": "CASANARE",
+      "codigo": "85"
+    }
+  },
+  {
+    "model": "api.departamento",
+    "pk": 27,
+    "fields": {
+      "nombre": "PUTUMAYO",
+      "codigo": "86"
+    }
+  },
+  {
+    "model": "api.departamento",
+    "pk": 28,
+    "fields": {
+      "nombre": "ARCHIPIÉLAGO DE SAN ANDRÉS, PROVIDENCIA Y SANTA CATALINA",
+      "codigo": "88"
+    }
+  },
+  {
+    "model": "api.departamento",
+    "pk": 29,
+    "fields": {
+      "nombre": "AMAZONAS",
+      "codigo": "91"
+    }
+  },
+  {
+    "model": "api.departamento",
+    "pk": 30,
+    "fields": {
+      "nombre": "GUAINÍA",
+      "codigo": "94"
+    }
+  },
+  {
+    "model": "api.departamento",
+    "pk": 31,
+    "fields": {
+      "nombre": "GUAVIARE",
+      "codigo": "95"
+    }
+  },
+  {
+    "model": "api.departamento",
+    "pk": 32,
+    "fields": {
+      "nombre": "VAUPÉS",
+      "codigo": "97"
+    }
+  },
+  {
+    "model": "api.departamento",
+    "pk": 33,
+    "fields": {
+      "nombre": "VICHADA",
+      "codigo": "99"
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1,
+    "fields": {
+      "nombre": "MEDELLÍN",
+      "codigo": "5001",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 2,
+    "fields": {
+      "nombre": "ABEJORRAL",
+      "codigo": "5002",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 3,
+    "fields": {
+      "nombre": "ABRIAQUÍ",
+      "codigo": "5004",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 4,
+    "fields": {
+      "nombre": "ALEJANDRÍA",
+      "codigo": "5021",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 5,
+    "fields": {
+      "nombre": "AMAGÁ",
+      "codigo": "5030",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 6,
+    "fields": {
+      "nombre": "AMALFI",
+      "codigo": "5031",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 7,
+    "fields": {
+      "nombre": "ANDES",
+      "codigo": "5034",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 8,
+    "fields": {
+      "nombre": "ANGELÓPOLIS",
+      "codigo": "5036",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 9,
+    "fields": {
+      "nombre": "ANGOSTURA",
+      "codigo": "5038",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 10,
+    "fields": {
+      "nombre": "ANORÍ",
+      "codigo": "5040",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 11,
+    "fields": {
+      "nombre": "SANTA FÉ DE ANTIOQUIA",
+      "codigo": "5042",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 12,
+    "fields": {
+      "nombre": "ANZÁ",
+      "codigo": "5044",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 13,
+    "fields": {
+      "nombre": "APARTADÓ",
+      "codigo": "5045",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 14,
+    "fields": {
+      "nombre": "ARBOLETES",
+      "codigo": "5051",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 15,
+    "fields": {
+      "nombre": "ARGELIA",
+      "codigo": "5055",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 16,
+    "fields": {
+      "nombre": "ARMENIA",
+      "codigo": "5059",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 17,
+    "fields": {
+      "nombre": "BARBOSA",
+      "codigo": "5079",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 18,
+    "fields": {
+      "nombre": "BELMIRA",
+      "codigo": "5086",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 19,
+    "fields": {
+      "nombre": "BELLO",
+      "codigo": "5088",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 20,
+    "fields": {
+      "nombre": "BETANIA",
+      "codigo": "5091",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 21,
+    "fields": {
+      "nombre": "BETULIA",
+      "codigo": "5093",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 22,
+    "fields": {
+      "nombre": "CIUDAD BOLÍVAR",
+      "codigo": "5101",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 23,
+    "fields": {
+      "nombre": "BRICEÑO",
+      "codigo": "5107",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 24,
+    "fields": {
+      "nombre": "BURITICÁ",
+      "codigo": "5113",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 25,
+    "fields": {
+      "nombre": "CÁCERES",
+      "codigo": "5120",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 26,
+    "fields": {
+      "nombre": "CAICEDO",
+      "codigo": "5125",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 27,
+    "fields": {
+      "nombre": "CALDAS",
+      "codigo": "5129",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 28,
+    "fields": {
+      "nombre": "CAMPAMENTO",
+      "codigo": "5134",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 29,
+    "fields": {
+      "nombre": "CAÑASGORDAS",
+      "codigo": "5138",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 30,
+    "fields": {
+      "nombre": "CARACOLÍ",
+      "codigo": "5142",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 31,
+    "fields": {
+      "nombre": "CARAMANTA",
+      "codigo": "5145",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 32,
+    "fields": {
+      "nombre": "CAREPA",
+      "codigo": "5147",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 33,
+    "fields": {
+      "nombre": "EL CARMEN DE VIBORAL",
+      "codigo": "5148",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 34,
+    "fields": {
+      "nombre": "CAROLINA",
+      "codigo": "5150",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 35,
+    "fields": {
+      "nombre": "CAUCASIA",
+      "codigo": "5154",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 36,
+    "fields": {
+      "nombre": "CHIGORODÓ",
+      "codigo": "5172",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 37,
+    "fields": {
+      "nombre": "CISNEROS",
+      "codigo": "5190",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 38,
+    "fields": {
+      "nombre": "COCORNÁ",
+      "codigo": "5197",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 39,
+    "fields": {
+      "nombre": "CONCEPCIÓN",
+      "codigo": "5206",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 40,
+    "fields": {
+      "nombre": "CONCORDIA",
+      "codigo": "5209",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 41,
+    "fields": {
+      "nombre": "COPACABANA",
+      "codigo": "5212",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 42,
+    "fields": {
+      "nombre": "DABEIBA",
+      "codigo": "5234",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 43,
+    "fields": {
+      "nombre": "DONMATÍAS",
+      "codigo": "5237",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 44,
+    "fields": {
+      "nombre": "EBÉJICO",
+      "codigo": "5240",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 45,
+    "fields": {
+      "nombre": "EL BAGRE",
+      "codigo": "5250",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 46,
+    "fields": {
+      "nombre": "ENTRERRÍOS",
+      "codigo": "5264",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 47,
+    "fields": {
+      "nombre": "ENVIGADO",
+      "codigo": "5266",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 48,
+    "fields": {
+      "nombre": "FREDONIA",
+      "codigo": "5282",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 49,
+    "fields": {
+      "nombre": "FRONTINO",
+      "codigo": "5284",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 50,
+    "fields": {
+      "nombre": "GIRALDO",
+      "codigo": "5306",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 51,
+    "fields": {
+      "nombre": "GIRARDOTA",
+      "codigo": "5308",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 52,
+    "fields": {
+      "nombre": "GÓMEZ PLATA",
+      "codigo": "5310",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 53,
+    "fields": {
+      "nombre": "GRANADA",
+      "codigo": "5313",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 54,
+    "fields": {
+      "nombre": "GUADALUPE",
+      "codigo": "5315",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 55,
+    "fields": {
+      "nombre": "GUARNE",
+      "codigo": "5318",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 56,
+    "fields": {
+      "nombre": "GUATAPÉ",
+      "codigo": "5321",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 57,
+    "fields": {
+      "nombre": "HELICONIA",
+      "codigo": "5347",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 58,
+    "fields": {
+      "nombre": "HISPANIA",
+      "codigo": "5353",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 59,
+    "fields": {
+      "nombre": "ITAGÜÍ",
+      "codigo": "5360",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 60,
+    "fields": {
+      "nombre": "ITUANGO",
+      "codigo": "5361",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 61,
+    "fields": {
+      "nombre": "JARDÍN",
+      "codigo": "5364",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 62,
+    "fields": {
+      "nombre": "JERICÓ",
+      "codigo": "5368",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 63,
+    "fields": {
+      "nombre": "LA CEJA",
+      "codigo": "5376",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 64,
+    "fields": {
+      "nombre": "LA ESTRELLA",
+      "codigo": "5380",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 65,
+    "fields": {
+      "nombre": "LA PINTADA",
+      "codigo": "5390",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 66,
+    "fields": {
+      "nombre": "LA UNIÓN",
+      "codigo": "5400",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 67,
+    "fields": {
+      "nombre": "LIBORINA",
+      "codigo": "5411",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 68,
+    "fields": {
+      "nombre": "MACEO",
+      "codigo": "5425",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 69,
+    "fields": {
+      "nombre": "MARINILLA",
+      "codigo": "5440",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 70,
+    "fields": {
+      "nombre": "MONTEBELLO",
+      "codigo": "5467",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 71,
+    "fields": {
+      "nombre": "MURINDÓ",
+      "codigo": "5475",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 72,
+    "fields": {
+      "nombre": "MUTATÁ",
+      "codigo": "5480",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 73,
+    "fields": {
+      "nombre": "NARIÑO",
+      "codigo": "5483",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 74,
+    "fields": {
+      "nombre": "NECOCLÍ",
+      "codigo": "5490",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 75,
+    "fields": {
+      "nombre": "NECHÍ",
+      "codigo": "5495",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 76,
+    "fields": {
+      "nombre": "OLAYA",
+      "codigo": "5501",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 77,
+    "fields": {
+      "nombre": "PEÑOL",
+      "codigo": "5541",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 78,
+    "fields": {
+      "nombre": "PEQUE",
+      "codigo": "5543",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 79,
+    "fields": {
+      "nombre": "PUEBLORRICO",
+      "codigo": "5576",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 80,
+    "fields": {
+      "nombre": "PUERTO BERRÍO",
+      "codigo": "5579",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 81,
+    "fields": {
+      "nombre": "PUERTO NARE",
+      "codigo": "5585",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 82,
+    "fields": {
+      "nombre": "PUERTO TRIUNFO",
+      "codigo": "5591",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 83,
+    "fields": {
+      "nombre": "REMEDIOS",
+      "codigo": "5604",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 84,
+    "fields": {
+      "nombre": "RETIRO",
+      "codigo": "5607",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 85,
+    "fields": {
+      "nombre": "RIONEGRO",
+      "codigo": "5615",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 86,
+    "fields": {
+      "nombre": "SABANALARGA",
+      "codigo": "5628",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 87,
+    "fields": {
+      "nombre": "SABANETA",
+      "codigo": "5631",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 88,
+    "fields": {
+      "nombre": "SALGAR",
+      "codigo": "5642",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 89,
+    "fields": {
+      "nombre": "SAN ANDRÉS DE CUERQUÍA",
+      "codigo": "5647",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 90,
+    "fields": {
+      "nombre": "SAN CARLOS",
+      "codigo": "5649",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 91,
+    "fields": {
+      "nombre": "SAN FRANCISCO",
+      "codigo": "5652",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 92,
+    "fields": {
+      "nombre": "SAN JERÓNIMO",
+      "codigo": "5656",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 93,
+    "fields": {
+      "nombre": "SAN JOSÉ DE LA MONTAÑA",
+      "codigo": "5658",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 94,
+    "fields": {
+      "nombre": "SAN JUAN DE URABÁ",
+      "codigo": "5659",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 95,
+    "fields": {
+      "nombre": "SAN LUIS",
+      "codigo": "5660",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 96,
+    "fields": {
+      "nombre": "SAN PEDRO DE LOS MILAGROS",
+      "codigo": "5664",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 97,
+    "fields": {
+      "nombre": "SAN PEDRO DE URABÁ",
+      "codigo": "5665",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 98,
+    "fields": {
+      "nombre": "SAN RAFAEL",
+      "codigo": "5667",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 99,
+    "fields": {
+      "nombre": "SAN ROQUE",
+      "codigo": "5670",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 100,
+    "fields": {
+      "nombre": "SAN VICENTE FERRER",
+      "codigo": "5674",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 101,
+    "fields": {
+      "nombre": "SANTA BÁRBARA",
+      "codigo": "5679",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 102,
+    "fields": {
+      "nombre": "SANTA ROSA DE OSOS",
+      "codigo": "5686",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 103,
+    "fields": {
+      "nombre": "SANTO DOMINGO",
+      "codigo": "5690",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 104,
+    "fields": {
+      "nombre": "EL SANTUARIO",
+      "codigo": "5697",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 105,
+    "fields": {
+      "nombre": "SEGOVIA",
+      "codigo": "5736",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 106,
+    "fields": {
+      "nombre": "SONSÓN",
+      "codigo": "5756",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 107,
+    "fields": {
+      "nombre": "SOPETRÁN",
+      "codigo": "5761",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 108,
+    "fields": {
+      "nombre": "TÁMESIS",
+      "codigo": "5789",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 109,
+    "fields": {
+      "nombre": "TARAZÁ",
+      "codigo": "5790",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 110,
+    "fields": {
+      "nombre": "TARSO",
+      "codigo": "5792",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 111,
+    "fields": {
+      "nombre": "TITIRIBÍ",
+      "codigo": "5809",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 112,
+    "fields": {
+      "nombre": "TOLEDO",
+      "codigo": "5819",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 113,
+    "fields": {
+      "nombre": "TURBO",
+      "codigo": "5837",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 114,
+    "fields": {
+      "nombre": "URAMITA",
+      "codigo": "5842",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 115,
+    "fields": {
+      "nombre": "URRAO",
+      "codigo": "5847",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 116,
+    "fields": {
+      "nombre": "VALDIVIA",
+      "codigo": "5854",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 117,
+    "fields": {
+      "nombre": "VALPARAÍSO",
+      "codigo": "5856",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 118,
+    "fields": {
+      "nombre": "VEGACHÍ",
+      "codigo": "5858",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 119,
+    "fields": {
+      "nombre": "VENECIA",
+      "codigo": "5861",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 120,
+    "fields": {
+      "nombre": "VIGÍA DEL FUERTE",
+      "codigo": "5873",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 121,
+    "fields": {
+      "nombre": "YALÍ",
+      "codigo": "5885",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 122,
+    "fields": {
+      "nombre": "YARUMAL",
+      "codigo": "5887",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 123,
+    "fields": {
+      "nombre": "YOLOMBÓ",
+      "codigo": "5890",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 124,
+    "fields": {
+      "nombre": "YONDÓ",
+      "codigo": "5893",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 125,
+    "fields": {
+      "nombre": "ZARAGOZA",
+      "codigo": "5895",
+      "departamento": 1
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 126,
+    "fields": {
+      "nombre": "BARRANQUILLA",
+      "codigo": "8001",
+      "departamento": 2
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 127,
+    "fields": {
+      "nombre": "BARANOA",
+      "codigo": "8078",
+      "departamento": 2
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 128,
+    "fields": {
+      "nombre": "CAMPO DE LA CRUZ",
+      "codigo": "8137",
+      "departamento": 2
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 129,
+    "fields": {
+      "nombre": "CANDELARIA",
+      "codigo": "8141",
+      "departamento": 2
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 130,
+    "fields": {
+      "nombre": "GALAPA",
+      "codigo": "8296",
+      "departamento": 2
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 131,
+    "fields": {
+      "nombre": "JUAN DE ACOSTA",
+      "codigo": "8372",
+      "departamento": 2
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 132,
+    "fields": {
+      "nombre": "LURUACO",
+      "codigo": "8421",
+      "departamento": 2
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 133,
+    "fields": {
+      "nombre": "MALAMBO",
+      "codigo": "8433",
+      "departamento": 2
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 134,
+    "fields": {
+      "nombre": "MANATÍ",
+      "codigo": "8436",
+      "departamento": 2
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 135,
+    "fields": {
+      "nombre": "PALMAR DE VARELA",
+      "codigo": "8520",
+      "departamento": 2
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 136,
+    "fields": {
+      "nombre": "PIOJÓ",
+      "codigo": "8549",
+      "departamento": 2
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 137,
+    "fields": {
+      "nombre": "POLONUEVO",
+      "codigo": "8558",
+      "departamento": 2
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 138,
+    "fields": {
+      "nombre": "PONEDERA",
+      "codigo": "8560",
+      "departamento": 2
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 139,
+    "fields": {
+      "nombre": "PUERTO COLOMBIA",
+      "codigo": "8573",
+      "departamento": 2
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 140,
+    "fields": {
+      "nombre": "REPELÓN",
+      "codigo": "8606",
+      "departamento": 2
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 141,
+    "fields": {
+      "nombre": "SABANAGRANDE",
+      "codigo": "8634",
+      "departamento": 2
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 142,
+    "fields": {
+      "nombre": "SABANALARGA",
+      "codigo": "8638",
+      "departamento": 2
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 143,
+    "fields": {
+      "nombre": "SANTA LUCÍA",
+      "codigo": "8675",
+      "departamento": 2
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 144,
+    "fields": {
+      "nombre": "SANTO TOMÁS",
+      "codigo": "8685",
+      "departamento": 2
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 145,
+    "fields": {
+      "nombre": "SOLEDAD",
+      "codigo": "8758",
+      "departamento": 2
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 146,
+    "fields": {
+      "nombre": "SUAN",
+      "codigo": "8770",
+      "departamento": 2
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 147,
+    "fields": {
+      "nombre": "TUBARÁ",
+      "codigo": "8832",
+      "departamento": 2
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 148,
+    "fields": {
+      "nombre": "USIACURÍ",
+      "codigo": "8849",
+      "departamento": 2
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 149,
+    "fields": {
+      "nombre": "BOGOTÁ, D.C.",
+      "codigo": "11001",
+      "departamento": 3
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 150,
+    "fields": {
+      "nombre": "CARTAGENA DE INDIAS",
+      "codigo": "13001",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 151,
+    "fields": {
+      "nombre": "ACHÍ",
+      "codigo": "13006",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 152,
+    "fields": {
+      "nombre": "ALTOS DEL ROSARIO",
+      "codigo": "13030",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 153,
+    "fields": {
+      "nombre": "ARENAL",
+      "codigo": "13042",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 154,
+    "fields": {
+      "nombre": "ARJONA",
+      "codigo": "13052",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 155,
+    "fields": {
+      "nombre": "ARROYOHONDO",
+      "codigo": "13062",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 156,
+    "fields": {
+      "nombre": "BARRANCO DE LOBA",
+      "codigo": "13074",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 157,
+    "fields": {
+      "nombre": "CALAMAR",
+      "codigo": "13140",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 158,
+    "fields": {
+      "nombre": "CANTAGALLO",
+      "codigo": "13160",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 159,
+    "fields": {
+      "nombre": "CICUCO",
+      "codigo": "13188",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 160,
+    "fields": {
+      "nombre": "CÓRDOBA",
+      "codigo": "13212",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 161,
+    "fields": {
+      "nombre": "CLEMENCIA",
+      "codigo": "13222",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 162,
+    "fields": {
+      "nombre": "EL CARMEN DE BOLÍVAR",
+      "codigo": "13244",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 163,
+    "fields": {
+      "nombre": "EL GUAMO",
+      "codigo": "13248",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 164,
+    "fields": {
+      "nombre": "EL PEÑÓN",
+      "codigo": "13268",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 165,
+    "fields": {
+      "nombre": "HATILLO DE LOBA",
+      "codigo": "13300",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 166,
+    "fields": {
+      "nombre": "MAGANGUÉ",
+      "codigo": "13430",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 167,
+    "fields": {
+      "nombre": "MAHATES",
+      "codigo": "13433",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 168,
+    "fields": {
+      "nombre": "MARGARITA",
+      "codigo": "13440",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 169,
+    "fields": {
+      "nombre": "MARÍA LA BAJA",
+      "codigo": "13442",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 170,
+    "fields": {
+      "nombre": "MONTECRISTO",
+      "codigo": "13458",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 171,
+    "fields": {
+      "nombre": "SANTA CRUZ DE MOMPOX",
+      "codigo": "13468",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 172,
+    "fields": {
+      "nombre": "MORALES",
+      "codigo": "13473",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 173,
+    "fields": {
+      "nombre": "NOROSÍ",
+      "codigo": "13490",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 174,
+    "fields": {
+      "nombre": "PINILLOS",
+      "codigo": "13549",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 175,
+    "fields": {
+      "nombre": "REGIDOR",
+      "codigo": "13580",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 176,
+    "fields": {
+      "nombre": "RÍO VIEJO",
+      "codigo": "13600",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 177,
+    "fields": {
+      "nombre": "SAN CRISTÓBAL",
+      "codigo": "13620",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 178,
+    "fields": {
+      "nombre": "SAN ESTANISLAO",
+      "codigo": "13647",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 179,
+    "fields": {
+      "nombre": "SAN FERNANDO",
+      "codigo": "13650",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 180,
+    "fields": {
+      "nombre": "SAN JACINTO",
+      "codigo": "13654",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 181,
+    "fields": {
+      "nombre": "SAN JACINTO DEL CAUCA",
+      "codigo": "13655",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 182,
+    "fields": {
+      "nombre": "SAN JUAN NEPOMUCENO",
+      "codigo": "13657",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 183,
+    "fields": {
+      "nombre": "SAN MARTÍN DE LOBA",
+      "codigo": "13667",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 184,
+    "fields": {
+      "nombre": "SAN PABLO",
+      "codigo": "13670",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 185,
+    "fields": {
+      "nombre": "SANTA CATALINA",
+      "codigo": "13673",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 186,
+    "fields": {
+      "nombre": "SANTA ROSA",
+      "codigo": "13683",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 187,
+    "fields": {
+      "nombre": "SANTA ROSA DEL SUR",
+      "codigo": "13688",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 188,
+    "fields": {
+      "nombre": "SIMITÍ",
+      "codigo": "13744",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 189,
+    "fields": {
+      "nombre": "SOPLAVIENTO",
+      "codigo": "13760",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 190,
+    "fields": {
+      "nombre": "TALAIGUA NUEVO",
+      "codigo": "13780",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 191,
+    "fields": {
+      "nombre": "TIQUISIO",
+      "codigo": "13810",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 192,
+    "fields": {
+      "nombre": "TURBACO",
+      "codigo": "13836",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 193,
+    "fields": {
+      "nombre": "TURBANÁ",
+      "codigo": "13838",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 194,
+    "fields": {
+      "nombre": "VILLANUEVA",
+      "codigo": "13873",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 195,
+    "fields": {
+      "nombre": "ZAMBRANO",
+      "codigo": "13894",
+      "departamento": 4
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 196,
+    "fields": {
+      "nombre": "TUNJA",
+      "codigo": "15001",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 197,
+    "fields": {
+      "nombre": "ALMEIDA",
+      "codigo": "15022",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 198,
+    "fields": {
+      "nombre": "AQUITANIA",
+      "codigo": "15047",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 199,
+    "fields": {
+      "nombre": "ARCABUCO",
+      "codigo": "15051",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 200,
+    "fields": {
+      "nombre": "BELÉN",
+      "codigo": "15087",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 201,
+    "fields": {
+      "nombre": "BERBEO",
+      "codigo": "15090",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 202,
+    "fields": {
+      "nombre": "BETÉITIVA",
+      "codigo": "15092",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 203,
+    "fields": {
+      "nombre": "BOAVITA",
+      "codigo": "15097",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 204,
+    "fields": {
+      "nombre": "BOYACÁ",
+      "codigo": "15104",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 205,
+    "fields": {
+      "nombre": "BRICEÑO",
+      "codigo": "15106",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 206,
+    "fields": {
+      "nombre": "BUENAVISTA",
+      "codigo": "15109",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 207,
+    "fields": {
+      "nombre": "BUSBANZÁ",
+      "codigo": "15114",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 208,
+    "fields": {
+      "nombre": "CALDAS",
+      "codigo": "15131",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 209,
+    "fields": {
+      "nombre": "CAMPOHERMOSO",
+      "codigo": "15135",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 210,
+    "fields": {
+      "nombre": "CERINZA",
+      "codigo": "15162",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 211,
+    "fields": {
+      "nombre": "CHINAVITA",
+      "codigo": "15172",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 212,
+    "fields": {
+      "nombre": "CHIQUINQUIRÁ",
+      "codigo": "15176",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 213,
+    "fields": {
+      "nombre": "CHISCAS",
+      "codigo": "15180",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 214,
+    "fields": {
+      "nombre": "CHITA",
+      "codigo": "15183",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 215,
+    "fields": {
+      "nombre": "CHITARAQUE",
+      "codigo": "15185",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 216,
+    "fields": {
+      "nombre": "CHIVATÁ",
+      "codigo": "15187",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 217,
+    "fields": {
+      "nombre": "CIÉNEGA",
+      "codigo": "15189",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 218,
+    "fields": {
+      "nombre": "CÓMBITA",
+      "codigo": "15204",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 219,
+    "fields": {
+      "nombre": "COPER",
+      "codigo": "15212",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 220,
+    "fields": {
+      "nombre": "CORRALES",
+      "codigo": "15215",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 221,
+    "fields": {
+      "nombre": "COVARACHÍA",
+      "codigo": "15218",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 222,
+    "fields": {
+      "nombre": "CUBARÁ",
+      "codigo": "15223",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 223,
+    "fields": {
+      "nombre": "CUCAITA",
+      "codigo": "15224",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 224,
+    "fields": {
+      "nombre": "CUÍTIVA",
+      "codigo": "15226",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 225,
+    "fields": {
+      "nombre": "CHÍQUIZA",
+      "codigo": "15232",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 226,
+    "fields": {
+      "nombre": "CHIVOR",
+      "codigo": "15236",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 227,
+    "fields": {
+      "nombre": "DUITAMA",
+      "codigo": "15238",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 228,
+    "fields": {
+      "nombre": "EL COCUY",
+      "codigo": "15244",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 229,
+    "fields": {
+      "nombre": "EL ESPINO",
+      "codigo": "15248",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 230,
+    "fields": {
+      "nombre": "FIRAVITOBA",
+      "codigo": "15272",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 231,
+    "fields": {
+      "nombre": "FLORESTA",
+      "codigo": "15276",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 232,
+    "fields": {
+      "nombre": "GACHANTIVÁ",
+      "codigo": "15293",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 233,
+    "fields": {
+      "nombre": "GÁMEZA",
+      "codigo": "15296",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 234,
+    "fields": {
+      "nombre": "GARAGOA",
+      "codigo": "15299",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 235,
+    "fields": {
+      "nombre": "GUACAMAYAS",
+      "codigo": "15317",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 236,
+    "fields": {
+      "nombre": "GUATEQUE",
+      "codigo": "15322",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 237,
+    "fields": {
+      "nombre": "GUAYATÁ",
+      "codigo": "15325",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 238,
+    "fields": {
+      "nombre": "GÜICÁN DE LA SIERRA",
+      "codigo": "15332",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 239,
+    "fields": {
+      "nombre": "IZA",
+      "codigo": "15362",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 240,
+    "fields": {
+      "nombre": "JENESANO",
+      "codigo": "15367",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 241,
+    "fields": {
+      "nombre": "JERICÓ",
+      "codigo": "15368",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 242,
+    "fields": {
+      "nombre": "LABRANZAGRANDE",
+      "codigo": "15377",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 243,
+    "fields": {
+      "nombre": "LA CAPILLA",
+      "codigo": "15380",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 244,
+    "fields": {
+      "nombre": "LA VICTORIA",
+      "codigo": "15401",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 245,
+    "fields": {
+      "nombre": "LA UVITA",
+      "codigo": "15403",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 246,
+    "fields": {
+      "nombre": "VILLA DE LEYVA",
+      "codigo": "15407",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 247,
+    "fields": {
+      "nombre": "MACANAL",
+      "codigo": "15425",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 248,
+    "fields": {
+      "nombre": "MARIPÍ",
+      "codigo": "15442",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 249,
+    "fields": {
+      "nombre": "MIRAFLORES",
+      "codigo": "15455",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 250,
+    "fields": {
+      "nombre": "MONGUA",
+      "codigo": "15464",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 251,
+    "fields": {
+      "nombre": "MONGUÍ",
+      "codigo": "15466",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 252,
+    "fields": {
+      "nombre": "MONIQUIRÁ",
+      "codigo": "15469",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 253,
+    "fields": {
+      "nombre": "MOTAVITA",
+      "codigo": "15476",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 254,
+    "fields": {
+      "nombre": "MUZO",
+      "codigo": "15480",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 255,
+    "fields": {
+      "nombre": "NOBSA",
+      "codigo": "15491",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 256,
+    "fields": {
+      "nombre": "NUEVO COLÓN",
+      "codigo": "15494",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 257,
+    "fields": {
+      "nombre": "OICATÁ",
+      "codigo": "15500",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 258,
+    "fields": {
+      "nombre": "OTANCHE",
+      "codigo": "15507",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 259,
+    "fields": {
+      "nombre": "PACHAVITA",
+      "codigo": "15511",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 260,
+    "fields": {
+      "nombre": "PÁEZ",
+      "codigo": "15514",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 261,
+    "fields": {
+      "nombre": "PAIPA",
+      "codigo": "15516",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 262,
+    "fields": {
+      "nombre": "PAJARITO",
+      "codigo": "15518",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 263,
+    "fields": {
+      "nombre": "PANQUEBA",
+      "codigo": "15522",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 264,
+    "fields": {
+      "nombre": "PAUNA",
+      "codigo": "15531",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 265,
+    "fields": {
+      "nombre": "PAYA",
+      "codigo": "15533",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 266,
+    "fields": {
+      "nombre": "PAZ DE RÍO",
+      "codigo": "15537",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 267,
+    "fields": {
+      "nombre": "PESCA",
+      "codigo": "15542",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 268,
+    "fields": {
+      "nombre": "PISBA",
+      "codigo": "15550",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 269,
+    "fields": {
+      "nombre": "PUERTO BOYACÁ",
+      "codigo": "15572",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 270,
+    "fields": {
+      "nombre": "QUÍPAMA",
+      "codigo": "15580",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 271,
+    "fields": {
+      "nombre": "RAMIRIQUÍ",
+      "codigo": "15599",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 272,
+    "fields": {
+      "nombre": "RÁQUIRA",
+      "codigo": "15600",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 273,
+    "fields": {
+      "nombre": "RONDÓN",
+      "codigo": "15621",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 274,
+    "fields": {
+      "nombre": "SABOYÁ",
+      "codigo": "15632",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 275,
+    "fields": {
+      "nombre": "SÁCHICA",
+      "codigo": "15638",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 276,
+    "fields": {
+      "nombre": "SAMACÁ",
+      "codigo": "15646",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 277,
+    "fields": {
+      "nombre": "SAN EDUARDO",
+      "codigo": "15660",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 278,
+    "fields": {
+      "nombre": "SAN JOSÉ DE PARE",
+      "codigo": "15664",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 279,
+    "fields": {
+      "nombre": "SAN LUIS DE GACENO",
+      "codigo": "15667",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 280,
+    "fields": {
+      "nombre": "SAN MATEO",
+      "codigo": "15673",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 281,
+    "fields": {
+      "nombre": "SAN MIGUEL DE SEMA",
+      "codigo": "15676",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 282,
+    "fields": {
+      "nombre": "SAN PABLO DE BORBUR",
+      "codigo": "15681",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 283,
+    "fields": {
+      "nombre": "SANTANA",
+      "codigo": "15686",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 284,
+    "fields": {
+      "nombre": "SANTA MARÍA",
+      "codigo": "15690",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 285,
+    "fields": {
+      "nombre": "SANTA ROSA DE VITERBO",
+      "codigo": "15693",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 286,
+    "fields": {
+      "nombre": "SANTA SOFÍA",
+      "codigo": "15696",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 287,
+    "fields": {
+      "nombre": "SATIVANORTE",
+      "codigo": "15720",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 288,
+    "fields": {
+      "nombre": "SATIVASUR",
+      "codigo": "15723",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 289,
+    "fields": {
+      "nombre": "SIACHOQUE",
+      "codigo": "15740",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 290,
+    "fields": {
+      "nombre": "SOATÁ",
+      "codigo": "15753",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 291,
+    "fields": {
+      "nombre": "SOCOTÁ",
+      "codigo": "15755",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 292,
+    "fields": {
+      "nombre": "SOCHA",
+      "codigo": "15757",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 293,
+    "fields": {
+      "nombre": "SOGAMOSO",
+      "codigo": "15759",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 294,
+    "fields": {
+      "nombre": "SOMONDOCO",
+      "codigo": "15761",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 295,
+    "fields": {
+      "nombre": "SORA",
+      "codigo": "15762",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 296,
+    "fields": {
+      "nombre": "SOTAQUIRÁ",
+      "codigo": "15763",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 297,
+    "fields": {
+      "nombre": "SORACÁ",
+      "codigo": "15764",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 298,
+    "fields": {
+      "nombre": "SUSACÓN",
+      "codigo": "15774",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 299,
+    "fields": {
+      "nombre": "SUTAMARCHÁN",
+      "codigo": "15776",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 300,
+    "fields": {
+      "nombre": "SUTATENZA",
+      "codigo": "15778",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 301,
+    "fields": {
+      "nombre": "TASCO",
+      "codigo": "15790",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 302,
+    "fields": {
+      "nombre": "TENZA",
+      "codigo": "15798",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 303,
+    "fields": {
+      "nombre": "TIBANÁ",
+      "codigo": "15804",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 304,
+    "fields": {
+      "nombre": "TIBASOSA",
+      "codigo": "15806",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 305,
+    "fields": {
+      "nombre": "TINJACÁ",
+      "codigo": "15808",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 306,
+    "fields": {
+      "nombre": "TIPACOQUE",
+      "codigo": "15810",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 307,
+    "fields": {
+      "nombre": "TOCA",
+      "codigo": "15814",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 308,
+    "fields": {
+      "nombre": "TOGÜÍ",
+      "codigo": "15816",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 309,
+    "fields": {
+      "nombre": "TÓPAGA",
+      "codigo": "15820",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 310,
+    "fields": {
+      "nombre": "TOTA",
+      "codigo": "15822",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 311,
+    "fields": {
+      "nombre": "TUNUNGUÁ",
+      "codigo": "15832",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 312,
+    "fields": {
+      "nombre": "TURMEQUÉ",
+      "codigo": "15835",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 313,
+    "fields": {
+      "nombre": "TUTA",
+      "codigo": "15837",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 314,
+    "fields": {
+      "nombre": "TUTAZÁ",
+      "codigo": "15839",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 315,
+    "fields": {
+      "nombre": "ÚMBITA",
+      "codigo": "15842",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 316,
+    "fields": {
+      "nombre": "VENTAQUEMADA",
+      "codigo": "15861",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 317,
+    "fields": {
+      "nombre": "VIRACACHÁ",
+      "codigo": "15879",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 318,
+    "fields": {
+      "nombre": "ZETAQUIRA",
+      "codigo": "15897",
+      "departamento": 5
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 319,
+    "fields": {
+      "nombre": "MANIZALES",
+      "codigo": "17001",
+      "departamento": 6
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 320,
+    "fields": {
+      "nombre": "AGUADAS",
+      "codigo": "17013",
+      "departamento": 6
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 321,
+    "fields": {
+      "nombre": "ANSERMA",
+      "codigo": "17042",
+      "departamento": 6
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 322,
+    "fields": {
+      "nombre": "ARANZAZU",
+      "codigo": "17050",
+      "departamento": 6
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 323,
+    "fields": {
+      "nombre": "BELALCÁZAR",
+      "codigo": "17088",
+      "departamento": 6
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 324,
+    "fields": {
+      "nombre": "CHINCHINÁ",
+      "codigo": "17174",
+      "departamento": 6
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 325,
+    "fields": {
+      "nombre": "FILADELFIA",
+      "codigo": "17272",
+      "departamento": 6
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 326,
+    "fields": {
+      "nombre": "LA DORADA",
+      "codigo": "17380",
+      "departamento": 6
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 327,
+    "fields": {
+      "nombre": "LA MERCED",
+      "codigo": "17388",
+      "departamento": 6
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 328,
+    "fields": {
+      "nombre": "MANZANARES",
+      "codigo": "17433",
+      "departamento": 6
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 329,
+    "fields": {
+      "nombre": "MARMATO",
+      "codigo": "17442",
+      "departamento": 6
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 330,
+    "fields": {
+      "nombre": "MARQUETALIA",
+      "codigo": "17444",
+      "departamento": 6
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 331,
+    "fields": {
+      "nombre": "MARULANDA",
+      "codigo": "17446",
+      "departamento": 6
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 332,
+    "fields": {
+      "nombre": "NEIRA",
+      "codigo": "17486",
+      "departamento": 6
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 333,
+    "fields": {
+      "nombre": "NORCASIA",
+      "codigo": "17495",
+      "departamento": 6
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 334,
+    "fields": {
+      "nombre": "PÁCORA",
+      "codigo": "17513",
+      "departamento": 6
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 335,
+    "fields": {
+      "nombre": "PALESTINA",
+      "codigo": "17524",
+      "departamento": 6
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 336,
+    "fields": {
+      "nombre": "PENSILVANIA",
+      "codigo": "17541",
+      "departamento": 6
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 337,
+    "fields": {
+      "nombre": "RIOSUCIO",
+      "codigo": "17614",
+      "departamento": 6
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 338,
+    "fields": {
+      "nombre": "RISARALDA",
+      "codigo": "17616",
+      "departamento": 6
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 339,
+    "fields": {
+      "nombre": "SALAMINA",
+      "codigo": "17653",
+      "departamento": 6
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 340,
+    "fields": {
+      "nombre": "SAMANÁ",
+      "codigo": "17662",
+      "departamento": 6
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 341,
+    "fields": {
+      "nombre": "SAN JOSÉ",
+      "codigo": "17665",
+      "departamento": 6
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 342,
+    "fields": {
+      "nombre": "SUPÍA",
+      "codigo": "17777",
+      "departamento": 6
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 343,
+    "fields": {
+      "nombre": "VICTORIA",
+      "codigo": "17867",
+      "departamento": 6
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 344,
+    "fields": {
+      "nombre": "VILLAMARÍA",
+      "codigo": "17873",
+      "departamento": 6
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 345,
+    "fields": {
+      "nombre": "VITERBO",
+      "codigo": "17877",
+      "departamento": 6
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 346,
+    "fields": {
+      "nombre": "FLORENCIA",
+      "codigo": "18001",
+      "departamento": 7
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 347,
+    "fields": {
+      "nombre": "ALBANIA",
+      "codigo": "18029",
+      "departamento": 7
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 348,
+    "fields": {
+      "nombre": "BELÉN DE LOS ANDAQUÍES",
+      "codigo": "18094",
+      "departamento": 7
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 349,
+    "fields": {
+      "nombre": "CARTAGENA DEL CHAIRÁ",
+      "codigo": "18150",
+      "departamento": 7
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 350,
+    "fields": {
+      "nombre": "CURILLO",
+      "codigo": "18205",
+      "departamento": 7
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 351,
+    "fields": {
+      "nombre": "EL DONCELLO",
+      "codigo": "18247",
+      "departamento": 7
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 352,
+    "fields": {
+      "nombre": "EL PAUJÍL",
+      "codigo": "18256",
+      "departamento": 7
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 353,
+    "fields": {
+      "nombre": "LA MONTAÑITA",
+      "codigo": "18410",
+      "departamento": 7
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 354,
+    "fields": {
+      "nombre": "MILÁN",
+      "codigo": "18460",
+      "departamento": 7
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 355,
+    "fields": {
+      "nombre": "MORELIA",
+      "codigo": "18479",
+      "departamento": 7
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 356,
+    "fields": {
+      "nombre": "PUERTO RICO",
+      "codigo": "18592",
+      "departamento": 7
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 357,
+    "fields": {
+      "nombre": "SAN JOSÉ DEL FRAGUA",
+      "codigo": "18610",
+      "departamento": 7
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 358,
+    "fields": {
+      "nombre": "SAN VICENTE DEL CAGUÁN",
+      "codigo": "18753",
+      "departamento": 7
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 359,
+    "fields": {
+      "nombre": "SOLANO",
+      "codigo": "18756",
+      "departamento": 7
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 360,
+    "fields": {
+      "nombre": "SOLITA",
+      "codigo": "18785",
+      "departamento": 7
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 361,
+    "fields": {
+      "nombre": "VALPARAÍSO",
+      "codigo": "18860",
+      "departamento": 7
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 362,
+    "fields": {
+      "nombre": "POPAYÁN",
+      "codigo": "19001",
+      "departamento": 8
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 363,
+    "fields": {
+      "nombre": "ALMAGUER",
+      "codigo": "19022",
+      "departamento": 8
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 364,
+    "fields": {
+      "nombre": "ARGELIA",
+      "codigo": "19050",
+      "departamento": 8
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 365,
+    "fields": {
+      "nombre": "BALBOA",
+      "codigo": "19075",
+      "departamento": 8
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 366,
+    "fields": {
+      "nombre": "BOLÍVAR",
+      "codigo": "19100",
+      "departamento": 8
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 367,
+    "fields": {
+      "nombre": "BUENOS AIRES",
+      "codigo": "19110",
+      "departamento": 8
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 368,
+    "fields": {
+      "nombre": "CAJIBÍO",
+      "codigo": "19130",
+      "departamento": 8
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 369,
+    "fields": {
+      "nombre": "CALDONO",
+      "codigo": "19137",
+      "departamento": 8
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 370,
+    "fields": {
+      "nombre": "CALOTO",
+      "codigo": "19142",
+      "departamento": 8
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 371,
+    "fields": {
+      "nombre": "CORINTO",
+      "codigo": "19212",
+      "departamento": 8
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 372,
+    "fields": {
+      "nombre": "EL TAMBO",
+      "codigo": "19256",
+      "departamento": 8
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 373,
+    "fields": {
+      "nombre": "FLORENCIA",
+      "codigo": "19290",
+      "departamento": 8
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 374,
+    "fields": {
+      "nombre": "GUACHENÉ",
+      "codigo": "19300",
+      "departamento": 8
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 375,
+    "fields": {
+      "nombre": "GUAPI",
+      "codigo": "19318",
+      "departamento": 8
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 376,
+    "fields": {
+      "nombre": "INZÁ",
+      "codigo": "19355",
+      "departamento": 8
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 377,
+    "fields": {
+      "nombre": "JAMBALÓ",
+      "codigo": "19364",
+      "departamento": 8
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 378,
+    "fields": {
+      "nombre": "LA SIERRA",
+      "codigo": "19392",
+      "departamento": 8
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 379,
+    "fields": {
+      "nombre": "LA VEGA",
+      "codigo": "19397",
+      "departamento": 8
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 380,
+    "fields": {
+      "nombre": "LÓPEZ DE MICAY",
+      "codigo": "19418",
+      "departamento": 8
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 381,
+    "fields": {
+      "nombre": "MERCADERES",
+      "codigo": "19450",
+      "departamento": 8
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 382,
+    "fields": {
+      "nombre": "MIRANDA",
+      "codigo": "19455",
+      "departamento": 8
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 383,
+    "fields": {
+      "nombre": "MORALES",
+      "codigo": "19473",
+      "departamento": 8
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 384,
+    "fields": {
+      "nombre": "PADILLA",
+      "codigo": "19513",
+      "departamento": 8
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 385,
+    "fields": {
+      "nombre": "PÁEZ",
+      "codigo": "19517",
+      "departamento": 8
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 386,
+    "fields": {
+      "nombre": "PATÍA",
+      "codigo": "19532",
+      "departamento": 8
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 387,
+    "fields": {
+      "nombre": "PIAMONTE",
+      "codigo": "19533",
+      "departamento": 8
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 388,
+    "fields": {
+      "nombre": "PIENDAMÓ - TUNÍA",
+      "codigo": "19548",
+      "departamento": 8
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 389,
+    "fields": {
+      "nombre": "PUERTO TEJADA",
+      "codigo": "19573",
+      "departamento": 8
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 390,
+    "fields": {
+      "nombre": "PURACÉ",
+      "codigo": "19585",
+      "departamento": 8
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 391,
+    "fields": {
+      "nombre": "ROSAS",
+      "codigo": "19622",
+      "departamento": 8
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 392,
+    "fields": {
+      "nombre": "SAN SEBASTIÁN",
+      "codigo": "19693",
+      "departamento": 8
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 393,
+    "fields": {
+      "nombre": "SANTANDER DE QUILICHAO",
+      "codigo": "19698",
+      "departamento": 8
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 394,
+    "fields": {
+      "nombre": "SANTA ROSA",
+      "codigo": "19701",
+      "departamento": 8
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 395,
+    "fields": {
+      "nombre": "SILVIA",
+      "codigo": "19743",
+      "departamento": 8
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 396,
+    "fields": {
+      "nombre": "SOTARÁ - PAISPAMBA",
+      "codigo": "19760",
+      "departamento": 8
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 397,
+    "fields": {
+      "nombre": "SUÁREZ",
+      "codigo": "19780",
+      "departamento": 8
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 398,
+    "fields": {
+      "nombre": "SUCRE",
+      "codigo": "19785",
+      "departamento": 8
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 399,
+    "fields": {
+      "nombre": "TIMBÍO",
+      "codigo": "19807",
+      "departamento": 8
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 400,
+    "fields": {
+      "nombre": "TIMBIQUÍ",
+      "codigo": "19809",
+      "departamento": 8
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 401,
+    "fields": {
+      "nombre": "TORIBÍO",
+      "codigo": "19821",
+      "departamento": 8
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 402,
+    "fields": {
+      "nombre": "TOTORÓ",
+      "codigo": "19824",
+      "departamento": 8
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 403,
+    "fields": {
+      "nombre": "VILLA RICA",
+      "codigo": "19845",
+      "departamento": 8
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 404,
+    "fields": {
+      "nombre": "VALLEDUPAR",
+      "codigo": "20001",
+      "departamento": 9
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 405,
+    "fields": {
+      "nombre": "AGUACHICA",
+      "codigo": "20011",
+      "departamento": 9
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 406,
+    "fields": {
+      "nombre": "AGUSTÍN CODAZZI",
+      "codigo": "20013",
+      "departamento": 9
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 407,
+    "fields": {
+      "nombre": "ASTREA",
+      "codigo": "20032",
+      "departamento": 9
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 408,
+    "fields": {
+      "nombre": "BECERRIL",
+      "codigo": "20045",
+      "departamento": 9
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 409,
+    "fields": {
+      "nombre": "BOSCONIA",
+      "codigo": "20060",
+      "departamento": 9
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 410,
+    "fields": {
+      "nombre": "CHIMICHAGUA",
+      "codigo": "20175",
+      "departamento": 9
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 411,
+    "fields": {
+      "nombre": "CHIRIGUANÁ",
+      "codigo": "20178",
+      "departamento": 9
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 412,
+    "fields": {
+      "nombre": "CURUMANÍ",
+      "codigo": "20228",
+      "departamento": 9
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 413,
+    "fields": {
+      "nombre": "EL COPEY",
+      "codigo": "20238",
+      "departamento": 9
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 414,
+    "fields": {
+      "nombre": "EL PASO",
+      "codigo": "20250",
+      "departamento": 9
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 415,
+    "fields": {
+      "nombre": "GAMARRA",
+      "codigo": "20295",
+      "departamento": 9
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 416,
+    "fields": {
+      "nombre": "GONZÁLEZ",
+      "codigo": "20310",
+      "departamento": 9
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 417,
+    "fields": {
+      "nombre": "LA GLORIA",
+      "codigo": "20383",
+      "departamento": 9
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 418,
+    "fields": {
+      "nombre": "LA JAGUA DE IBIRICO",
+      "codigo": "20400",
+      "departamento": 9
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 419,
+    "fields": {
+      "nombre": "MANAURE BALCÓN DEL CESAR",
+      "codigo": "20443",
+      "departamento": 9
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 420,
+    "fields": {
+      "nombre": "PAILITAS",
+      "codigo": "20517",
+      "departamento": 9
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 421,
+    "fields": {
+      "nombre": "PELAYA",
+      "codigo": "20550",
+      "departamento": 9
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 422,
+    "fields": {
+      "nombre": "PUEBLO BELLO",
+      "codigo": "20570",
+      "departamento": 9
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 423,
+    "fields": {
+      "nombre": "RÍO DE ORO",
+      "codigo": "20614",
+      "departamento": 9
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 424,
+    "fields": {
+      "nombre": "LA PAZ",
+      "codigo": "20621",
+      "departamento": 9
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 425,
+    "fields": {
+      "nombre": "SAN ALBERTO",
+      "codigo": "20710",
+      "departamento": 9
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 426,
+    "fields": {
+      "nombre": "SAN DIEGO",
+      "codigo": "20750",
+      "departamento": 9
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 427,
+    "fields": {
+      "nombre": "SAN MARTÍN",
+      "codigo": "20770",
+      "departamento": 9
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 428,
+    "fields": {
+      "nombre": "TAMALAMEQUE",
+      "codigo": "20787",
+      "departamento": 9
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 429,
+    "fields": {
+      "nombre": "MONTERÍA",
+      "codigo": "23001",
+      "departamento": 10
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 430,
+    "fields": {
+      "nombre": "AYAPEL",
+      "codigo": "23068",
+      "departamento": 10
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 431,
+    "fields": {
+      "nombre": "BUENAVISTA",
+      "codigo": "23079",
+      "departamento": 10
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 432,
+    "fields": {
+      "nombre": "CANALETE",
+      "codigo": "23090",
+      "departamento": 10
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 433,
+    "fields": {
+      "nombre": "CERETÉ",
+      "codigo": "23162",
+      "departamento": 10
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 434,
+    "fields": {
+      "nombre": "CHIMÁ",
+      "codigo": "23168",
+      "departamento": 10
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 435,
+    "fields": {
+      "nombre": "CHINÚ",
+      "codigo": "23182",
+      "departamento": 10
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 436,
+    "fields": {
+      "nombre": "CIÉNAGA DE ORO",
+      "codigo": "23189",
+      "departamento": 10
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 437,
+    "fields": {
+      "nombre": "COTORRA",
+      "codigo": "23300",
+      "departamento": 10
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 438,
+    "fields": {
+      "nombre": "LA APARTADA",
+      "codigo": "23350",
+      "departamento": 10
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 439,
+    "fields": {
+      "nombre": "LORICA",
+      "codigo": "23417",
+      "departamento": 10
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 440,
+    "fields": {
+      "nombre": "LOS CÓRDOBAS",
+      "codigo": "23419",
+      "departamento": 10
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 441,
+    "fields": {
+      "nombre": "MOMIL",
+      "codigo": "23464",
+      "departamento": 10
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 442,
+    "fields": {
+      "nombre": "MONTELÍBANO",
+      "codigo": "23466",
+      "departamento": 10
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 443,
+    "fields": {
+      "nombre": "MOÑITOS",
+      "codigo": "23500",
+      "departamento": 10
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 444,
+    "fields": {
+      "nombre": "PLANETA RICA",
+      "codigo": "23555",
+      "departamento": 10
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 445,
+    "fields": {
+      "nombre": "PUEBLO NUEVO",
+      "codigo": "23570",
+      "departamento": 10
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 446,
+    "fields": {
+      "nombre": "PUERTO ESCONDIDO",
+      "codigo": "23574",
+      "departamento": 10
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 447,
+    "fields": {
+      "nombre": "PUERTO LIBERTADOR",
+      "codigo": "23580",
+      "departamento": 10
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 448,
+    "fields": {
+      "nombre": "PURÍSIMA DE LA CONCEPCIÓN",
+      "codigo": "23586",
+      "departamento": 10
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 449,
+    "fields": {
+      "nombre": "SAHAGÚN",
+      "codigo": "23660",
+      "departamento": 10
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 450,
+    "fields": {
+      "nombre": "SAN ANDRÉS DE SOTAVENTO",
+      "codigo": "23670",
+      "departamento": 10
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 451,
+    "fields": {
+      "nombre": "SAN ANTERO",
+      "codigo": "23672",
+      "departamento": 10
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 452,
+    "fields": {
+      "nombre": "SAN BERNARDO DEL VIENTO",
+      "codigo": "23675",
+      "departamento": 10
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 453,
+    "fields": {
+      "nombre": "SAN CARLOS",
+      "codigo": "23678",
+      "departamento": 10
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 454,
+    "fields": {
+      "nombre": "SAN JOSÉ DE URÉ",
+      "codigo": "23682",
+      "departamento": 10
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 455,
+    "fields": {
+      "nombre": "SAN PELAYO",
+      "codigo": "23686",
+      "departamento": 10
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 456,
+    "fields": {
+      "nombre": "TIERRALTA",
+      "codigo": "23807",
+      "departamento": 10
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 457,
+    "fields": {
+      "nombre": "TUCHÍN",
+      "codigo": "23815",
+      "departamento": 10
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 458,
+    "fields": {
+      "nombre": "VALENCIA",
+      "codigo": "23855",
+      "departamento": 10
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 459,
+    "fields": {
+      "nombre": "AGUA DE DIOS",
+      "codigo": "25001",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 460,
+    "fields": {
+      "nombre": "ALBÁN",
+      "codigo": "25019",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 461,
+    "fields": {
+      "nombre": "ANAPOIMA",
+      "codigo": "25035",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 462,
+    "fields": {
+      "nombre": "ANOLAIMA",
+      "codigo": "25040",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 463,
+    "fields": {
+      "nombre": "ARBELÁEZ",
+      "codigo": "25053",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 464,
+    "fields": {
+      "nombre": "BELTRÁN",
+      "codigo": "25086",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 465,
+    "fields": {
+      "nombre": "BITUIMA",
+      "codigo": "25095",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 466,
+    "fields": {
+      "nombre": "BOJACÁ",
+      "codigo": "25099",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 467,
+    "fields": {
+      "nombre": "CABRERA",
+      "codigo": "25120",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 468,
+    "fields": {
+      "nombre": "CACHIPAY",
+      "codigo": "25123",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 469,
+    "fields": {
+      "nombre": "CAJICÁ",
+      "codigo": "25126",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 470,
+    "fields": {
+      "nombre": "CAPARRAPÍ",
+      "codigo": "25148",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 471,
+    "fields": {
+      "nombre": "CÁQUEZA",
+      "codigo": "25151",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 472,
+    "fields": {
+      "nombre": "CARMEN DE CARUPA",
+      "codigo": "25154",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 473,
+    "fields": {
+      "nombre": "CHAGUANÍ",
+      "codigo": "25168",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 474,
+    "fields": {
+      "nombre": "CHÍA",
+      "codigo": "25175",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 475,
+    "fields": {
+      "nombre": "CHIPAQUE",
+      "codigo": "25178",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 476,
+    "fields": {
+      "nombre": "CHOACHÍ",
+      "codigo": "25181",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 477,
+    "fields": {
+      "nombre": "CHOCONTÁ",
+      "codigo": "25183",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 478,
+    "fields": {
+      "nombre": "COGUA",
+      "codigo": "25200",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 479,
+    "fields": {
+      "nombre": "COTA",
+      "codigo": "25214",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 480,
+    "fields": {
+      "nombre": "CUCUNUBÁ",
+      "codigo": "25224",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 481,
+    "fields": {
+      "nombre": "EL COLEGIO",
+      "codigo": "25245",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 482,
+    "fields": {
+      "nombre": "EL PEÑÓN",
+      "codigo": "25258",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 483,
+    "fields": {
+      "nombre": "EL ROSAL",
+      "codigo": "25260",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 484,
+    "fields": {
+      "nombre": "FACATATIVÁ",
+      "codigo": "25269",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 485,
+    "fields": {
+      "nombre": "FÓMEQUE",
+      "codigo": "25279",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 486,
+    "fields": {
+      "nombre": "FOSCA",
+      "codigo": "25281",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 487,
+    "fields": {
+      "nombre": "FUNZA",
+      "codigo": "25286",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 488,
+    "fields": {
+      "nombre": "FÚQUENE",
+      "codigo": "25288",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 489,
+    "fields": {
+      "nombre": "FUSAGASUGÁ",
+      "codigo": "25290",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 490,
+    "fields": {
+      "nombre": "GACHALÁ",
+      "codigo": "25293",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 491,
+    "fields": {
+      "nombre": "GACHANCIPÁ",
+      "codigo": "25295",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 492,
+    "fields": {
+      "nombre": "GACHETÁ",
+      "codigo": "25297",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 493,
+    "fields": {
+      "nombre": "GAMA",
+      "codigo": "25299",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 494,
+    "fields": {
+      "nombre": "GIRARDOT",
+      "codigo": "25307",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 495,
+    "fields": {
+      "nombre": "GRANADA",
+      "codigo": "25312",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 496,
+    "fields": {
+      "nombre": "GUACHETÁ",
+      "codigo": "25317",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 497,
+    "fields": {
+      "nombre": "GUADUAS",
+      "codigo": "25320",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 498,
+    "fields": {
+      "nombre": "GUASCA",
+      "codigo": "25322",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 499,
+    "fields": {
+      "nombre": "GUATAQUÍ",
+      "codigo": "25324",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 500,
+    "fields": {
+      "nombre": "GUATAVITA",
+      "codigo": "25326",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 501,
+    "fields": {
+      "nombre": "GUAYABAL DE SÍQUIMA",
+      "codigo": "25328",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 502,
+    "fields": {
+      "nombre": "GUAYABETAL",
+      "codigo": "25335",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 503,
+    "fields": {
+      "nombre": "GUTIÉRREZ",
+      "codigo": "25339",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 504,
+    "fields": {
+      "nombre": "JERUSALÉN",
+      "codigo": "25368",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 505,
+    "fields": {
+      "nombre": "JUNÍN",
+      "codigo": "25372",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 506,
+    "fields": {
+      "nombre": "LA CALERA",
+      "codigo": "25377",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 507,
+    "fields": {
+      "nombre": "LA MESA",
+      "codigo": "25386",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 508,
+    "fields": {
+      "nombre": "LA PALMA",
+      "codigo": "25394",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 509,
+    "fields": {
+      "nombre": "LA PEÑA",
+      "codigo": "25398",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 510,
+    "fields": {
+      "nombre": "LA VEGA",
+      "codigo": "25402",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 511,
+    "fields": {
+      "nombre": "LENGUAZAQUE",
+      "codigo": "25407",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 512,
+    "fields": {
+      "nombre": "MACHETÁ",
+      "codigo": "25426",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 513,
+    "fields": {
+      "nombre": "MADRID",
+      "codigo": "25430",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 514,
+    "fields": {
+      "nombre": "MANTA",
+      "codigo": "25436",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 515,
+    "fields": {
+      "nombre": "MEDINA",
+      "codigo": "25438",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 516,
+    "fields": {
+      "nombre": "MOSQUERA",
+      "codigo": "25473",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 517,
+    "fields": {
+      "nombre": "NARIÑO",
+      "codigo": "25483",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 518,
+    "fields": {
+      "nombre": "NEMOCÓN",
+      "codigo": "25486",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 519,
+    "fields": {
+      "nombre": "NILO",
+      "codigo": "25488",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 520,
+    "fields": {
+      "nombre": "NIMAIMA",
+      "codigo": "25489",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 521,
+    "fields": {
+      "nombre": "NOCAIMA",
+      "codigo": "25491",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 522,
+    "fields": {
+      "nombre": "VENECIA",
+      "codigo": "25506",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 523,
+    "fields": {
+      "nombre": "PACHO",
+      "codigo": "25513",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 524,
+    "fields": {
+      "nombre": "PAIME",
+      "codigo": "25518",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 525,
+    "fields": {
+      "nombre": "PANDI",
+      "codigo": "25524",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 526,
+    "fields": {
+      "nombre": "PARATEBUENO",
+      "codigo": "25530",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 527,
+    "fields": {
+      "nombre": "PASCA",
+      "codigo": "25535",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 528,
+    "fields": {
+      "nombre": "PUERTO SALGAR",
+      "codigo": "25572",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 529,
+    "fields": {
+      "nombre": "PULÍ",
+      "codigo": "25580",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 530,
+    "fields": {
+      "nombre": "QUEBRADANEGRA",
+      "codigo": "25592",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 531,
+    "fields": {
+      "nombre": "QUETAME",
+      "codigo": "25594",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 532,
+    "fields": {
+      "nombre": "QUIPILE",
+      "codigo": "25596",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 533,
+    "fields": {
+      "nombre": "APULO",
+      "codigo": "25599",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 534,
+    "fields": {
+      "nombre": "RICAURTE",
+      "codigo": "25612",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 535,
+    "fields": {
+      "nombre": "SAN ANTONIO DEL TEQUENDAMA",
+      "codigo": "25645",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 536,
+    "fields": {
+      "nombre": "SAN BERNARDO",
+      "codigo": "25649",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 537,
+    "fields": {
+      "nombre": "SAN CAYETANO",
+      "codigo": "25653",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 538,
+    "fields": {
+      "nombre": "SAN FRANCISCO",
+      "codigo": "25658",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 539,
+    "fields": {
+      "nombre": "SAN JUAN DE RIOSECO",
+      "codigo": "25662",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 540,
+    "fields": {
+      "nombre": "SASAIMA",
+      "codigo": "25718",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 541,
+    "fields": {
+      "nombre": "SESQUILÉ",
+      "codigo": "25736",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 542,
+    "fields": {
+      "nombre": "SIBATÉ",
+      "codigo": "25740",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 543,
+    "fields": {
+      "nombre": "SILVANIA",
+      "codigo": "25743",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 544,
+    "fields": {
+      "nombre": "SIMIJACA",
+      "codigo": "25745",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 545,
+    "fields": {
+      "nombre": "SOACHA",
+      "codigo": "25754",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 546,
+    "fields": {
+      "nombre": "SOPÓ",
+      "codigo": "25758",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 547,
+    "fields": {
+      "nombre": "SUBACHOQUE",
+      "codigo": "25769",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 548,
+    "fields": {
+      "nombre": "SUESCA",
+      "codigo": "25772",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 549,
+    "fields": {
+      "nombre": "SUPATÁ",
+      "codigo": "25777",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 550,
+    "fields": {
+      "nombre": "SUSA",
+      "codigo": "25779",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 551,
+    "fields": {
+      "nombre": "SUTATAUSA",
+      "codigo": "25781",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 552,
+    "fields": {
+      "nombre": "TABIO",
+      "codigo": "25785",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 553,
+    "fields": {
+      "nombre": "TAUSA",
+      "codigo": "25793",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 554,
+    "fields": {
+      "nombre": "TENA",
+      "codigo": "25797",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 555,
+    "fields": {
+      "nombre": "TENJO",
+      "codigo": "25799",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 556,
+    "fields": {
+      "nombre": "TIBACUY",
+      "codigo": "25805",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 557,
+    "fields": {
+      "nombre": "TIBIRITA",
+      "codigo": "25807",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 558,
+    "fields": {
+      "nombre": "TOCAIMA",
+      "codigo": "25815",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 559,
+    "fields": {
+      "nombre": "TOCANCIPÁ",
+      "codigo": "25817",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 560,
+    "fields": {
+      "nombre": "TOPAIPÍ",
+      "codigo": "25823",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 561,
+    "fields": {
+      "nombre": "UBALÁ",
+      "codigo": "25839",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 562,
+    "fields": {
+      "nombre": "UBAQUE",
+      "codigo": "25841",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 563,
+    "fields": {
+      "nombre": "VILLA DE SAN DIEGO DE UBATÉ",
+      "codigo": "25843",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 564,
+    "fields": {
+      "nombre": "UNE",
+      "codigo": "25845",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 565,
+    "fields": {
+      "nombre": "ÚTICA",
+      "codigo": "25851",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 566,
+    "fields": {
+      "nombre": "VERGARA",
+      "codigo": "25862",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 567,
+    "fields": {
+      "nombre": "VIANÍ",
+      "codigo": "25867",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 568,
+    "fields": {
+      "nombre": "VILLAGÓMEZ",
+      "codigo": "25871",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 569,
+    "fields": {
+      "nombre": "VILLAPINZÓN",
+      "codigo": "25873",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 570,
+    "fields": {
+      "nombre": "VILLETA",
+      "codigo": "25875",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 571,
+    "fields": {
+      "nombre": "VIOTÁ",
+      "codigo": "25878",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 572,
+    "fields": {
+      "nombre": "YACOPÍ",
+      "codigo": "25885",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 573,
+    "fields": {
+      "nombre": "ZIPACÓN",
+      "codigo": "25898",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 574,
+    "fields": {
+      "nombre": "ZIPAQUIRÁ",
+      "codigo": "25899",
+      "departamento": 11
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 575,
+    "fields": {
+      "nombre": "QUIBDÓ",
+      "codigo": "27001",
+      "departamento": 12
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 576,
+    "fields": {
+      "nombre": "ACANDÍ",
+      "codigo": "27006",
+      "departamento": 12
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 577,
+    "fields": {
+      "nombre": "ALTO BAUDÓ",
+      "codigo": "27025",
+      "departamento": 12
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 578,
+    "fields": {
+      "nombre": "ATRATO",
+      "codigo": "27050",
+      "departamento": 12
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 579,
+    "fields": {
+      "nombre": "BAGADÓ",
+      "codigo": "27073",
+      "departamento": 12
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 580,
+    "fields": {
+      "nombre": "BAHÍA SOLANO",
+      "codigo": "27075",
+      "departamento": 12
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 581,
+    "fields": {
+      "nombre": "BAJO BAUDÓ",
+      "codigo": "27077",
+      "departamento": 12
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 582,
+    "fields": {
+      "nombre": "BOJAYÁ",
+      "codigo": "27099",
+      "departamento": 12
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 583,
+    "fields": {
+      "nombre": "EL CANTÓN DEL SAN PABLO",
+      "codigo": "27135",
+      "departamento": 12
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 584,
+    "fields": {
+      "nombre": "CARMEN DEL DARIÉN",
+      "codigo": "27150",
+      "departamento": 12
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 585,
+    "fields": {
+      "nombre": "CÉRTEGUI",
+      "codigo": "27160",
+      "departamento": 12
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 586,
+    "fields": {
+      "nombre": "CONDOTO",
+      "codigo": "27205",
+      "departamento": 12
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 587,
+    "fields": {
+      "nombre": "EL CARMEN DE ATRATO",
+      "codigo": "27245",
+      "departamento": 12
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 588,
+    "fields": {
+      "nombre": "EL LITORAL DEL SAN JUAN",
+      "codigo": "27250",
+      "departamento": 12
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 589,
+    "fields": {
+      "nombre": "ISTMINA",
+      "codigo": "27361",
+      "departamento": 12
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 590,
+    "fields": {
+      "nombre": "JURADÓ",
+      "codigo": "27372",
+      "departamento": 12
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 591,
+    "fields": {
+      "nombre": "LLORÓ",
+      "codigo": "27413",
+      "departamento": 12
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 592,
+    "fields": {
+      "nombre": "MEDIO ATRATO",
+      "codigo": "27425",
+      "departamento": 12
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 593,
+    "fields": {
+      "nombre": "MEDIO BAUDÓ",
+      "codigo": "27430",
+      "departamento": 12
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 594,
+    "fields": {
+      "nombre": "MEDIO SAN JUAN",
+      "codigo": "27450",
+      "departamento": 12
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 595,
+    "fields": {
+      "nombre": "NÓVITA",
+      "codigo": "27491",
+      "departamento": 12
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 596,
+    "fields": {
+      "nombre": "NUEVO BELÉN DE BAJIRÁ",
+      "codigo": "27493",
+      "departamento": 12
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 597,
+    "fields": {
+      "nombre": "NUQUÍ",
+      "codigo": "27495",
+      "departamento": 12
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 598,
+    "fields": {
+      "nombre": "RÍO IRÓ",
+      "codigo": "27580",
+      "departamento": 12
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 599,
+    "fields": {
+      "nombre": "RÍO QUITO",
+      "codigo": "27600",
+      "departamento": 12
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 600,
+    "fields": {
+      "nombre": "RIOSUCIO",
+      "codigo": "27615",
+      "departamento": 12
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 601,
+    "fields": {
+      "nombre": "SAN JOSÉ DEL PALMAR",
+      "codigo": "27660",
+      "departamento": 12
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 602,
+    "fields": {
+      "nombre": "SIPÍ",
+      "codigo": "27745",
+      "departamento": 12
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 603,
+    "fields": {
+      "nombre": "TADÓ",
+      "codigo": "27787",
+      "departamento": 12
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 604,
+    "fields": {
+      "nombre": "UNGUÍA",
+      "codigo": "27800",
+      "departamento": 12
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 605,
+    "fields": {
+      "nombre": "UNIÓN PANAMERICANA",
+      "codigo": "27810",
+      "departamento": 12
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 606,
+    "fields": {
+      "nombre": "NEIVA",
+      "codigo": "41001",
+      "departamento": 13
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 607,
+    "fields": {
+      "nombre": "ACEVEDO",
+      "codigo": "41006",
+      "departamento": 13
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 608,
+    "fields": {
+      "nombre": "AGRADO",
+      "codigo": "41013",
+      "departamento": 13
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 609,
+    "fields": {
+      "nombre": "AIPE",
+      "codigo": "41016",
+      "departamento": 13
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 610,
+    "fields": {
+      "nombre": "ALGECIRAS",
+      "codigo": "41020",
+      "departamento": 13
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 611,
+    "fields": {
+      "nombre": "ALTAMIRA",
+      "codigo": "41026",
+      "departamento": 13
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 612,
+    "fields": {
+      "nombre": "BARAYA",
+      "codigo": "41078",
+      "departamento": 13
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 613,
+    "fields": {
+      "nombre": "CAMPOALEGRE",
+      "codigo": "41132",
+      "departamento": 13
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 614,
+    "fields": {
+      "nombre": "COLOMBIA",
+      "codigo": "41206",
+      "departamento": 13
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 615,
+    "fields": {
+      "nombre": "ELÍAS",
+      "codigo": "41244",
+      "departamento": 13
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 616,
+    "fields": {
+      "nombre": "GARZÓN",
+      "codigo": "41298",
+      "departamento": 13
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 617,
+    "fields": {
+      "nombre": "GIGANTE",
+      "codigo": "41306",
+      "departamento": 13
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 618,
+    "fields": {
+      "nombre": "GUADALUPE",
+      "codigo": "41319",
+      "departamento": 13
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 619,
+    "fields": {
+      "nombre": "HOBO",
+      "codigo": "41349",
+      "departamento": 13
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 620,
+    "fields": {
+      "nombre": "ÍQUIRA",
+      "codigo": "41357",
+      "departamento": 13
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 621,
+    "fields": {
+      "nombre": "ISNOS",
+      "codigo": "41359",
+      "departamento": 13
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 622,
+    "fields": {
+      "nombre": "LA ARGENTINA",
+      "codigo": "41378",
+      "departamento": 13
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 623,
+    "fields": {
+      "nombre": "LA PLATA",
+      "codigo": "41396",
+      "departamento": 13
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 624,
+    "fields": {
+      "nombre": "NÁTAGA",
+      "codigo": "41483",
+      "departamento": 13
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 625,
+    "fields": {
+      "nombre": "OPORAPA",
+      "codigo": "41503",
+      "departamento": 13
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 626,
+    "fields": {
+      "nombre": "PAICOL",
+      "codigo": "41518",
+      "departamento": 13
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 627,
+    "fields": {
+      "nombre": "PALERMO",
+      "codigo": "41524",
+      "departamento": 13
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 628,
+    "fields": {
+      "nombre": "PALESTINA",
+      "codigo": "41530",
+      "departamento": 13
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 629,
+    "fields": {
+      "nombre": "PITAL",
+      "codigo": "41548",
+      "departamento": 13
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 630,
+    "fields": {
+      "nombre": "PITALITO",
+      "codigo": "41551",
+      "departamento": 13
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 631,
+    "fields": {
+      "nombre": "RIVERA",
+      "codigo": "41615",
+      "departamento": 13
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 632,
+    "fields": {
+      "nombre": "SALADOBLANCO",
+      "codigo": "41660",
+      "departamento": 13
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 633,
+    "fields": {
+      "nombre": "SAN AGUSTÍN",
+      "codigo": "41668",
+      "departamento": 13
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 634,
+    "fields": {
+      "nombre": "SANTA MARÍA",
+      "codigo": "41676",
+      "departamento": 13
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 635,
+    "fields": {
+      "nombre": "SUAZA",
+      "codigo": "41770",
+      "departamento": 13
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 636,
+    "fields": {
+      "nombre": "TARQUI",
+      "codigo": "41791",
+      "departamento": 13
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 637,
+    "fields": {
+      "nombre": "TESALIA",
+      "codigo": "41797",
+      "departamento": 13
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 638,
+    "fields": {
+      "nombre": "TELLO",
+      "codigo": "41799",
+      "departamento": 13
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 639,
+    "fields": {
+      "nombre": "TERUEL",
+      "codigo": "41801",
+      "departamento": 13
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 640,
+    "fields": {
+      "nombre": "TIMANÁ",
+      "codigo": "41807",
+      "departamento": 13
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 641,
+    "fields": {
+      "nombre": "VILLAVIEJA",
+      "codigo": "41872",
+      "departamento": 13
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 642,
+    "fields": {
+      "nombre": "YAGUARÁ",
+      "codigo": "41885",
+      "departamento": 13
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 643,
+    "fields": {
+      "nombre": "RIOHACHA",
+      "codigo": "44001",
+      "departamento": 14
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 644,
+    "fields": {
+      "nombre": "ALBANIA",
+      "codigo": "44035",
+      "departamento": 14
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 645,
+    "fields": {
+      "nombre": "BARRANCAS",
+      "codigo": "44078",
+      "departamento": 14
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 646,
+    "fields": {
+      "nombre": "DIBULLA",
+      "codigo": "44090",
+      "departamento": 14
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 647,
+    "fields": {
+      "nombre": "DISTRACCIÓN",
+      "codigo": "44098",
+      "departamento": 14
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 648,
+    "fields": {
+      "nombre": "EL MOLINO",
+      "codigo": "44110",
+      "departamento": 14
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 649,
+    "fields": {
+      "nombre": "FONSECA",
+      "codigo": "44279",
+      "departamento": 14
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 650,
+    "fields": {
+      "nombre": "HATONUEVO",
+      "codigo": "44378",
+      "departamento": 14
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 651,
+    "fields": {
+      "nombre": "LA JAGUA DEL PILAR",
+      "codigo": "44420",
+      "departamento": 14
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 652,
+    "fields": {
+      "nombre": "MAICAO",
+      "codigo": "44430",
+      "departamento": 14
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 653,
+    "fields": {
+      "nombre": "MANAURE",
+      "codigo": "44560",
+      "departamento": 14
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 654,
+    "fields": {
+      "nombre": "SAN JUAN DEL CESAR",
+      "codigo": "44650",
+      "departamento": 14
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 655,
+    "fields": {
+      "nombre": "URIBIA",
+      "codigo": "44847",
+      "departamento": 14
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 656,
+    "fields": {
+      "nombre": "URUMITA",
+      "codigo": "44855",
+      "departamento": 14
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 657,
+    "fields": {
+      "nombre": "VILLANUEVA",
+      "codigo": "44874",
+      "departamento": 14
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 658,
+    "fields": {
+      "nombre": "SANTA MARTA",
+      "codigo": "47001",
+      "departamento": 15
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 659,
+    "fields": {
+      "nombre": "ALGARROBO",
+      "codigo": "47030",
+      "departamento": 15
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 660,
+    "fields": {
+      "nombre": "ARACATACA",
+      "codigo": "47053",
+      "departamento": 15
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 661,
+    "fields": {
+      "nombre": "ARIGUANÍ",
+      "codigo": "47058",
+      "departamento": 15
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 662,
+    "fields": {
+      "nombre": "CERRO DE SAN ANTONIO",
+      "codigo": "47161",
+      "departamento": 15
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 663,
+    "fields": {
+      "nombre": "CHIVOLO",
+      "codigo": "47170",
+      "departamento": 15
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 664,
+    "fields": {
+      "nombre": "CIÉNAGA",
+      "codigo": "47189",
+      "departamento": 15
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 665,
+    "fields": {
+      "nombre": "CONCORDIA",
+      "codigo": "47205",
+      "departamento": 15
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 666,
+    "fields": {
+      "nombre": "EL BANCO",
+      "codigo": "47245",
+      "departamento": 15
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 667,
+    "fields": {
+      "nombre": "EL PIÑÓN",
+      "codigo": "47258",
+      "departamento": 15
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 668,
+    "fields": {
+      "nombre": "EL RETÉN",
+      "codigo": "47268",
+      "departamento": 15
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 669,
+    "fields": {
+      "nombre": "FUNDACIÓN",
+      "codigo": "47288",
+      "departamento": 15
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 670,
+    "fields": {
+      "nombre": "GUAMAL",
+      "codigo": "47318",
+      "departamento": 15
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 671,
+    "fields": {
+      "nombre": "NUEVA GRANADA",
+      "codigo": "47460",
+      "departamento": 15
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 672,
+    "fields": {
+      "nombre": "PEDRAZA",
+      "codigo": "47541",
+      "departamento": 15
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 673,
+    "fields": {
+      "nombre": "PIJIÑO DEL CARMEN",
+      "codigo": "47545",
+      "departamento": 15
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 674,
+    "fields": {
+      "nombre": "PIVIJAY",
+      "codigo": "47551",
+      "departamento": 15
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 675,
+    "fields": {
+      "nombre": "PLATO",
+      "codigo": "47555",
+      "departamento": 15
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 676,
+    "fields": {
+      "nombre": "PUEBLOVIEJO",
+      "codigo": "47570",
+      "departamento": 15
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 677,
+    "fields": {
+      "nombre": "REMOLINO",
+      "codigo": "47605",
+      "departamento": 15
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 678,
+    "fields": {
+      "nombre": "SABANAS DE SAN ÁNGEL",
+      "codigo": "47660",
+      "departamento": 15
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 679,
+    "fields": {
+      "nombre": "SALAMINA",
+      "codigo": "47675",
+      "departamento": 15
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 680,
+    "fields": {
+      "nombre": "SAN SEBASTIÁN DE BUENAVISTA",
+      "codigo": "47692",
+      "departamento": 15
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 681,
+    "fields": {
+      "nombre": "SAN ZENÓN",
+      "codigo": "47703",
+      "departamento": 15
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 682,
+    "fields": {
+      "nombre": "SANTA ANA",
+      "codigo": "47707",
+      "departamento": 15
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 683,
+    "fields": {
+      "nombre": "SANTA BÁRBARA DE PINTO",
+      "codigo": "47720",
+      "departamento": 15
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 684,
+    "fields": {
+      "nombre": "SITIONUEVO",
+      "codigo": "47745",
+      "departamento": 15
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 685,
+    "fields": {
+      "nombre": "TENERIFE",
+      "codigo": "47798",
+      "departamento": 15
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 686,
+    "fields": {
+      "nombre": "ZAPAYÁN",
+      "codigo": "47960",
+      "departamento": 15
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 687,
+    "fields": {
+      "nombre": "ZONA BANANERA",
+      "codigo": "47980",
+      "departamento": 15
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 688,
+    "fields": {
+      "nombre": "VILLAVICENCIO",
+      "codigo": "50001",
+      "departamento": 16
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 689,
+    "fields": {
+      "nombre": "ACACÍAS",
+      "codigo": "50006",
+      "departamento": 16
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 690,
+    "fields": {
+      "nombre": "BARRANCA DE UPÍA",
+      "codigo": "50110",
+      "departamento": 16
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 691,
+    "fields": {
+      "nombre": "CABUYARO",
+      "codigo": "50124",
+      "departamento": 16
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 692,
+    "fields": {
+      "nombre": "CASTILLA LA NUEVA",
+      "codigo": "50150",
+      "departamento": 16
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 693,
+    "fields": {
+      "nombre": "CUBARRAL",
+      "codigo": "50223",
+      "departamento": 16
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 694,
+    "fields": {
+      "nombre": "CUMARAL",
+      "codigo": "50226",
+      "departamento": 16
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 695,
+    "fields": {
+      "nombre": "EL CALVARIO",
+      "codigo": "50245",
+      "departamento": 16
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 696,
+    "fields": {
+      "nombre": "EL CASTILLO",
+      "codigo": "50251",
+      "departamento": 16
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 697,
+    "fields": {
+      "nombre": "EL DORADO",
+      "codigo": "50270",
+      "departamento": 16
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 698,
+    "fields": {
+      "nombre": "FUENTE DE ORO",
+      "codigo": "50287",
+      "departamento": 16
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 699,
+    "fields": {
+      "nombre": "GRANADA",
+      "codigo": "50313",
+      "departamento": 16
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 700,
+    "fields": {
+      "nombre": "GUAMAL",
+      "codigo": "50318",
+      "departamento": 16
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 701,
+    "fields": {
+      "nombre": "MAPIRIPÁN",
+      "codigo": "50325",
+      "departamento": 16
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 702,
+    "fields": {
+      "nombre": "MESETAS",
+      "codigo": "50330",
+      "departamento": 16
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 703,
+    "fields": {
+      "nombre": "LA MACARENA",
+      "codigo": "50350",
+      "departamento": 16
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 704,
+    "fields": {
+      "nombre": "URIBE",
+      "codigo": "50370",
+      "departamento": 16
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 705,
+    "fields": {
+      "nombre": "LEJANÍAS",
+      "codigo": "50400",
+      "departamento": 16
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 706,
+    "fields": {
+      "nombre": "PUERTO CONCORDIA",
+      "codigo": "50450",
+      "departamento": 16
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 707,
+    "fields": {
+      "nombre": "PUERTO GAITÁN",
+      "codigo": "50568",
+      "departamento": 16
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 708,
+    "fields": {
+      "nombre": "PUERTO LÓPEZ",
+      "codigo": "50573",
+      "departamento": 16
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 709,
+    "fields": {
+      "nombre": "PUERTO LLERAS",
+      "codigo": "50577",
+      "departamento": 16
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 710,
+    "fields": {
+      "nombre": "PUERTO RICO",
+      "codigo": "50590",
+      "departamento": 16
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 711,
+    "fields": {
+      "nombre": "RESTREPO",
+      "codigo": "50606",
+      "departamento": 16
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 712,
+    "fields": {
+      "nombre": "SAN CARLOS DE GUAROA",
+      "codigo": "50680",
+      "departamento": 16
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 713,
+    "fields": {
+      "nombre": "SAN JUAN DE ARAMA",
+      "codigo": "50683",
+      "departamento": 16
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 714,
+    "fields": {
+      "nombre": "SAN JUANITO",
+      "codigo": "50686",
+      "departamento": 16
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 715,
+    "fields": {
+      "nombre": "SAN MARTÍN",
+      "codigo": "50689",
+      "departamento": 16
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 716,
+    "fields": {
+      "nombre": "VISTAHERMOSA",
+      "codigo": "50711",
+      "departamento": 16
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 717,
+    "fields": {
+      "nombre": "PASTO",
+      "codigo": "52001",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 718,
+    "fields": {
+      "nombre": "ALBÁN",
+      "codigo": "52019",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 719,
+    "fields": {
+      "nombre": "ALDANA",
+      "codigo": "52022",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 720,
+    "fields": {
+      "nombre": "ANCUYA",
+      "codigo": "52036",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 721,
+    "fields": {
+      "nombre": "ARBOLEDA",
+      "codigo": "52051",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 722,
+    "fields": {
+      "nombre": "BARBACOAS",
+      "codigo": "52079",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 723,
+    "fields": {
+      "nombre": "BELÉN",
+      "codigo": "52083",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 724,
+    "fields": {
+      "nombre": "BUESACO",
+      "codigo": "52110",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 725,
+    "fields": {
+      "nombre": "COLÓN",
+      "codigo": "52203",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 726,
+    "fields": {
+      "nombre": "CONSACÁ",
+      "codigo": "52207",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 727,
+    "fields": {
+      "nombre": "CONTADERO",
+      "codigo": "52210",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 728,
+    "fields": {
+      "nombre": "CÓRDOBA",
+      "codigo": "52215",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 729,
+    "fields": {
+      "nombre": "CUASPUD CARLOSAMA",
+      "codigo": "52224",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 730,
+    "fields": {
+      "nombre": "CUMBAL",
+      "codigo": "52227",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 731,
+    "fields": {
+      "nombre": "CUMBITARA",
+      "codigo": "52233",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 732,
+    "fields": {
+      "nombre": "CHACHAGÜÍ",
+      "codigo": "52240",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 733,
+    "fields": {
+      "nombre": "EL CHARCO",
+      "codigo": "52250",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 734,
+    "fields": {
+      "nombre": "EL PEÑOL",
+      "codigo": "52254",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 735,
+    "fields": {
+      "nombre": "EL ROSARIO",
+      "codigo": "52256",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 736,
+    "fields": {
+      "nombre": "EL TABLÓN DE GÓMEZ",
+      "codigo": "52258",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 737,
+    "fields": {
+      "nombre": "EL TAMBO",
+      "codigo": "52260",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 738,
+    "fields": {
+      "nombre": "FUNES",
+      "codigo": "52287",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 739,
+    "fields": {
+      "nombre": "GUACHUCAL",
+      "codigo": "52317",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 740,
+    "fields": {
+      "nombre": "GUAITARILLA",
+      "codigo": "52320",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 741,
+    "fields": {
+      "nombre": "GUALMATÁN",
+      "codigo": "52323",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 742,
+    "fields": {
+      "nombre": "ILES",
+      "codigo": "52352",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 743,
+    "fields": {
+      "nombre": "IMUÉS",
+      "codigo": "52354",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 744,
+    "fields": {
+      "nombre": "IPIALES",
+      "codigo": "52356",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 745,
+    "fields": {
+      "nombre": "LA CRUZ",
+      "codigo": "52378",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 746,
+    "fields": {
+      "nombre": "LA FLORIDA",
+      "codigo": "52381",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 747,
+    "fields": {
+      "nombre": "LA LLANADA",
+      "codigo": "52385",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 748,
+    "fields": {
+      "nombre": "LA TOLA",
+      "codigo": "52390",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 749,
+    "fields": {
+      "nombre": "LA UNIÓN",
+      "codigo": "52399",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 750,
+    "fields": {
+      "nombre": "LEIVA",
+      "codigo": "52405",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 751,
+    "fields": {
+      "nombre": "LINARES",
+      "codigo": "52411",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 752,
+    "fields": {
+      "nombre": "LOS ANDES",
+      "codigo": "52418",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 753,
+    "fields": {
+      "nombre": "MAGÜÍ",
+      "codigo": "52427",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 754,
+    "fields": {
+      "nombre": "MALLAMA",
+      "codigo": "52435",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 755,
+    "fields": {
+      "nombre": "MOSQUERA",
+      "codigo": "52473",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 756,
+    "fields": {
+      "nombre": "NARIÑO",
+      "codigo": "52480",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 757,
+    "fields": {
+      "nombre": "OLAYA HERRERA",
+      "codigo": "52490",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 758,
+    "fields": {
+      "nombre": "OSPINA",
+      "codigo": "52506",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 759,
+    "fields": {
+      "nombre": "FRANCISCO PIZARRO",
+      "codigo": "52520",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 760,
+    "fields": {
+      "nombre": "POLICARPA",
+      "codigo": "52540",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 761,
+    "fields": {
+      "nombre": "POTOSÍ",
+      "codigo": "52560",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 762,
+    "fields": {
+      "nombre": "PROVIDENCIA",
+      "codigo": "52565",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 763,
+    "fields": {
+      "nombre": "PUERRES",
+      "codigo": "52573",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 764,
+    "fields": {
+      "nombre": "PUPIALES",
+      "codigo": "52585",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 765,
+    "fields": {
+      "nombre": "RICAURTE",
+      "codigo": "52612",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 766,
+    "fields": {
+      "nombre": "ROBERTO PAYÁN",
+      "codigo": "52621",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 767,
+    "fields": {
+      "nombre": "SAMANIEGO",
+      "codigo": "52678",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 768,
+    "fields": {
+      "nombre": "SANDONÁ",
+      "codigo": "52683",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 769,
+    "fields": {
+      "nombre": "SAN BERNARDO",
+      "codigo": "52685",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 770,
+    "fields": {
+      "nombre": "SAN LORENZO",
+      "codigo": "52687",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 771,
+    "fields": {
+      "nombre": "SAN PABLO",
+      "codigo": "52693",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 772,
+    "fields": {
+      "nombre": "SAN PEDRO DE CARTAGO",
+      "codigo": "52694",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 773,
+    "fields": {
+      "nombre": "SANTA BÁRBARA",
+      "codigo": "52696",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 774,
+    "fields": {
+      "nombre": "SANTACRUZ",
+      "codigo": "52699",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 775,
+    "fields": {
+      "nombre": "SAPUYES",
+      "codigo": "52720",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 776,
+    "fields": {
+      "nombre": "TAMINANGO",
+      "codigo": "52786",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 777,
+    "fields": {
+      "nombre": "TANGUA",
+      "codigo": "52788",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 778,
+    "fields": {
+      "nombre": "SAN ANDRÉS DE TUMACO",
+      "codigo": "52835",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 779,
+    "fields": {
+      "nombre": "TÚQUERRES",
+      "codigo": "52838",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 780,
+    "fields": {
+      "nombre": "YACUANQUER",
+      "codigo": "52885",
+      "departamento": 17
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 781,
+    "fields": {
+      "nombre": "SAN JOSÉ DE CÚCUTA",
+      "codigo": "54001",
+      "departamento": 18
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 782,
+    "fields": {
+      "nombre": "ÁBREGO",
+      "codigo": "54003",
+      "departamento": 18
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 783,
+    "fields": {
+      "nombre": "ARBOLEDAS",
+      "codigo": "54051",
+      "departamento": 18
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 784,
+    "fields": {
+      "nombre": "BOCHALEMA",
+      "codigo": "54099",
+      "departamento": 18
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 785,
+    "fields": {
+      "nombre": "BUCARASICA",
+      "codigo": "54109",
+      "departamento": 18
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 786,
+    "fields": {
+      "nombre": "CÁCOTA",
+      "codigo": "54125",
+      "departamento": 18
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 787,
+    "fields": {
+      "nombre": "CÁCHIRA",
+      "codigo": "54128",
+      "departamento": 18
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 788,
+    "fields": {
+      "nombre": "CHINÁCOTA",
+      "codigo": "54172",
+      "departamento": 18
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 789,
+    "fields": {
+      "nombre": "CHITAGÁ",
+      "codigo": "54174",
+      "departamento": 18
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 790,
+    "fields": {
+      "nombre": "CONVENCIÓN",
+      "codigo": "54206",
+      "departamento": 18
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 791,
+    "fields": {
+      "nombre": "CUCUTILLA",
+      "codigo": "54223",
+      "departamento": 18
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 792,
+    "fields": {
+      "nombre": "DURANIA",
+      "codigo": "54239",
+      "departamento": 18
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 793,
+    "fields": {
+      "nombre": "EL CARMEN",
+      "codigo": "54245",
+      "departamento": 18
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 794,
+    "fields": {
+      "nombre": "EL TARRA",
+      "codigo": "54250",
+      "departamento": 18
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 795,
+    "fields": {
+      "nombre": "EL ZULIA",
+      "codigo": "54261",
+      "departamento": 18
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 796,
+    "fields": {
+      "nombre": "GRAMALOTE",
+      "codigo": "54313",
+      "departamento": 18
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 797,
+    "fields": {
+      "nombre": "HACARÍ",
+      "codigo": "54344",
+      "departamento": 18
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 798,
+    "fields": {
+      "nombre": "HERRÁN",
+      "codigo": "54347",
+      "departamento": 18
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 799,
+    "fields": {
+      "nombre": "LABATECA",
+      "codigo": "54377",
+      "departamento": 18
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 800,
+    "fields": {
+      "nombre": "LA ESPERANZA",
+      "codigo": "54385",
+      "departamento": 18
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 801,
+    "fields": {
+      "nombre": "LA PLAYA",
+      "codigo": "54398",
+      "departamento": 18
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 802,
+    "fields": {
+      "nombre": "LOS PATIOS",
+      "codigo": "54405",
+      "departamento": 18
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 803,
+    "fields": {
+      "nombre": "LOURDES",
+      "codigo": "54418",
+      "departamento": 18
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 804,
+    "fields": {
+      "nombre": "MUTISCUA",
+      "codigo": "54480",
+      "departamento": 18
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 805,
+    "fields": {
+      "nombre": "OCAÑA",
+      "codigo": "54498",
+      "departamento": 18
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 806,
+    "fields": {
+      "nombre": "PAMPLONA",
+      "codigo": "54518",
+      "departamento": 18
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 807,
+    "fields": {
+      "nombre": "PAMPLONITA",
+      "codigo": "54520",
+      "departamento": 18
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 808,
+    "fields": {
+      "nombre": "PUERTO SANTANDER",
+      "codigo": "54553",
+      "departamento": 18
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 809,
+    "fields": {
+      "nombre": "RAGONVALIA",
+      "codigo": "54599",
+      "departamento": 18
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 810,
+    "fields": {
+      "nombre": "SALAZAR",
+      "codigo": "54660",
+      "departamento": 18
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 811,
+    "fields": {
+      "nombre": "SAN CALIXTO",
+      "codigo": "54670",
+      "departamento": 18
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 812,
+    "fields": {
+      "nombre": "SAN CAYETANO",
+      "codigo": "54673",
+      "departamento": 18
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 813,
+    "fields": {
+      "nombre": "SANTIAGO",
+      "codigo": "54680",
+      "departamento": 18
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 814,
+    "fields": {
+      "nombre": "SARDINATA",
+      "codigo": "54720",
+      "departamento": 18
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 815,
+    "fields": {
+      "nombre": "SILOS",
+      "codigo": "54743",
+      "departamento": 18
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 816,
+    "fields": {
+      "nombre": "TEORAMA",
+      "codigo": "54800",
+      "departamento": 18
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 817,
+    "fields": {
+      "nombre": "TIBÚ",
+      "codigo": "54810",
+      "departamento": 18
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 818,
+    "fields": {
+      "nombre": "TOLEDO",
+      "codigo": "54820",
+      "departamento": 18
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 819,
+    "fields": {
+      "nombre": "VILLA CARO",
+      "codigo": "54871",
+      "departamento": 18
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 820,
+    "fields": {
+      "nombre": "VILLA DEL ROSARIO",
+      "codigo": "54874",
+      "departamento": 18
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 821,
+    "fields": {
+      "nombre": "ARMENIA",
+      "codigo": "63001",
+      "departamento": 19
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 822,
+    "fields": {
+      "nombre": "BUENAVISTA",
+      "codigo": "63111",
+      "departamento": 19
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 823,
+    "fields": {
+      "nombre": "CALARCÁ",
+      "codigo": "63130",
+      "departamento": 19
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 824,
+    "fields": {
+      "nombre": "CIRCASIA",
+      "codigo": "63190",
+      "departamento": 19
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 825,
+    "fields": {
+      "nombre": "CÓRDOBA",
+      "codigo": "63212",
+      "departamento": 19
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 826,
+    "fields": {
+      "nombre": "FILANDIA",
+      "codigo": "63272",
+      "departamento": 19
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 827,
+    "fields": {
+      "nombre": "GÉNOVA",
+      "codigo": "63302",
+      "departamento": 19
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 828,
+    "fields": {
+      "nombre": "LA TEBAIDA",
+      "codigo": "63401",
+      "departamento": 19
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 829,
+    "fields": {
+      "nombre": "MONTENEGRO",
+      "codigo": "63470",
+      "departamento": 19
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 830,
+    "fields": {
+      "nombre": "PIJAO",
+      "codigo": "63548",
+      "departamento": 19
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 831,
+    "fields": {
+      "nombre": "QUIMBAYA",
+      "codigo": "63594",
+      "departamento": 19
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 832,
+    "fields": {
+      "nombre": "SALENTO",
+      "codigo": "63690",
+      "departamento": 19
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 833,
+    "fields": {
+      "nombre": "PEREIRA",
+      "codigo": "66001",
+      "departamento": 20
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 834,
+    "fields": {
+      "nombre": "APÍA",
+      "codigo": "66045",
+      "departamento": 20
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 835,
+    "fields": {
+      "nombre": "BALBOA",
+      "codigo": "66075",
+      "departamento": 20
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 836,
+    "fields": {
+      "nombre": "BELÉN DE UMBRÍA",
+      "codigo": "66088",
+      "departamento": 20
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 837,
+    "fields": {
+      "nombre": "DOSQUEBRADAS",
+      "codigo": "66170",
+      "departamento": 20
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 838,
+    "fields": {
+      "nombre": "GUÁTICA",
+      "codigo": "66318",
+      "departamento": 20
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 839,
+    "fields": {
+      "nombre": "LA CELIA",
+      "codigo": "66383",
+      "departamento": 20
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 840,
+    "fields": {
+      "nombre": "LA VIRGINIA",
+      "codigo": "66400",
+      "departamento": 20
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 841,
+    "fields": {
+      "nombre": "MARSELLA",
+      "codigo": "66440",
+      "departamento": 20
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 842,
+    "fields": {
+      "nombre": "MISTRATÓ",
+      "codigo": "66456",
+      "departamento": 20
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 843,
+    "fields": {
+      "nombre": "PUEBLO RICO",
+      "codigo": "66572",
+      "departamento": 20
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 844,
+    "fields": {
+      "nombre": "QUINCHÍA",
+      "codigo": "66594",
+      "departamento": 20
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 845,
+    "fields": {
+      "nombre": "SANTA ROSA DE CABAL",
+      "codigo": "66682",
+      "departamento": 20
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 846,
+    "fields": {
+      "nombre": "SANTUARIO",
+      "codigo": "66687",
+      "departamento": 20
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 847,
+    "fields": {
+      "nombre": "BUCARAMANGA",
+      "codigo": "68001",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 848,
+    "fields": {
+      "nombre": "AGUADA",
+      "codigo": "68013",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 849,
+    "fields": {
+      "nombre": "ALBANIA",
+      "codigo": "68020",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 850,
+    "fields": {
+      "nombre": "ARATOCA",
+      "codigo": "68051",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 851,
+    "fields": {
+      "nombre": "BARBOSA",
+      "codigo": "68077",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 852,
+    "fields": {
+      "nombre": "BARICHARA",
+      "codigo": "68079",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 853,
+    "fields": {
+      "nombre": "BARRANCABERMEJA",
+      "codigo": "68081",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 854,
+    "fields": {
+      "nombre": "BETULIA",
+      "codigo": "68092",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 855,
+    "fields": {
+      "nombre": "BOLÍVAR",
+      "codigo": "68101",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 856,
+    "fields": {
+      "nombre": "CABRERA",
+      "codigo": "68121",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 857,
+    "fields": {
+      "nombre": "CALIFORNIA",
+      "codigo": "68132",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 858,
+    "fields": {
+      "nombre": "CAPITANEJO",
+      "codigo": "68147",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 859,
+    "fields": {
+      "nombre": "CARCASÍ",
+      "codigo": "68152",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 860,
+    "fields": {
+      "nombre": "CEPITÁ",
+      "codigo": "68160",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 861,
+    "fields": {
+      "nombre": "CERRITO",
+      "codigo": "68162",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 862,
+    "fields": {
+      "nombre": "CHARALÁ",
+      "codigo": "68167",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 863,
+    "fields": {
+      "nombre": "CHARTA",
+      "codigo": "68169",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 864,
+    "fields": {
+      "nombre": "CHIMA",
+      "codigo": "68176",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 865,
+    "fields": {
+      "nombre": "CHIPATÁ",
+      "codigo": "68179",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 866,
+    "fields": {
+      "nombre": "CIMITARRA",
+      "codigo": "68190",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 867,
+    "fields": {
+      "nombre": "CONCEPCIÓN",
+      "codigo": "68207",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 868,
+    "fields": {
+      "nombre": "CONFINES",
+      "codigo": "68209",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 869,
+    "fields": {
+      "nombre": "CONTRATACIÓN",
+      "codigo": "68211",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 870,
+    "fields": {
+      "nombre": "COROMORO",
+      "codigo": "68217",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 871,
+    "fields": {
+      "nombre": "CURITÍ",
+      "codigo": "68229",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 872,
+    "fields": {
+      "nombre": "EL CARMEN DE CHUCURÍ",
+      "codigo": "68235",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 873,
+    "fields": {
+      "nombre": "EL GUACAMAYO",
+      "codigo": "68245",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 874,
+    "fields": {
+      "nombre": "EL PEÑÓN",
+      "codigo": "68250",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 875,
+    "fields": {
+      "nombre": "EL PLAYÓN",
+      "codigo": "68255",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 876,
+    "fields": {
+      "nombre": "ENCINO",
+      "codigo": "68264",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 877,
+    "fields": {
+      "nombre": "ENCISO",
+      "codigo": "68266",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 878,
+    "fields": {
+      "nombre": "FLORIÁN",
+      "codigo": "68271",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 879,
+    "fields": {
+      "nombre": "FLORIDABLANCA",
+      "codigo": "68276",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 880,
+    "fields": {
+      "nombre": "GALÁN",
+      "codigo": "68296",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 881,
+    "fields": {
+      "nombre": "GÁMBITA",
+      "codigo": "68298",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 882,
+    "fields": {
+      "nombre": "GIRÓN",
+      "codigo": "68307",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 883,
+    "fields": {
+      "nombre": "GUACA",
+      "codigo": "68318",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 884,
+    "fields": {
+      "nombre": "GUADALUPE",
+      "codigo": "68320",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 885,
+    "fields": {
+      "nombre": "GUAPOTÁ",
+      "codigo": "68322",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 886,
+    "fields": {
+      "nombre": "GUAVATÁ",
+      "codigo": "68324",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 887,
+    "fields": {
+      "nombre": "GÜEPSA",
+      "codigo": "68327",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 888,
+    "fields": {
+      "nombre": "HATO",
+      "codigo": "68344",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 889,
+    "fields": {
+      "nombre": "JESÚS MARÍA",
+      "codigo": "68368",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 890,
+    "fields": {
+      "nombre": "JORDÁN",
+      "codigo": "68370",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 891,
+    "fields": {
+      "nombre": "LA BELLEZA",
+      "codigo": "68377",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 892,
+    "fields": {
+      "nombre": "LANDÁZURI",
+      "codigo": "68385",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 893,
+    "fields": {
+      "nombre": "LA PAZ",
+      "codigo": "68397",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 894,
+    "fields": {
+      "nombre": "LEBRIJA",
+      "codigo": "68406",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 895,
+    "fields": {
+      "nombre": "LOS SANTOS",
+      "codigo": "68418",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 896,
+    "fields": {
+      "nombre": "MACARAVITA",
+      "codigo": "68425",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 897,
+    "fields": {
+      "nombre": "MÁLAGA",
+      "codigo": "68432",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 898,
+    "fields": {
+      "nombre": "MATANZA",
+      "codigo": "68444",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 899,
+    "fields": {
+      "nombre": "MOGOTES",
+      "codigo": "68464",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 900,
+    "fields": {
+      "nombre": "MOLAGAVITA",
+      "codigo": "68468",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 901,
+    "fields": {
+      "nombre": "OCAMONTE",
+      "codigo": "68498",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 902,
+    "fields": {
+      "nombre": "OIBA",
+      "codigo": "68500",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 903,
+    "fields": {
+      "nombre": "ONZAGA",
+      "codigo": "68502",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 904,
+    "fields": {
+      "nombre": "PALMAR",
+      "codigo": "68522",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 905,
+    "fields": {
+      "nombre": "PALMAS DEL SOCORRO",
+      "codigo": "68524",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 906,
+    "fields": {
+      "nombre": "PÁRAMO",
+      "codigo": "68533",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 907,
+    "fields": {
+      "nombre": "PIEDECUESTA",
+      "codigo": "68547",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 908,
+    "fields": {
+      "nombre": "PINCHOTE",
+      "codigo": "68549",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 909,
+    "fields": {
+      "nombre": "PUENTE NACIONAL",
+      "codigo": "68572",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 910,
+    "fields": {
+      "nombre": "PUERTO PARRA",
+      "codigo": "68573",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 911,
+    "fields": {
+      "nombre": "PUERTO WILCHES",
+      "codigo": "68575",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 912,
+    "fields": {
+      "nombre": "RIONEGRO",
+      "codigo": "68615",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 913,
+    "fields": {
+      "nombre": "SABANA DE TORRES",
+      "codigo": "68655",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 914,
+    "fields": {
+      "nombre": "SAN ANDRÉS",
+      "codigo": "68669",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 915,
+    "fields": {
+      "nombre": "SAN BENITO",
+      "codigo": "68673",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 916,
+    "fields": {
+      "nombre": "SAN GIL",
+      "codigo": "68679",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 917,
+    "fields": {
+      "nombre": "SAN JOAQUÍN",
+      "codigo": "68682",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 918,
+    "fields": {
+      "nombre": "SAN JOSÉ DE MIRANDA",
+      "codigo": "68684",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 919,
+    "fields": {
+      "nombre": "SAN MIGUEL",
+      "codigo": "68686",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 920,
+    "fields": {
+      "nombre": "SAN VICENTE DE CHUCURÍ",
+      "codigo": "68689",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 921,
+    "fields": {
+      "nombre": "SANTA BÁRBARA",
+      "codigo": "68705",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 922,
+    "fields": {
+      "nombre": "SANTA HELENA DEL OPÓN",
+      "codigo": "68720",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 923,
+    "fields": {
+      "nombre": "SIMACOTA",
+      "codigo": "68745",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 924,
+    "fields": {
+      "nombre": "SOCORRO",
+      "codigo": "68755",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 925,
+    "fields": {
+      "nombre": "SUAITA",
+      "codigo": "68770",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 926,
+    "fields": {
+      "nombre": "SUCRE",
+      "codigo": "68773",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 927,
+    "fields": {
+      "nombre": "SURATÁ",
+      "codigo": "68780",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 928,
+    "fields": {
+      "nombre": "TONA",
+      "codigo": "68820",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 929,
+    "fields": {
+      "nombre": "VALLE DE SAN JOSÉ",
+      "codigo": "68855",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 930,
+    "fields": {
+      "nombre": "VÉLEZ",
+      "codigo": "68861",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 931,
+    "fields": {
+      "nombre": "VETAS",
+      "codigo": "68867",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 932,
+    "fields": {
+      "nombre": "VILLANUEVA",
+      "codigo": "68872",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 933,
+    "fields": {
+      "nombre": "ZAPATOCA",
+      "codigo": "68895",
+      "departamento": 21
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 934,
+    "fields": {
+      "nombre": "SINCELEJO",
+      "codigo": "70001",
+      "departamento": 22
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 935,
+    "fields": {
+      "nombre": "BUENAVISTA",
+      "codigo": "70110",
+      "departamento": 22
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 936,
+    "fields": {
+      "nombre": "CAIMITO",
+      "codigo": "70124",
+      "departamento": 22
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 937,
+    "fields": {
+      "nombre": "COLOSÓ",
+      "codigo": "70204",
+      "departamento": 22
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 938,
+    "fields": {
+      "nombre": "COROZAL",
+      "codigo": "70215",
+      "departamento": 22
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 939,
+    "fields": {
+      "nombre": "COVEÑAS",
+      "codigo": "70221",
+      "departamento": 22
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 940,
+    "fields": {
+      "nombre": "CHALÁN",
+      "codigo": "70230",
+      "departamento": 22
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 941,
+    "fields": {
+      "nombre": "EL ROBLE",
+      "codigo": "70233",
+      "departamento": 22
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 942,
+    "fields": {
+      "nombre": "GALERAS",
+      "codigo": "70235",
+      "departamento": 22
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 943,
+    "fields": {
+      "nombre": "GUARANDA",
+      "codigo": "70265",
+      "departamento": 22
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 944,
+    "fields": {
+      "nombre": "LA UNIÓN",
+      "codigo": "70400",
+      "departamento": 22
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 945,
+    "fields": {
+      "nombre": "LOS PALMITOS",
+      "codigo": "70418",
+      "departamento": 22
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 946,
+    "fields": {
+      "nombre": "MAJAGUAL",
+      "codigo": "70429",
+      "departamento": 22
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 947,
+    "fields": {
+      "nombre": "MORROA",
+      "codigo": "70473",
+      "departamento": 22
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 948,
+    "fields": {
+      "nombre": "OVEJAS",
+      "codigo": "70508",
+      "departamento": 22
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 949,
+    "fields": {
+      "nombre": "PALMITO",
+      "codigo": "70523",
+      "departamento": 22
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 950,
+    "fields": {
+      "nombre": "SAMPUÉS",
+      "codigo": "70670",
+      "departamento": 22
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 951,
+    "fields": {
+      "nombre": "SAN BENITO ABAD",
+      "codigo": "70678",
+      "departamento": 22
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 952,
+    "fields": {
+      "nombre": "SAN JUAN DE BETULIA",
+      "codigo": "70702",
+      "departamento": 22
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 953,
+    "fields": {
+      "nombre": "SAN MARCOS",
+      "codigo": "70708",
+      "departamento": 22
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 954,
+    "fields": {
+      "nombre": "SAN ONOFRE",
+      "codigo": "70713",
+      "departamento": 22
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 955,
+    "fields": {
+      "nombre": "SAN PEDRO",
+      "codigo": "70717",
+      "departamento": 22
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 956,
+    "fields": {
+      "nombre": "SAN LUIS DE SINCÉ",
+      "codigo": "70742",
+      "departamento": 22
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 957,
+    "fields": {
+      "nombre": "SUCRE",
+      "codigo": "70771",
+      "departamento": 22
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 958,
+    "fields": {
+      "nombre": "SANTIAGO DE TOLÚ",
+      "codigo": "70820",
+      "departamento": 22
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 959,
+    "fields": {
+      "nombre": "SAN JOSÉ DE TOLUVIEJO",
+      "codigo": "70823",
+      "departamento": 22
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 960,
+    "fields": {
+      "nombre": "IBAGUÉ",
+      "codigo": "73001",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 961,
+    "fields": {
+      "nombre": "ALPUJARRA",
+      "codigo": "73024",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 962,
+    "fields": {
+      "nombre": "ALVARADO",
+      "codigo": "73026",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 963,
+    "fields": {
+      "nombre": "AMBALEMA",
+      "codigo": "73030",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 964,
+    "fields": {
+      "nombre": "ANZOÁTEGUI",
+      "codigo": "73043",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 965,
+    "fields": {
+      "nombre": "ARMERO",
+      "codigo": "73055",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 966,
+    "fields": {
+      "nombre": "ATACO",
+      "codigo": "73067",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 967,
+    "fields": {
+      "nombre": "CAJAMARCA",
+      "codigo": "73124",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 968,
+    "fields": {
+      "nombre": "CARMEN DE APICALÁ",
+      "codigo": "73148",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 969,
+    "fields": {
+      "nombre": "CASABIANCA",
+      "codigo": "73152",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 970,
+    "fields": {
+      "nombre": "CHAPARRAL",
+      "codigo": "73168",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 971,
+    "fields": {
+      "nombre": "COELLO",
+      "codigo": "73200",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 972,
+    "fields": {
+      "nombre": "COYAIMA",
+      "codigo": "73217",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 973,
+    "fields": {
+      "nombre": "CUNDAY",
+      "codigo": "73226",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 974,
+    "fields": {
+      "nombre": "DOLORES",
+      "codigo": "73236",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 975,
+    "fields": {
+      "nombre": "ESPINAL",
+      "codigo": "73268",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 976,
+    "fields": {
+      "nombre": "FALAN",
+      "codigo": "73270",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 977,
+    "fields": {
+      "nombre": "FLANDES",
+      "codigo": "73275",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 978,
+    "fields": {
+      "nombre": "FRESNO",
+      "codigo": "73283",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 979,
+    "fields": {
+      "nombre": "GUAMO",
+      "codigo": "73319",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 980,
+    "fields": {
+      "nombre": "HERVEO",
+      "codigo": "73347",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 981,
+    "fields": {
+      "nombre": "HONDA",
+      "codigo": "73349",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 982,
+    "fields": {
+      "nombre": "ICONONZO",
+      "codigo": "73352",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 983,
+    "fields": {
+      "nombre": "LÉRIDA",
+      "codigo": "73408",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 984,
+    "fields": {
+      "nombre": "LÍBANO",
+      "codigo": "73411",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 985,
+    "fields": {
+      "nombre": "SAN SEBASTIÁN DE MARIQUITA",
+      "codigo": "73443",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 986,
+    "fields": {
+      "nombre": "MELGAR",
+      "codigo": "73449",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 987,
+    "fields": {
+      "nombre": "MURILLO",
+      "codigo": "73461",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 988,
+    "fields": {
+      "nombre": "NATAGAIMA",
+      "codigo": "73483",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 989,
+    "fields": {
+      "nombre": "ORTEGA",
+      "codigo": "73504",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 990,
+    "fields": {
+      "nombre": "PALOCABILDO",
+      "codigo": "73520",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 991,
+    "fields": {
+      "nombre": "PIEDRAS",
+      "codigo": "73547",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 992,
+    "fields": {
+      "nombre": "PLANADAS",
+      "codigo": "73555",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 993,
+    "fields": {
+      "nombre": "PRADO",
+      "codigo": "73563",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 994,
+    "fields": {
+      "nombre": "PURIFICACIÓN",
+      "codigo": "73585",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 995,
+    "fields": {
+      "nombre": "RIOBLANCO",
+      "codigo": "73616",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 996,
+    "fields": {
+      "nombre": "RONCESVALLES",
+      "codigo": "73622",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 997,
+    "fields": {
+      "nombre": "ROVIRA",
+      "codigo": "73624",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 998,
+    "fields": {
+      "nombre": "SALDAÑA",
+      "codigo": "73671",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 999,
+    "fields": {
+      "nombre": "SAN ANTONIO",
+      "codigo": "73675",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1000,
+    "fields": {
+      "nombre": "SAN LUIS",
+      "codigo": "73678",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1001,
+    "fields": {
+      "nombre": "SANTA ISABEL",
+      "codigo": "73686",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1002,
+    "fields": {
+      "nombre": "SUÁREZ",
+      "codigo": "73770",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1003,
+    "fields": {
+      "nombre": "VALLE DE SAN JUAN",
+      "codigo": "73854",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1004,
+    "fields": {
+      "nombre": "VENADILLO",
+      "codigo": "73861",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1005,
+    "fields": {
+      "nombre": "VILLAHERMOSA",
+      "codigo": "73870",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1006,
+    "fields": {
+      "nombre": "VILLARRICA",
+      "codigo": "73873",
+      "departamento": 23
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1007,
+    "fields": {
+      "nombre": "SANTIAGO DE CALI",
+      "codigo": "76001",
+      "departamento": 24
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1008,
+    "fields": {
+      "nombre": "ALCALÁ",
+      "codigo": "76020",
+      "departamento": 24
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1009,
+    "fields": {
+      "nombre": "ANDALUCÍA",
+      "codigo": "76036",
+      "departamento": 24
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1010,
+    "fields": {
+      "nombre": "ANSERMANUEVO",
+      "codigo": "76041",
+      "departamento": 24
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1011,
+    "fields": {
+      "nombre": "ARGELIA",
+      "codigo": "76054",
+      "departamento": 24
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1012,
+    "fields": {
+      "nombre": "BOLÍVAR",
+      "codigo": "76100",
+      "departamento": 24
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1013,
+    "fields": {
+      "nombre": "BUENAVENTURA",
+      "codigo": "76109",
+      "departamento": 24
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1014,
+    "fields": {
+      "nombre": "GUADALAJARA DE BUGA",
+      "codigo": "76111",
+      "departamento": 24
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1015,
+    "fields": {
+      "nombre": "BUGALAGRANDE",
+      "codigo": "76113",
+      "departamento": 24
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1016,
+    "fields": {
+      "nombre": "CAICEDONIA",
+      "codigo": "76122",
+      "departamento": 24
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1017,
+    "fields": {
+      "nombre": "CALIMA",
+      "codigo": "76126",
+      "departamento": 24
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1018,
+    "fields": {
+      "nombre": "CANDELARIA",
+      "codigo": "76130",
+      "departamento": 24
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1019,
+    "fields": {
+      "nombre": "CARTAGO",
+      "codigo": "76147",
+      "departamento": 24
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1020,
+    "fields": {
+      "nombre": "DAGUA",
+      "codigo": "76233",
+      "departamento": 24
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1021,
+    "fields": {
+      "nombre": "EL ÁGUILA",
+      "codigo": "76243",
+      "departamento": 24
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1022,
+    "fields": {
+      "nombre": "EL CAIRO",
+      "codigo": "76246",
+      "departamento": 24
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1023,
+    "fields": {
+      "nombre": "EL CERRITO",
+      "codigo": "76248",
+      "departamento": 24
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1024,
+    "fields": {
+      "nombre": "EL DOVIO",
+      "codigo": "76250",
+      "departamento": 24
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1025,
+    "fields": {
+      "nombre": "FLORIDA",
+      "codigo": "76275",
+      "departamento": 24
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1026,
+    "fields": {
+      "nombre": "GINEBRA",
+      "codigo": "76306",
+      "departamento": 24
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1027,
+    "fields": {
+      "nombre": "GUACARÍ",
+      "codigo": "76318",
+      "departamento": 24
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1028,
+    "fields": {
+      "nombre": "JAMUNDÍ",
+      "codigo": "76364",
+      "departamento": 24
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1029,
+    "fields": {
+      "nombre": "LA CUMBRE",
+      "codigo": "76377",
+      "departamento": 24
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1030,
+    "fields": {
+      "nombre": "LA UNIÓN",
+      "codigo": "76400",
+      "departamento": 24
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1031,
+    "fields": {
+      "nombre": "LA VICTORIA",
+      "codigo": "76403",
+      "departamento": 24
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1032,
+    "fields": {
+      "nombre": "OBANDO",
+      "codigo": "76497",
+      "departamento": 24
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1033,
+    "fields": {
+      "nombre": "PALMIRA",
+      "codigo": "76520",
+      "departamento": 24
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1034,
+    "fields": {
+      "nombre": "PRADERA",
+      "codigo": "76563",
+      "departamento": 24
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1035,
+    "fields": {
+      "nombre": "RESTREPO",
+      "codigo": "76606",
+      "departamento": 24
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1036,
+    "fields": {
+      "nombre": "RIOFRÍO",
+      "codigo": "76616",
+      "departamento": 24
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1037,
+    "fields": {
+      "nombre": "ROLDANILLO",
+      "codigo": "76622",
+      "departamento": 24
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1038,
+    "fields": {
+      "nombre": "SAN PEDRO",
+      "codigo": "76670",
+      "departamento": 24
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1039,
+    "fields": {
+      "nombre": "SEVILLA",
+      "codigo": "76736",
+      "departamento": 24
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1040,
+    "fields": {
+      "nombre": "TORO",
+      "codigo": "76823",
+      "departamento": 24
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1041,
+    "fields": {
+      "nombre": "TRUJILLO",
+      "codigo": "76828",
+      "departamento": 24
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1042,
+    "fields": {
+      "nombre": "TULUÁ",
+      "codigo": "76834",
+      "departamento": 24
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1043,
+    "fields": {
+      "nombre": "ULLOA",
+      "codigo": "76845",
+      "departamento": 24
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1044,
+    "fields": {
+      "nombre": "VERSALLES",
+      "codigo": "76863",
+      "departamento": 24
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1045,
+    "fields": {
+      "nombre": "VIJES",
+      "codigo": "76869",
+      "departamento": 24
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1046,
+    "fields": {
+      "nombre": "YOTOCO",
+      "codigo": "76890",
+      "departamento": 24
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1047,
+    "fields": {
+      "nombre": "YUMBO",
+      "codigo": "76892",
+      "departamento": 24
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1048,
+    "fields": {
+      "nombre": "ZARZAL",
+      "codigo": "76895",
+      "departamento": 24
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1049,
+    "fields": {
+      "nombre": "ARAUCA",
+      "codigo": "81001",
+      "departamento": 25
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1050,
+    "fields": {
+      "nombre": "ARAUQUITA",
+      "codigo": "81065",
+      "departamento": 25
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1051,
+    "fields": {
+      "nombre": "CRAVO NORTE",
+      "codigo": "81220",
+      "departamento": 25
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1052,
+    "fields": {
+      "nombre": "FORTUL",
+      "codigo": "81300",
+      "departamento": 25
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1053,
+    "fields": {
+      "nombre": "PUERTO RONDÓN",
+      "codigo": "81591",
+      "departamento": 25
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1054,
+    "fields": {
+      "nombre": "SARAVENA",
+      "codigo": "81736",
+      "departamento": 25
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1055,
+    "fields": {
+      "nombre": "TAME",
+      "codigo": "81794",
+      "departamento": 25
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1056,
+    "fields": {
+      "nombre": "YOPAL",
+      "codigo": "85001",
+      "departamento": 26
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1057,
+    "fields": {
+      "nombre": "AGUAZUL",
+      "codigo": "85010",
+      "departamento": 26
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1058,
+    "fields": {
+      "nombre": "CHÁMEZA",
+      "codigo": "85015",
+      "departamento": 26
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1059,
+    "fields": {
+      "nombre": "HATO COROZAL",
+      "codigo": "85125",
+      "departamento": 26
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1060,
+    "fields": {
+      "nombre": "LA SALINA",
+      "codigo": "85136",
+      "departamento": 26
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1061,
+    "fields": {
+      "nombre": "MANÍ",
+      "codigo": "85139",
+      "departamento": 26
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1062,
+    "fields": {
+      "nombre": "MONTERREY",
+      "codigo": "85162",
+      "departamento": 26
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1063,
+    "fields": {
+      "nombre": "NUNCHÍA",
+      "codigo": "85225",
+      "departamento": 26
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1064,
+    "fields": {
+      "nombre": "OROCUÉ",
+      "codigo": "85230",
+      "departamento": 26
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1065,
+    "fields": {
+      "nombre": "PAZ DE ARIPORO",
+      "codigo": "85250",
+      "departamento": 26
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1066,
+    "fields": {
+      "nombre": "PORE",
+      "codigo": "85263",
+      "departamento": 26
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1067,
+    "fields": {
+      "nombre": "RECETOR",
+      "codigo": "85279",
+      "departamento": 26
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1068,
+    "fields": {
+      "nombre": "SABANALARGA",
+      "codigo": "85300",
+      "departamento": 26
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1069,
+    "fields": {
+      "nombre": "SÁCAMA",
+      "codigo": "85315",
+      "departamento": 26
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1070,
+    "fields": {
+      "nombre": "SAN LUIS DE PALENQUE",
+      "codigo": "85325",
+      "departamento": 26
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1071,
+    "fields": {
+      "nombre": "TÁMARA",
+      "codigo": "85400",
+      "departamento": 26
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1072,
+    "fields": {
+      "nombre": "TAURAMENA",
+      "codigo": "85410",
+      "departamento": 26
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1073,
+    "fields": {
+      "nombre": "TRINIDAD",
+      "codigo": "85430",
+      "departamento": 26
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1074,
+    "fields": {
+      "nombre": "VILLANUEVA",
+      "codigo": "85440",
+      "departamento": 26
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1075,
+    "fields": {
+      "nombre": "MOCOA",
+      "codigo": "86001",
+      "departamento": 27
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1076,
+    "fields": {
+      "nombre": "COLÓN",
+      "codigo": "86219",
+      "departamento": 27
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1077,
+    "fields": {
+      "nombre": "ORITO",
+      "codigo": "86320",
+      "departamento": 27
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1078,
+    "fields": {
+      "nombre": "PUERTO ASÍS",
+      "codigo": "86568",
+      "departamento": 27
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1079,
+    "fields": {
+      "nombre": "PUERTO CAICEDO",
+      "codigo": "86569",
+      "departamento": 27
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1080,
+    "fields": {
+      "nombre": "PUERTO GUZMÁN",
+      "codigo": "86571",
+      "departamento": 27
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1081,
+    "fields": {
+      "nombre": "PUERTO LEGUÍZAMO",
+      "codigo": "86573",
+      "departamento": 27
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1082,
+    "fields": {
+      "nombre": "SIBUNDOY",
+      "codigo": "86749",
+      "departamento": 27
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1083,
+    "fields": {
+      "nombre": "SAN FRANCISCO",
+      "codigo": "86755",
+      "departamento": 27
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1084,
+    "fields": {
+      "nombre": "SAN MIGUEL",
+      "codigo": "86757",
+      "departamento": 27
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1085,
+    "fields": {
+      "nombre": "SANTIAGO",
+      "codigo": "86760",
+      "departamento": 27
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1086,
+    "fields": {
+      "nombre": "VALLE DEL GUAMUEZ",
+      "codigo": "86865",
+      "departamento": 27
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1087,
+    "fields": {
+      "nombre": "VILLAGARZÓN",
+      "codigo": "86885",
+      "departamento": 27
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1088,
+    "fields": {
+      "nombre": "SAN ANDRÉS",
+      "codigo": "88001",
+      "departamento": 28
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1089,
+    "fields": {
+      "nombre": "PROVIDENCIA",
+      "codigo": "88564",
+      "departamento": 28
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1090,
+    "fields": {
+      "nombre": "LETICIA",
+      "codigo": "91001",
+      "departamento": 29
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1091,
+    "fields": {
+      "nombre": "EL ENCANTO",
+      "codigo": "91263",
+      "departamento": 29
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1092,
+    "fields": {
+      "nombre": "LA CHORRERA",
+      "codigo": "91405",
+      "departamento": 29
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1093,
+    "fields": {
+      "nombre": "LA PEDRERA",
+      "codigo": "91407",
+      "departamento": 29
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1094,
+    "fields": {
+      "nombre": "LA VICTORIA",
+      "codigo": "91430",
+      "departamento": 29
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1095,
+    "fields": {
+      "nombre": "MIRITÍ - PARANÁ",
+      "codigo": "91460",
+      "departamento": 29
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1096,
+    "fields": {
+      "nombre": "PUERTO ALEGRÍA",
+      "codigo": "91530",
+      "departamento": 29
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1097,
+    "fields": {
+      "nombre": "PUERTO ARICA",
+      "codigo": "91536",
+      "departamento": 29
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1098,
+    "fields": {
+      "nombre": "PUERTO NARIÑO",
+      "codigo": "91540",
+      "departamento": 29
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1099,
+    "fields": {
+      "nombre": "PUERTO SANTANDER",
+      "codigo": "91669",
+      "departamento": 29
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1100,
+    "fields": {
+      "nombre": "TARAPACÁ",
+      "codigo": "91798",
+      "departamento": 29
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1101,
+    "fields": {
+      "nombre": "INÍRIDA",
+      "codigo": "94001",
+      "departamento": 30
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1102,
+    "fields": {
+      "nombre": "BARRANCOMINAS",
+      "codigo": "94343",
+      "departamento": 30
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1103,
+    "fields": {
+      "nombre": "SAN FELIPE",
+      "codigo": "94883",
+      "departamento": 30
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1104,
+    "fields": {
+      "nombre": "PUERTO COLOMBIA",
+      "codigo": "94884",
+      "departamento": 30
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1105,
+    "fields": {
+      "nombre": "LA GUADALUPE",
+      "codigo": "94885",
+      "departamento": 30
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1106,
+    "fields": {
+      "nombre": "CACAHUAL",
+      "codigo": "94886",
+      "departamento": 30
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1107,
+    "fields": {
+      "nombre": "PANA PANA",
+      "codigo": "94887",
+      "departamento": 30
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1108,
+    "fields": {
+      "nombre": "MORICHAL",
+      "codigo": "94888",
+      "departamento": 30
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1109,
+    "fields": {
+      "nombre": "SAN JOSÉ DEL GUAVIARE",
+      "codigo": "95001",
+      "departamento": 31
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1110,
+    "fields": {
+      "nombre": "CALAMAR",
+      "codigo": "95015",
+      "departamento": 31
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1111,
+    "fields": {
+      "nombre": "EL RETORNO",
+      "codigo": "95025",
+      "departamento": 31
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1112,
+    "fields": {
+      "nombre": "MIRAFLORES",
+      "codigo": "95200",
+      "departamento": 31
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1113,
+    "fields": {
+      "nombre": "MITÚ",
+      "codigo": "97001",
+      "departamento": 32
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1114,
+    "fields": {
+      "nombre": "CARURÚ",
+      "codigo": "97161",
+      "departamento": 32
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1115,
+    "fields": {
+      "nombre": "PACOA",
+      "codigo": "97511",
+      "departamento": 32
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1116,
+    "fields": {
+      "nombre": "TARAIRA",
+      "codigo": "97666",
+      "departamento": 32
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1117,
+    "fields": {
+      "nombre": "PAPUNAHUA",
+      "codigo": "97777",
+      "departamento": 32
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1118,
+    "fields": {
+      "nombre": "YAVARATÉ",
+      "codigo": "97889",
+      "departamento": 32
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1119,
+    "fields": {
+      "nombre": "PUERTO CARREÑO",
+      "codigo": "99001",
+      "departamento": 33
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1120,
+    "fields": {
+      "nombre": "LA PRIMAVERA",
+      "codigo": "99524",
+      "departamento": 33
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1121,
+    "fields": {
+      "nombre": "SANTA ROSALÍA",
+      "codigo": "99624",
+      "departamento": 33
+    }
+  },
+  {
+    "model": "api.municipio",
+    "pk": 1122,
+    "fields": {
+      "nombre": "CUMARIBO",
+      "codigo": "99773",
+      "departamento": 33
+    }
+  }
+]

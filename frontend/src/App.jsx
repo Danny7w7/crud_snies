@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   Moon,
   Sun,
@@ -12,11 +12,17 @@ import {
   UserPlus,
   FileText,
   ClipboardList,
+  BookOpen,
+  MapPin,
+  Globe,
+  Calendar,
 } from 'lucide-react'
+import countryList from 'react-select-country-list'
 import { Button } from './components/ui/button'
 import { Input } from './components/ui/input'
 import { Label } from './components/ui/label'
 import { Checkbox } from './components/ui/checkbox'
+import { SearchableSelect } from './components/SearchableSelect'
 import { ThemeProvider, useTheme } from './contexts/ThemeContext'
 import { useDarkMode } from './hooks/useDarkMode'
 import AtmosphereBackground from './components/AtmosphereBackground'
@@ -39,6 +45,11 @@ const INITIAL_FORM = {
   primer_apellido: '',
   segundo_apellido: '',
   codigo_estudiante: '',
+  programa: '',
+  municipio: '',
+  pais_nacimiento: '',
+  municipio_nacimiento: '',
+  periodo_primer_semestre: '',
 }
 
 function ThemeToggle() {
@@ -62,6 +73,35 @@ function EstudiantesCrud() {
   const [editingId, setEditingId] = useState(null)
   const [aceptaTratamiento, setAceptaTratamiento] = useState(false)
   const [error, setError] = useState('')
+  const [municipios, setMunicipios] = useState([])
+  const [loadingMunicipios, setLoadingMunicipios] = useState(true)
+
+  const municipioOptions = useMemo(
+    () => municipios.map((m) => ({ value: m.id, label: `${m.nombre} - ${m.codigo}` })),
+    [municipios],
+  )
+  const paisOptions = useMemo(
+    () =>
+      countryList()
+        .getData()
+        .map((p) => ({ value: p.value.toUpperCase(), label: p.label })),
+    [],
+  )
+
+  useEffect(() => {
+    async function loadMunicipios() {
+      try {
+        const res = await fetch('/api/municipios/')
+        if (!res.ok) throw new Error('Error al cargar municipios')
+        setMunicipios(await res.json())
+      } catch (err) {
+        setError(err.message)
+      } finally {
+        setLoadingMunicipios(false)
+      }
+    }
+    loadMunicipios()
+  }, [])
 
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value })
@@ -335,6 +375,107 @@ function EstudiantesCrud() {
                       placeholder="Ej: 2026001234"
                       className={inputWithIconClass}
                     />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="programa" className="text-sm font-medium text-foreground">
+                    Programa al que pertenece
+                  </Label>
+                  <div className="group relative">
+                    <BookOpen className={`${inputIconClass} group-focus-within:text-accent`} />
+                    <Input
+                      id="programa"
+                      name="programa"
+                      value={form.programa}
+                      onChange={handleChange}
+                      maxLength={100}
+                      placeholder="Ej: Ingeniería de Sistemas"
+                      className={inputWithIconClass}
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-2">
+                    <Label htmlFor="municipio" className="text-sm font-medium text-foreground">
+                      Municipio
+                    </Label>
+                    <div className="group relative">
+                      <MapPin className={`${inputIconClass} group-focus-within:text-accent`} />
+                      <SearchableSelect
+                        id="municipio"
+                        value={form.municipio}
+                        onValueChange={(value) => setForm({ ...form, municipio: value })}
+                        options={municipioOptions}
+                        placeholder="Selecciona un municipio"
+                        searchPlaceholder="Buscar municipio..."
+                        emptyLabel="No hay municipios."
+                        isLoading={loadingMunicipios}
+                        className={inputWithIconClass}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="periodo_primer_semestre" className="text-sm font-medium text-foreground">
+                      Periodo que cursó 1er semestre
+                    </Label>
+                    <div className="group relative">
+                      <Calendar className={`${inputIconClass} group-focus-within:text-accent`} />
+                      <Input
+                        id="periodo_primer_semestre"
+                        name="periodo_primer_semestre"
+                        value={form.periodo_primer_semestre}
+                        onChange={handleChange}
+                        maxLength={20}
+                        placeholder="Ej: 2026-1"
+                        className={inputWithIconClass}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-2">
+                    <Label htmlFor="pais_nacimiento" className="text-sm font-medium text-foreground">
+                      País de nacimiento
+                    </Label>
+                    <div className="group relative">
+                      <Globe className={`${inputIconClass} group-focus-within:text-accent`} />
+                      <SearchableSelect
+                        id="pais_nacimiento"
+                        value={form.pais_nacimiento}
+                        onValueChange={(value) => setForm({ ...form, pais_nacimiento: value })}
+                        options={paisOptions}
+                        placeholder="Selecciona un país"
+                        searchPlaceholder="Buscar país..."
+                        emptyLabel="No hay países."
+                        className={inputWithIconClass}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="municipio_nacimiento" className="text-sm font-medium text-foreground">
+                      Municipio de nacimiento
+                    </Label>
+                    <div className="group relative">
+                      <MapPin className={`${inputIconClass} group-focus-within:text-accent`} />
+                      <SearchableSelect
+                        id="municipio_nacimiento"
+                        value={form.municipio_nacimiento}
+                        onValueChange={(value) =>
+                          setForm({ ...form, municipio_nacimiento: value })
+                        }
+                        options={municipioOptions}
+                        placeholder="Selecciona un municipio"
+                        searchPlaceholder="Buscar municipio..."
+                        emptyLabel="No hay municipios."
+                        isLoading={loadingMunicipios}
+                        className={inputWithIconClass}
+                      />
+                    </div>
                   </div>
                 </div>
 

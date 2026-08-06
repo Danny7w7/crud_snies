@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Departamento, Estudiante, Municipio
+from .models import Departamento, Estudiante, Municipio, Persona
 
 
 class EstudianteSerializer(serializers.ModelSerializer):
@@ -32,3 +32,21 @@ class DepartamentoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Departamento
         fields = '__all__'
+
+class PersonaSerializer(serializers.ModelSerializer):
+    codigo_estudiante = serializers.CharField(read_only=True)
+
+    class Meta:
+        model = Persona
+        fields = [
+            'id',
+            'identificacion',
+            'tipo_identificacion',
+            'nombre',
+            'apellido',
+            'codigo_estudiante',
+            'direccion',
+            'telefono',
+            'email',
+            'sexo',
+        ]

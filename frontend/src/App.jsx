@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { Link, Route, Routes } from 'react-router-dom'
 import {
   Moon,
   Sun,
@@ -12,6 +13,10 @@ import {
   UserPlus,
   FileText,
   ClipboardList,
+  Search,
+  Phone,
+  Mail,
+  Lock,
   BookOpen,
   MapPin,
   Globe,
@@ -28,6 +33,9 @@ import { useDarkMode } from './hooks/useDarkMode'
 import AtmosphereBackground from './components/AtmosphereBackground'
 
 const API_URL = '/api/estudiantes/'
+const API_PERSONAS_URL = '/api/personas/'
+
+const CONSULTA_HASH_KEY = 'consulta_password_hash'
 
 const TIPOS_IDENTIFICACION = [
   { value: 'CC', label: 'Cédula de Ciudadanía' },
@@ -52,6 +60,31 @@ const INITIAL_FORM = {
   periodo_primer_semestre: '',
 }
 
+const TIPO_DOCUMENTO_LABELS = {
+  0: 'Por definir',
+  1: 'CC',
+  2: 'Pasaporte',
+  3: 'CE',
+  4: 'TI',
+  5: 'Cabildo',
+  6: 'NIP',
+  7: 'NUIP',
+  8: 'RC',
+  9: 'Sec. Educación',
+}
+
+async function sha256Hex(text) {
+  const data = new TextEncoder().encode(text)
+  const digest = await crypto.subtle.digest('SHA-256', data)
+  return Array.from(new Uint8Array(digest))
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('')
+}
+
+function getConsultaHash() {
+  return sessionStorage.getItem(CONSULTA_HASH_KEY) || ''
+}
+
 function ThemeToggle() {
   const isDarkMode = useDarkMode()
   const { setTheme } = useTheme()
@@ -68,7 +101,381 @@ function ThemeToggle() {
   )
 }
 
-function EstudiantesCrud() {
+function PageShell({ active, children }) {
+  const navClass = (name) =>
+    `inline-flex flex-1 items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
+      active === name
+        ? 'bg-primary text-primary-foreground shadow-sm'
+        : 'text-muted-foreground hover:text-foreground'
+    }`
+
+  return (
+    <div className="relative min-h-screen overflow-hidden bg-[#eef1f5] text-foreground dark:bg-[#080d17]">
+      <AtmosphereBackground />
+
+      <ThemeToggle />
+
+      <main className="relative z-10 flex min-h-screen items-center justify-center p-4 py-16 sm:p-8 sm:py-20">
+        <div className="grid w-full max-w-6xl overflow-hidden rounded-[2rem] border border-white/55 bg-card/95 shadow-[0_32px_90px_-28px_rgba(15,31,58,0.55)] dark:border-white/10 dark:bg-card/90 lg:min-h-[700px] lg:grid-cols-[0.72fr_1.28fr]">
+          <section className="relative hidden overflow-hidden bg-brand-ink p-10 text-white lg:flex lg:flex-col lg:justify-between xl:p-14">
+            <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+              <div className="absolute -right-24 -top-20 h-72 w-72 rounded-full border border-white/10" />
+              <div className="absolute -right-6 top-12 h-44 w-44 rounded-full border border-white/10" />
+              <div className="absolute -bottom-32 -left-24 h-80 w-80 rounded-full bg-accent/20 blur-3xl" />
+              <div className="absolute inset-0 bg-[linear-gradient(145deg,transparent_30%,rgba(255,255,255,0.035)_100%)]" />
+            </div>
+
+            <div className="relative">
+              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-white/75">
+                <ShieldCheck className="h-4 w-4 text-accent" />
+                CRUD SNIES
+              </div>
+              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-white/55">
+                Institución Universitaria
+              </p>
+              <h1 className="mt-4 text-4xl font-semibold leading-tight xl:text-5xl">
+                Gestión de Estudiantes
+              </h1>
+              <p className="mt-4 text-sm leading-relaxed text-white/55">
+                Administra la información de identificación de los estudiantes:
+                registro, consulta, actualización y baja de datos.
+              </p>
+              <div className="mt-8 h-1 w-20 rounded-full bg-accent" />
+            </div>
+
+            <div className="relative space-y-5">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5">
+                  <UserPlus className="h-5 w-5 text-accent" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-white/90">Registro</p>
+                  <p className="text-xs text-white/45">Nuevos estudiantes al sistema</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5">
+                  <FileText className="h-5 w-5 text-accent" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-white/90">Actualización</p>
+                  <p className="text-xs text-white/45">Corrección de datos de identificación</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5">
+                  <ClipboardList className="h-5 w-5 text-accent" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-white/90">Consulta</p>
+                  <p className="text-xs text-white/45">Búsqueda y seguimiento de registros</p>
+                </div>
+              </div>
+            </div>
+
+            <p className="relative text-xs text-white/45">
+              SNIES · Sistema Nacional de Información de la Educación Superior
+            </p>
+          </section>
+
+          <section className="flex items-start bg-card px-6 py-9 sm:px-10 lg:px-12 xl:px-16 lg:max-h-[700px] lg:overflow-y-auto">
+            <div className="mx-auto w-full max-w-xl">
+              <nav className="mb-8 inline-flex w-full rounded-2xl border border-white/40 bg-secondary/60 p-1.5 dark:border-white/10">
+                <Link to="/registrar" className={navClass('registrar')}>
+                  <UserPlus className="h-4 w-4" />
+                  Registrar
+                </Link>
+                <Link to="/consulta" className={navClass('consulta')}>
+                  <Search className="h-4 w-4" />
+                  Consultar
+                </Link>
+              </nav>
+
+              {children}
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+  )
+}
+
+function ConsultaPasswordGate({ onSuccess }) {
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  async function handleSubmit(e) {
+    e.preventDefault()
+    setError('')
+    setLoading(true)
+    try {
+      const hash = await sha256Hex(password)
+      const res = await fetch(API_PERSONAS_URL, {
+        headers: { 'X-Consulta-Password': hash },
+      })
+      if (res.status === 403) {
+        setError('Contraseña de consulta incorrecta')
+        return
+      }
+      if (!res.ok) throw new Error('Error al validar la contraseña')
+      sessionStorage.setItem(CONSULTA_HASH_KEY, hash)
+      onSuccess()
+    } catch (err) {
+      setError(err.message || 'No se pudo validar la contraseña')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div className="mx-auto w-full max-w-md">
+      <div className="mb-8 text-center">
+        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-white/40 bg-secondary/70 dark:border-white/10">
+          <Lock className="h-6 w-6 text-accent" />
+        </div>
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
+          Acceso restringido
+        </p>
+        <h2 className="mt-3 text-3xl font-semibold tracking-tight text-foreground">
+          Consulta de personas
+        </h2>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Esta sección está protegida. Ingresa la contraseña de consulta para continuar.
+        </p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="consulta_password" className="text-sm font-medium text-foreground">
+            Contraseña
+          </Label>
+          <div className="group relative">
+            <Lock className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground transition-colors z-20 group-focus-within:text-accent" />
+            <Input
+              id="consulta_password"
+              name="consulta_password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              autoFocus
+              className="pl-12 h-12"
+            />
+          </div>
+        </div>
+
+        {error && (
+          <p className="rounded-lg border border-destructive/40 bg-destructive/20 px-3 py-2 text-sm text-destructive-foreground">
+            {error}
+          </p>
+        )}
+
+        <Button type="submit" size="lg" className="h-12 w-full" disabled={loading}>
+          <Lock className="h-4 w-4" />
+          {loading ? 'Validando...' : 'Ingresar'}
+        </Button>
+      </form>
+    </div>
+  )
+}
+
+function ConsultarPersonas() {
+  const [query, setQuery] = useState('')
+  const [results, setResults] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+
+  const headers = useMemo(
+    () => ({ 'X-Consulta-Password': getConsultaHash() }),
+    [],
+  )
+
+  const runSearch = useCallback(
+    async (q) => {
+      setLoading(true)
+      setError('')
+      try {
+        const url = q
+          ? `${API_PERSONAS_URL}?q=${encodeURIComponent(q)}`
+          : API_PERSONAS_URL
+        const res = await fetch(url, { headers })
+        if (res.status === 403) {
+          throw new Error('Contraseña de consulta inválida. Vuelve a ingresarla.')
+        }
+        if (!res.ok) throw new Error('Error al consultar los datos')
+        const data = await res.json()
+        setResults(data)
+      } catch (err) {
+        setError(err.message)
+        setResults([])
+      } finally {
+        setLoading(false)
+      }
+    },
+    [headers],
+  )
+
+  useEffect(() => {
+    runSearch('')
+  }, [runSearch])
+
+  function handleSubmit(e) {
+    e.preventDefault()
+    runSearch(query.trim())
+  }
+
+  return (
+    <div className="mx-auto w-full max-w-3xl">
+      <div className="mb-8">
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
+          CRUD SNIES
+        </p>
+        <h2 className="mt-3 text-3xl font-semibold tracking-tight text-foreground">
+          Consultar personas
+        </h2>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Resultados de la base de datos institucional (solo lectura)
+        </p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="mb-6 space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="busqueda" className="text-sm font-medium text-foreground">
+            Buscar por nombre, documento o código de estudiante
+          </Label>
+          <div className="group relative">
+            <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground transition-colors z-20 group-focus-within:text-accent" />
+            <Input
+              id="busqueda"
+              name="busqueda"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Ej: María, 1044431897, 2026001234"
+              className="pl-12 h-12"
+            />
+          </div>
+        </div>
+        <div className="flex gap-3">
+          <Button type="submit" size="lg" className="h-12 flex-1">
+            <Search className="h-4 w-4" />
+            Buscar
+          </Button>
+          {query && (
+            <Button
+              type="button"
+              variant="outline"
+              size="lg"
+              className="h-12"
+              onClick={() => {
+                setQuery('')
+                runSearch('')
+              }}
+            >
+              <X className="h-4 w-4" />
+              Limpiar
+            </Button>
+          )}
+        </div>
+      </form>
+
+      {error && (
+        <p className="mb-6 rounded-lg border border-destructive/40 bg-destructive/20 px-3 py-2 text-sm text-destructive-foreground">
+          {error}
+        </p>
+      )}
+
+      <div className="mb-4 flex items-center justify-between">
+        <p className="text-sm text-muted-foreground">
+          {loading
+            ? 'Consultando...'
+            : `${results.length} registro${results.length === 1 ? '' : 's'} encontrado${results.length === 1 ? '' : 's'}`}
+        </p>
+      </div>
+
+      {loading ? (
+        <div className="space-y-3">
+          {[...Array(5)].map((_, i) => (
+            <div key={i} className="erp-skeleton h-14 rounded-xl bg-card/60" />
+          ))}
+        </div>
+      ) : results.length === 0 ? (
+        <p className="rounded-xl border border-white/40 bg-card/80 px-4 py-10 text-center text-sm text-muted-foreground dark:border-white/10">
+          No se encontraron resultados para la búsqueda
+        </p>
+      ) : (
+        <div className="erp-table-frame">
+          <table className="w-full text-sm">
+            <thead className="bg-primary text-primary-foreground">
+              <tr>
+                <th className="px-4 py-3 text-left font-medium">Código</th>
+                <th className="px-4 py-3 text-left font-medium">Documento</th>
+                <th className="px-4 py-3 text-left font-medium">Nombre</th>
+                <th className="px-4 py-3 text-left font-medium">Apellido</th>
+                <th className="hidden px-4 py-3 text-left font-medium md:table-cell">
+                  Teléfono
+                </th>
+                <th className="hidden px-4 py-3 text-left font-medium lg:table-cell">
+                  Email
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border/60">
+              {results.map((p) => (
+                <tr
+                  key={p.id}
+                  className="transition-colors hover:bg-secondary/60"
+                >
+                  <td className="px-4 py-3 font-medium text-foreground">
+                    {p.codigo_estudiante || (
+                      <span className="text-muted-foreground">—</span>
+                    )}
+                  </td>
+                  <td className="px-4 py-3 text-foreground">
+                    <span className="mr-1.5 inline-block rounded-md bg-secondary px-1.5 py-0.5 text-xs text-muted-foreground">
+                      {TIPO_DOCUMENTO_LABELS[p.tipo_identificacion] ?? ''}
+                    </span>
+                    {p.identificacion}
+                  </td>
+                  <td className="px-4 py-3 text-foreground">{p.nombre}</td>
+                  <td className="px-4 py-3 text-foreground">{p.apellido}</td>
+                  <td className="hidden px-4 py-3 text-muted-foreground md:table-cell">
+                    <span className="inline-flex items-center gap-1.5">
+                      <Phone className="h-3.5 w-3.5" />
+                      {p.telefono || '—'}
+                    </span>
+                  </td>
+                  <td className="hidden max-w-[220px] truncate px-4 py-3 text-muted-foreground lg:table-cell">
+                    <span className="inline-flex items-center gap-1.5">
+                      <Mail className="h-3.5 w-3.5" />
+                      {p.email || '—'}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function ConsultaPage() {
+  const [authed, setAuthed] = useState(() => Boolean(getConsultaHash()))
+
+  return (
+    <PageShell active="consulta">
+      {authed ? (
+        <ConsultarPersonas />
+      ) : (
+        <ConsultaPasswordGate onSuccess={() => setAuthed(true)} />
+      )}
+    </PageShell>
+  )
+}
+
+function RegistrarPage() {
   const [form, setForm] = useState(INITIAL_FORM)
   const [editingId, setEditingId] = useState(null)
   const [aceptaTratamiento, setAceptaTratamiento] = useState(false)
@@ -151,391 +558,323 @@ function EstudiantesCrud() {
   const inputWithIconClass = 'pl-12 h-12'
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#eef1f5] text-foreground dark:bg-[#080d17]">
-      <AtmosphereBackground />
+    <PageShell active="registrar">
+      <div className="mb-8">
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
+          CRUD SNIES
+        </p>
+        <h2 className="mt-3 text-3xl font-semibold tracking-tight text-foreground">
+          {editingId ? 'Editar estudiante' : 'Registrar estudiante'}
+        </h2>
+        <p className="mt-2 text-sm text-muted-foreground">
+          {editingId
+            ? 'Actualiza los datos del estudiante y guarda los cambios'
+            : 'Completa el formulario con la información de identificación'}
+        </p>
+      </div>
 
-      <ThemeToggle />
-
-      <main className="relative z-10 flex min-h-screen items-center justify-center p-4 py-16 sm:p-8 sm:py-20">
-        <div className="grid w-full max-w-6xl overflow-hidden rounded-[2rem] border border-white/55 bg-card/95 shadow-[0_32px_90px_-28px_rgba(15,31,58,0.55)] dark:border-white/10 dark:bg-card/90 lg:min-h-[700px] lg:grid-cols-[0.72fr_1.28fr]">
-          <section className="relative hidden overflow-hidden bg-brand-ink p-10 text-white lg:flex lg:flex-col lg:justify-between xl:p-14">
-            <div className="pointer-events-none absolute inset-0" aria-hidden="true">
-              <div className="absolute -right-24 -top-20 h-72 w-72 rounded-full border border-white/10" />
-              <div className="absolute -right-6 top-12 h-44 w-44 rounded-full border border-white/10" />
-              <div className="absolute -bottom-32 -left-24 h-80 w-80 rounded-full bg-accent/20 blur-3xl" />
-              <div className="absolute inset-0 bg-[linear-gradient(145deg,transparent_30%,rgba(255,255,255,0.035)_100%)]" />
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="grid grid-cols-5 gap-3">
+          <div className="col-span-2 space-y-2">
+            <Label htmlFor="tipo_identificacion" className="text-sm font-medium text-foreground">
+              Tipo de identificación <span className="text-accent">*</span>
+            </Label>
+            <div className="group relative">
+              <IdCard className={`${inputIconClass} group-focus-within:text-accent`} />
+              <select
+                id="tipo_identificacion"
+                name="tipo_identificacion"
+                value={form.tipo_identificacion}
+                onChange={handleChange}
+                required
+                className={`${inputWithIconClass} focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] flex h-12 w-full min-w-0 cursor-pointer rounded-xl border border-input bg-input-background px-3 text-base text-foreground outline-none transition-[color,box-shadow] md:text-sm dark:bg-input/30`}
+              >
+                {TIPOS_IDENTIFICACION.map((tipo) => (
+                  <option key={tipo.value} value={tipo.value}>
+                    {tipo.label}
+                  </option>
+                ))}
+              </select>
             </div>
+          </div>
 
-            <div className="relative">
-              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-white/75">
-                <ShieldCheck className="h-4 w-4 text-accent" />
-                CRUD SNIES
-              </div>
-              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-white/55">
-                Institución Universitaria
-              </p>
-              <h1 className="mt-4 text-4xl font-semibold leading-tight xl:text-5xl">
-                Gestión de Estudiantes
-              </h1>
-              <p className="mt-4 text-sm leading-relaxed text-white/55">
-                Administra la información de identificación de los estudiantes:
-                registro, consulta, actualización y baja de datos.
-              </p>
-              <div className="mt-8 h-1 w-20 rounded-full bg-accent" />
+          <div className="col-span-3 space-y-2">
+            <Label htmlFor="numero_identificacion" className="text-sm font-medium text-foreground">
+              Número de identificación <span className="text-accent">*</span>
+            </Label>
+            <div className="group relative">
+              <Hash className={`${inputIconClass} group-focus-within:text-accent`} />
+              <Input
+                id="numero_identificacion"
+                name="numero_identificacion"
+                value={form.numero_identificacion}
+                onChange={handleChange}
+                maxLength={20}
+                required
+                placeholder="Ej: 1023456789"
+                className={inputWithIconClass}
+              />
             </div>
-
-            <div className="relative space-y-5">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5">
-                  <UserPlus className="h-5 w-5 text-accent" />
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-white/90">Registro</p>
-                  <p className="text-xs text-white/45">Nuevos estudiantes al sistema</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5">
-                  <FileText className="h-5 w-5 text-accent" />
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-white/90">Actualización</p>
-                  <p className="text-xs text-white/45">Corrección de datos de identificación</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5">
-                  <ClipboardList className="h-5 w-5 text-accent" />
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-white/90">Consulta</p>
-                  <p className="text-xs text-white/45">Búsqueda y seguimiento de registros</p>
-                </div>
-              </div>
-            </div>
-
-            <p className="relative text-xs text-white/45">
-              SNIES · Sistema Nacional de Información de la Educación Superior
-            </p>
-          </section>
-
-          <section className="flex items-start bg-card px-6 py-9 sm:px-10 lg:px-12 xl:px-16 lg:max-h-[700px] lg:overflow-y-auto">
-            <div className="mx-auto w-full max-w-xl">
-              <div className="mb-8">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
-                  CRUD SNIES
-                </p>
-                <h2 className="mt-3 text-3xl font-semibold tracking-tight text-foreground">
-                  {editingId ? 'Editar estudiante' : 'Registrar estudiante'}
-                </h2>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  {editingId
-                    ? 'Actualiza los datos del estudiante y guarda los cambios'
-                    : 'Completa el formulario con la información de identificación'}
-                </p>
-              </div>
-
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-5 gap-3">
-                  <div className="col-span-2 space-y-2">
-                    <Label htmlFor="tipo_identificacion" className="text-sm font-medium text-foreground">
-                      Tipo de identificación <span className="text-accent">*</span>
-                    </Label>
-                    <div className="group relative">
-                      <IdCard className={`${inputIconClass} group-focus-within:text-accent`} />
-                      <select
-                        id="tipo_identificacion"
-                        name="tipo_identificacion"
-                        value={form.tipo_identificacion}
-                        onChange={handleChange}
-                        required
-                        className={`${inputWithIconClass} focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] flex h-12 w-full min-w-0 cursor-pointer rounded-xl border border-input bg-input-background px-3 text-base text-foreground outline-none transition-[color,box-shadow] md:text-sm dark:bg-input/30`}
-                      >
-                        {TIPOS_IDENTIFICACION.map((tipo) => (
-                          <option key={tipo.value} value={tipo.value}>
-                            {tipo.label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="col-span-3 space-y-2">
-                    <Label htmlFor="numero_identificacion" className="text-sm font-medium text-foreground">
-                      Número de identificación <span className="text-accent">*</span>
-                    </Label>
-                    <div className="group relative">
-                      <Hash className={`${inputIconClass} group-focus-within:text-accent`} />
-                      <Input
-                        id="numero_identificacion"
-                        name="numero_identificacion"
-                        value={form.numero_identificacion}
-                        onChange={handleChange}
-                        maxLength={20}
-                        required
-                        placeholder="Ej: 1023456789"
-                        className={inputWithIconClass}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-2">
-                    <Label htmlFor="primer_nombre" className="text-sm font-medium text-foreground">
-                      Primer nombre <span className="text-accent">*</span>
-                    </Label>
-                    <div className="group relative">
-                      <User className={`${inputIconClass} group-focus-within:text-accent`} />
-                      <Input
-                        id="primer_nombre"
-                        name="primer_nombre"
-                        value={form.primer_nombre}
-                        onChange={handleChange}
-                        maxLength={50}
-                        required
-                        placeholder="Ej: Ana"
-                        className={inputWithIconClass}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="segundo_nombre" className="text-sm font-medium text-foreground">
-                      Segundo nombre
-                    </Label>
-                    <div className="group relative">
-                      <User className={`${inputIconClass} group-focus-within:text-accent`} />
-                      <Input
-                        id="segundo_nombre"
-                        name="segundo_nombre"
-                        value={form.segundo_nombre}
-                        onChange={handleChange}
-                        maxLength={50}
-                        placeholder="Ej: María"
-                        className={inputWithIconClass}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-2">
-                    <Label htmlFor="primer_apellido" className="text-sm font-medium text-foreground">
-                      Primer apellido <span className="text-accent">*</span>
-                    </Label>
-                    <div className="group relative">
-                      <User className={`${inputIconClass} group-focus-within:text-accent`} />
-                      <Input
-                        id="primer_apellido"
-                        name="primer_apellido"
-                        value={form.primer_apellido}
-                        onChange={handleChange}
-                        maxLength={50}
-                        required
-                        placeholder="Ej: López"
-                        className={inputWithIconClass}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="segundo_apellido" className="text-sm font-medium text-foreground">
-                      Segundo apellido <span className="text-accent">*</span>
-                    </Label>
-                    <div className="group relative">
-                      <User className={`${inputIconClass} group-focus-within:text-accent`} />
-                      <Input
-                        id="segundo_apellido"
-                        name="segundo_apellido"
-                        value={form.segundo_apellido}
-                        onChange={handleChange}
-                        maxLength={50}
-                        required
-                        placeholder="Ej: Pérez"
-                        className={inputWithIconClass}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="codigo_estudiante" className="text-sm font-medium text-foreground">
-                    Código de estudiante <span className="text-accent">*</span>
-                  </Label>
-                  <div className="group relative">
-                    <GraduationCap className={`${inputIconClass} group-focus-within:text-accent`} />
-                    <Input
-                      id="codigo_estudiante"
-                      name="codigo_estudiante"
-                      value={form.codigo_estudiante}
-                      onChange={handleChange}
-                      maxLength={20}
-                      required
-                      placeholder="Ej: 2026001234"
-                      className={inputWithIconClass}
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="programa" className="text-sm font-medium text-foreground">
-                    Programa al que pertenece
-                  </Label>
-                  <div className="group relative">
-                    <BookOpen className={`${inputIconClass} group-focus-within:text-accent`} />
-                    <Input
-                      id="programa"
-                      name="programa"
-                      value={form.programa}
-                      onChange={handleChange}
-                      maxLength={100}
-                      placeholder="Ej: Ingeniería de Sistemas"
-                      className={inputWithIconClass}
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-2">
-                    <Label htmlFor="municipio" className="text-sm font-medium text-foreground">
-                      Municipio
-                    </Label>
-                    <div className="group relative">
-                      <MapPin className={`${inputIconClass} group-focus-within:text-accent`} />
-                      <SearchableSelect
-                        id="municipio"
-                        value={form.municipio}
-                        onValueChange={(value) => setForm({ ...form, municipio: value })}
-                        options={municipioOptions}
-                        placeholder="Selecciona un municipio"
-                        searchPlaceholder="Buscar municipio..."
-                        emptyLabel="No hay municipios."
-                        isLoading={loadingMunicipios}
-                        className={inputWithIconClass}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="periodo_primer_semestre" className="text-sm font-medium text-foreground">
-                      Periodo que cursó 1er semestre
-                    </Label>
-                    <div className="group relative">
-                      <Calendar className={`${inputIconClass} group-focus-within:text-accent`} />
-                      <Input
-                        id="periodo_primer_semestre"
-                        name="periodo_primer_semestre"
-                        value={form.periodo_primer_semestre}
-                        onChange={handleChange}
-                        maxLength={20}
-                        placeholder="Ej: 2026-1"
-                        className={inputWithIconClass}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-2">
-                    <Label htmlFor="pais_nacimiento" className="text-sm font-medium text-foreground">
-                      País de nacimiento
-                    </Label>
-                    <div className="group relative">
-                      <Globe className={`${inputIconClass} group-focus-within:text-accent`} />
-                      <SearchableSelect
-                        id="pais_nacimiento"
-                        value={form.pais_nacimiento}
-                        onValueChange={(value) => setForm({ ...form, pais_nacimiento: value })}
-                        options={paisOptions}
-                        placeholder="Selecciona un país"
-                        searchPlaceholder="Buscar país..."
-                        emptyLabel="No hay países."
-                        className={inputWithIconClass}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="municipio_nacimiento" className="text-sm font-medium text-foreground">
-                      Municipio de nacimiento
-                    </Label>
-                    <div className="group relative">
-                      <MapPin className={`${inputIconClass} group-focus-within:text-accent`} />
-                      <SearchableSelect
-                        id="municipio_nacimiento"
-                        value={form.municipio_nacimiento}
-                        onValueChange={(value) =>
-                          setForm({ ...form, municipio_nacimiento: value })
-                        }
-                        options={municipioOptions}
-                        placeholder="Selecciona un municipio"
-                        searchPlaceholder="Buscar municipio..."
-                        emptyLabel="No hay municipios."
-                        isLoading={loadingMunicipios}
-                        className={inputWithIconClass}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-2 pt-1">
-                  <Checkbox
-                    id="aceptaTratamiento"
-                    checked={aceptaTratamiento}
-                    onCheckedChange={setAceptaTratamiento}
-                    className="mt-0.5"
-                  />
-                  <Label
-                    htmlFor="aceptaTratamiento"
-                    className="text-sm leading-relaxed text-muted-foreground"
-                  >
-                    Autorizo el tratamiento de datos personales conforme a la política de
-                    privacidad institucional
-                  </Label>
-                </div>
-
-                {error && (
-                  <p className="rounded-lg border border-destructive/40 bg-destructive/20 px-3 py-2 text-sm text-destructive-foreground">
-                    {error}
-                  </p>
-                )}
-
-                <div className="flex gap-3 pt-1">
-                  <Button
-                    type="submit"
-                    size="lg"
-                    className="h-12 flex-1"
-                  >
-                    <Save className="h-4 w-4" />
-                    {editingId ? 'Guardar cambios' : 'Registrar estudiante'}
-                  </Button>
-                  {editingId && (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="lg"
-                      className="h-12"
-                      onClick={handleCancelEdit}
-                    >
-                      <X className="h-4 w-4" />
-                      Cancelar
-                    </Button>
-                  )}
-                </div>
-              </form>
-            </div>
-          </section>
+          </div>
         </div>
-      </main>
-    </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          <div className="space-y-2">
+            <Label htmlFor="primer_nombre" className="text-sm font-medium text-foreground">
+              Primer nombre <span className="text-accent">*</span>
+            </Label>
+            <div className="group relative">
+              <User className={`${inputIconClass} group-focus-within:text-accent`} />
+              <Input
+                id="primer_nombre"
+                name="primer_nombre"
+                value={form.primer_nombre}
+                onChange={handleChange}
+                maxLength={50}
+                required
+                placeholder="Ej: Ana"
+                className={inputWithIconClass}
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="segundo_nombre" className="text-sm font-medium text-foreground">
+              Segundo nombre
+            </Label>
+            <div className="group relative">
+              <User className={`${inputIconClass} group-focus-within:text-accent`} />
+              <Input
+                id="segundo_nombre"
+                name="segundo_nombre"
+                value={form.segundo_nombre}
+                onChange={handleChange}
+                maxLength={50}
+                placeholder="Ej: María"
+                className={inputWithIconClass}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          <div className="space-y-2">
+            <Label htmlFor="primer_apellido" className="text-sm font-medium text-foreground">
+              Primer apellido <span className="text-accent">*</span>
+            </Label>
+            <div className="group relative">
+              <User className={`${inputIconClass} group-focus-within:text-accent`} />
+              <Input
+                id="primer_apellido"
+                name="primer_apellido"
+                value={form.primer_apellido}
+                onChange={handleChange}
+                maxLength={50}
+                required
+                placeholder="Ej: López"
+                className={inputWithIconClass}
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="segundo_apellido" className="text-sm font-medium text-foreground">
+              Segundo apellido <span className="text-accent">*</span>
+            </Label>
+            <div className="group relative">
+              <User className={`${inputIconClass} group-focus-within:text-accent`} />
+              <Input
+                id="segundo_apellido"
+                name="segundo_apellido"
+                value={form.segundo_apellido}
+                onChange={handleChange}
+                maxLength={50}
+                required
+                placeholder="Ej: Pérez"
+                className={inputWithIconClass}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="codigo_estudiante" className="text-sm font-medium text-foreground">
+            Código de estudiante <span className="text-accent">*</span>
+          </Label>
+          <div className="group relative">
+            <GraduationCap className={`${inputIconClass} group-focus-within:text-accent`} />
+            <Input
+              id="codigo_estudiante"
+              name="codigo_estudiante"
+              value={form.codigo_estudiante}
+              onChange={handleChange}
+              maxLength={20}
+              required
+              placeholder="Ej: 2026001234"
+              className={inputWithIconClass}
+            />
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="programa" className="text-sm font-medium text-foreground">
+            Programa al que pertenece
+          </Label>
+          <div className="group relative">
+            <BookOpen className={`${inputIconClass} group-focus-within:text-accent`} />
+            <Input
+              id="programa"
+              name="programa"
+              value={form.programa}
+              onChange={handleChange}
+              maxLength={100}
+              placeholder="Ej: Ingeniería de Sistemas"
+              className={inputWithIconClass}
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          <div className="space-y-2">
+            <Label htmlFor="municipio" className="text-sm font-medium text-foreground">
+              Municipio
+            </Label>
+            <div className="group relative">
+              <MapPin className={`${inputIconClass} group-focus-within:text-accent`} />
+              <SearchableSelect
+                id="municipio"
+                value={form.municipio}
+                onValueChange={(value) => setForm({ ...form, municipio: value })}
+                options={municipioOptions}
+                placeholder="Selecciona un municipio"
+                searchPlaceholder="Buscar municipio..."
+                emptyLabel="No hay municipios."
+                isLoading={loadingMunicipios}
+                className={inputWithIconClass}
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="periodo_primer_semestre" className="text-sm font-medium text-foreground">
+              Periodo que cursó 1er semestre
+            </Label>
+            <div className="group relative">
+              <Calendar className={`${inputIconClass} group-focus-within:text-accent`} />
+              <Input
+                id="periodo_primer_semestre"
+                name="periodo_primer_semestre"
+                value={form.periodo_primer_semestre}
+                onChange={handleChange}
+                maxLength={20}
+                placeholder="Ej: 2026-1"
+                className={inputWithIconClass}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          <div className="space-y-2">
+            <Label htmlFor="pais_nacimiento" className="text-sm font-medium text-foreground">
+              País de nacimiento
+            </Label>
+            <div className="group relative">
+              <Globe className={`${inputIconClass} group-focus-within:text-accent`} />
+              <SearchableSelect
+                id="pais_nacimiento"
+                value={form.pais_nacimiento}
+                onValueChange={(value) => setForm({ ...form, pais_nacimiento: value })}
+                options={paisOptions}
+                placeholder="Selecciona un país"
+                searchPlaceholder="Buscar país..."
+                emptyLabel="No hay países."
+                className={inputWithIconClass}
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="municipio_nacimiento" className="text-sm font-medium text-foreground">
+              Municipio de nacimiento
+            </Label>
+            <div className="group relative">
+              <MapPin className={`${inputIconClass} group-focus-within:text-accent`} />
+              <SearchableSelect
+                id="municipio_nacimiento"
+                value={form.municipio_nacimiento}
+                onValueChange={(value) =>
+                  setForm({ ...form, municipio_nacimiento: value })
+                }
+                options={municipioOptions}
+                placeholder="Selecciona un municipio"
+                searchPlaceholder="Buscar municipio..."
+                emptyLabel="No hay municipios."
+                isLoading={loadingMunicipios}
+                className={inputWithIconClass}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-start gap-2 pt-1">
+          <Checkbox
+            id="aceptaTratamiento"
+            checked={aceptaTratamiento}
+            onCheckedChange={setAceptaTratamiento}
+            className="mt-0.5"
+          />
+          <Label
+            htmlFor="aceptaTratamiento"
+            className="text-sm leading-relaxed text-muted-foreground"
+          >
+            Autorizo el tratamiento de datos personales conforme a la política de
+            privacidad institucional
+          </Label>
+        </div>
+
+        {error && (
+          <p className="rounded-lg border border-destructive/40 bg-destructive/20 px-3 py-2 text-sm text-destructive-foreground">
+            {error}
+          </p>
+        )}
+
+        <div className="flex gap-3 pt-1">
+          <Button
+            type="submit"
+            size="lg"
+            className="h-12 flex-1"
+          >
+            <Save className="h-4 w-4" />
+            {editingId ? 'Guardar cambios' : 'Registrar estudiante'}
+          </Button>
+          {editingId && (
+            <Button
+              type="button"
+              variant="outline"
+              size="lg"
+              className="h-12"
+              onClick={handleCancelEdit}
+            >
+              <X className="h-4 w-4" />
+              Cancelar
+            </Button>
+          )}
+        </div>
+      </form>
+    </PageShell>
   )
 }
 
 function App() {
   return (
     <ThemeProvider>
-      <EstudiantesCrud />
+      <Routes>
+        <Route path="/" element={<RegistrarPage />} />
+        <Route path="/registrar" element={<RegistrarPage />} />
+        <Route path="/consulta" element={<ConsultaPage />} />
+        <Route path="*" element={<RegistrarPage />} />
+      </Routes>
     </ThemeProvider>
   )
 }

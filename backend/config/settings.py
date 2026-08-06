@@ -10,10 +10,15 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
+
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+load_dotenv(BASE_DIR / '.env')
 
 
 # Quick-start development settings - unsuitable for production
@@ -26,6 +31,10 @@ SECRET_KEY = 'django-insecure-rzbg95*iqihzl5q6xglmowigj#9cy1ck+a0b3-g(pi=cpnaad7
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
+# Hash SHA-256 de la contraseña para la vista de consulta.
+# Nunca guardar el texto plano en el repositorio.
+CONSULTA_PASSWORD_HASH = os.getenv('CONSULTA_PASSWORD_HASH')
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
@@ -85,8 +94,21 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    },
+    'produccion': {
+        'ENGINE': 'config.db_postgres',
+        'NAME': os.getenv('DB_PROD_NAME'),
+        'USER': os.getenv('DB_PROD_USER'),
+        'PASSWORD': os.getenv('DB_PROD_PASSWORD'),
+        'HOST': os.getenv('DB_PROD_HOST'),
+        'PORT': os.getenv('DB_PROD_PORT', '5432'),
+        'OPTIONS': {
+            'connect_timeout': 15,
+        },
+    },
 }
+
+DATABASE_ROUTERS = ['config.routers.ProductionRouter']
 
 
 # Password validation

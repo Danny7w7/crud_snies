@@ -7,12 +7,13 @@ from rest_framework import viewsets
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import BasePermission
 
-from .models import Departamento, Estudiante, EstudianteSwa, Historico, Municipio
+from .models import Departamento, Estudiante, EstudianteSwa, Historico, Municipio, Programa
 from .serializers import (
     DepartamentoSerializer,
     EstudianteSerializer,
     MunicipioSerializer,
     PersonaSerializer,
+    ProgramaSerializer,
 )
 
 
@@ -119,3 +120,10 @@ class PersonaViewSet(viewsets.ReadOnlyModelViewSet):
             qs = qs.filter(es_reintegro=False)
 
         return qs.order_by('persona__apellido', 'persona__nombre')
+
+
+class ProgramaViewSet(viewsets.ReadOnlyModelViewSet):
+    """Catalogo de programas activos de la base de produccion."""
+
+    queryset = Programa.objects.filter(activo=1)
+    serializer_class = ProgramaSerializer

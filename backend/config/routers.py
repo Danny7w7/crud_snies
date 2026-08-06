@@ -1,6 +1,6 @@
 """Enrutador de bases de datos: solo lectura contra la base de produccion."""
 
-PRODUCTION_MODELS = {'persona', 'estudianteswa', 'historico'}
+PRODUCTION_MODELS = {'persona', 'estudianteswa', 'programa', 'historico'}
 
 
 class ProductionRouter:

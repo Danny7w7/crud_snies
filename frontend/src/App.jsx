@@ -93,9 +93,25 @@ function splitNameParts(value) {
   return { first: first || '', rest: rest.join(' ') }
 }
 
+function parsePeriodoIngreso(value) {
+  if (value === null || value === undefined || value === '') return { anio: '', semestre: '' }
+  const str = String(value).trim()
+  if (!/^\d{5}$/.test(str)) return { anio: '', semestre: '' }
+  const anio = str.slice(0, 4)
+  const semestre = str.slice(4)
+  if (semestre !== '1' && semestre !== '2') return { anio: '', semestre: '' }
+  return { anio, semestre }
+}
+
+function formatPeriodoIngreso(value) {
+  const { anio, semestre } = parsePeriodoIngreso(value)
+  return anio ? `${anio}-${semestre}` : null
+}
+
 function personaToForm(persona) {
   const nombres = splitNameParts(persona.nombre)
   const apellidos = splitNameParts(persona.apellido)
+  const periodo = parsePeriodoIngreso(persona.periodo_ingreso)
   return {
     tipo_identificacion: TIPO_DOCUMENTO_TO_CODE[persona.tipo_identificacion] || 'CC',
     numero_identificacion: persona.identificacion || '',
@@ -104,12 +120,12 @@ function personaToForm(persona) {
     primer_apellido: apellidos.first,
     segundo_apellido: apellidos.rest,
     codigo_estudiante: persona.codigo_estudiante || '',
-    programa: '',
+    programa: persona.programa != null ? String(persona.programa) : '',
     municipio: '',
     pais_nacimiento: '',
     municipio_nacimiento: '',
-    periodo_anio: '',
-    periodo_semestre: '',
+    periodo_anio: periodo.anio,
+    periodo_semestre: periodo.semestre,
   }
 }
 
@@ -516,6 +532,7 @@ function ConsultarPersonas() {
             <thead className="bg-primary text-primary-foreground">
               <tr>
                 <th className="px-4 py-3 text-left font-medium">Código</th>
+                <th className="px-4 py-3 text-left font-medium">Periodo</th>
                 <th className="px-4 py-3 text-left font-medium">Documento</th>
                 <th className="px-4 py-3 text-left font-medium">Nombre</th>
                 <th className="px-4 py-3 text-left font-medium">Apellido</th>
@@ -537,6 +554,11 @@ function ConsultarPersonas() {
                 >
                   <td className="px-4 py-3 font-medium text-foreground">
                     {p.codigo_estudiante || (
+                      <span className="text-muted-foreground">—</span>
+                    )}
+                  </td>
+                  <td className="px-4 py-3 text-muted-foreground">
+                    {formatPeriodoIngreso(p.periodo_ingreso) || (
                       <span className="text-muted-foreground">—</span>
                     )}
                   </td>
@@ -647,10 +669,16 @@ function RegistrarPage() {
   const [error, setError] = useState('')
   const [municipios, setMunicipios] = useState([])
   const [loadingMunicipios, setLoadingMunicipios] = useState(true)
+  const [programas, setProgramas] = useState([])
+  const [loadingProgramas, setLoadingProgramas] = useState(true)
 
   const municipioOptions = useMemo(
     () => municipios.map((m) => ({ value: m.id, label: `${m.nombre} - ${m.codigo}` })),
     [municipios],
+  )
+  const programaOptions = useMemo(
+    () => programas.map((p) => ({ value: String(p.codigo), label: p.nombre })),
+    [programas],
   )
   const paisOptions = useMemo(
     () =>
@@ -673,6 +701,19 @@ function RegistrarPage() {
       }
     }
     loadMunicipios()
+
+    async function loadProgramas() {
+      try {
+        const res = await fetch('/api/programas/')
+        if (!res.ok) throw new Error('Error al cargar programas')
+        setProgramas(await res.json())
+      } catch (err) {
+        setError(err.message)
+      } finally {
+        setLoadingProgramas(false)
+      }
+    }
+    loadProgramas()
   }, [])
 
   function handleChange(e) {
@@ -883,13 +924,15 @@ function RegistrarPage() {
           </Label>
           <div className="group relative">
             <BookOpen className={`${inputIconClass} group-focus-within:text-accent`} />
-            <Input
+            <SearchableSelect
               id="programa"
-              name="programa"
               value={form.programa}
-              onChange={handleChange}
-              maxLength={100}
-              placeholder="Ej: Ingeniería de Sistemas"
+              onValueChange={(value) => setForm({ ...form, programa: value })}
+              options={programaOptions}
+              placeholder="Selecciona un programa"
+              searchPlaceholder="Buscar programa..."
+              emptyLabel="No hay programas disponibles."
+              isLoading={loadingProgramas}
               className={inputWithIconClass}
             />
           </div>

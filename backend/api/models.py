@@ -117,6 +117,27 @@ class EstudianteSwa(models.Model):
         return f'{self.codigo}'
 
 
+class Programa(models.Model):
+    """Tabla 'programa' de la base de datos de produccion (solo lectura).
+
+    El esquema heredado usa 'codigo' como llave primaria (no 'id').
+    """
+
+    codigo = models.IntegerField(primary_key=True)
+    nombre = models.CharField(max_length=255, blank=True, null=True)
+    activo = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'programa'
+        verbose_name = 'Programa'
+        verbose_name_plural = 'Programas'
+        ordering = ['nombre']
+
+    def __str__(self):
+        return f'{self.nombre} ({self.codigo})'
+
+
 class Historico(models.Model):
     """Tabla 'historico' de produccion (historial de matricula por periodo).
 

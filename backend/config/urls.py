@@ -18,13 +18,20 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-from api.views import DepartamentoViewSet, EstudianteViewSet, MunicipioViewSet, PersonaViewSet
+from api.views import (
+    DepartamentoViewSet,
+    EstudianteViewSet,
+    MunicipioViewSet,
+    PersonaViewSet,
+    ProgramaViewSet,
+)
 
 router = DefaultRouter()
 router.register('estudiantes', EstudianteViewSet)
 router.register('municipios', MunicipioViewSet)
 router.register('departamentos', DepartamentoViewSet)
 router.register('personas', PersonaViewSet)
+router.register('programas', ProgramaViewSet)
 
 
 

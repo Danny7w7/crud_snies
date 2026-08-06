@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Link, Route, Routes } from 'react-router-dom'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Link, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import {
   Moon,
   Sun,
@@ -73,6 +73,38 @@ const TIPO_DOCUMENTO_LABELS = {
   9: 'Sec. Educación',
 }
 
+const TIPO_DOCUMENTO_TO_CODE = {
+  1: 'CC',
+  2: 'PA',
+  3: 'CE',
+  4: 'TI',
+  8: 'RC',
+}
+
+function splitNameParts(value) {
+  const [first, ...rest] = (value || '').trim().split(/\s+/)
+  return { first: first || '', rest: rest.join(' ') }
+}
+
+function personaToForm(persona) {
+  const nombres = splitNameParts(persona.nombre)
+  const apellidos = splitNameParts(persona.apellido)
+  return {
+    tipo_identificacion: TIPO_DOCUMENTO_TO_CODE[persona.tipo_identificacion] || 'CC',
+    numero_identificacion: persona.identificacion || '',
+    primer_nombre: nombres.first,
+    segundo_nombre: nombres.rest,
+    primer_apellido: apellidos.first,
+    segundo_apellido: apellidos.rest,
+    codigo_estudiante: persona.codigo_estudiante || '',
+    programa: '',
+    municipio: '',
+    pais_nacimiento: '',
+    municipio_nacimiento: '',
+    periodo_primer_semestre: '',
+  }
+}
+
 async function sha256Hex(text) {
   const data = new TextEncoder().encode(text)
   const digest = await crypto.subtle.digest('SHA-256', data)
@@ -101,13 +133,26 @@ function ThemeToggle() {
   )
 }
 
-function PageShell({ active, children }) {
+function PageShell({ active, children, wide = false }) {
   const navClass = (name) =>
     `inline-flex flex-1 items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
       active === name
         ? 'bg-primary text-primary-foreground shadow-sm'
         : 'text-muted-foreground hover:text-foreground'
     }`
+
+  const nav = (
+    <nav className="mb-8 inline-flex w-full rounded-2xl border border-white/40 bg-secondary/60 p-1.5 dark:border-white/10">
+      <Link to="/registrar" className={navClass('registrar')}>
+        <UserPlus className="h-4 w-4" />
+        Registrar
+      </Link>
+      <Link to="/consulta" className={navClass('consulta')}>
+        <Search className="h-4 w-4" />
+        Consultar
+      </Link>
+    </nav>
+  )
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#eef1f5] text-foreground dark:bg-[#080d17]">
@@ -116,6 +161,16 @@ function PageShell({ active, children }) {
       <ThemeToggle />
 
       <main className="relative z-10 flex min-h-screen items-center justify-center p-4 py-16 sm:p-8 sm:py-20">
+        {wide ? (
+          <div className="w-full max-w-7xl overflow-hidden rounded-[2rem] border border-white/55 bg-card/95 shadow-[0_32px_90px_-28px_rgba(15,31,58,0.55)] dark:border-white/10 dark:bg-card/90">
+            <section className="flex items-start bg-card px-6 py-9 sm:px-10 lg:px-12 xl:px-16">
+              <div className="mx-auto w-full">
+                {nav}
+                {children}
+              </div>
+            </section>
+          </div>
+        ) : (
         <div className="grid w-full max-w-6xl overflow-hidden rounded-[2rem] border border-white/55 bg-card/95 shadow-[0_32px_90px_-28px_rgba(15,31,58,0.55)] dark:border-white/10 dark:bg-card/90 lg:min-h-[700px] lg:grid-cols-[0.72fr_1.28fr]">
           <section className="relative hidden overflow-hidden bg-brand-ink p-10 text-white lg:flex lg:flex-col lg:justify-between xl:p-14">
             <div className="pointer-events-none absolute inset-0" aria-hidden="true">
@@ -180,21 +235,13 @@ function PageShell({ active, children }) {
 
           <section className="flex items-start bg-card px-6 py-9 sm:px-10 lg:px-12 xl:px-16 lg:max-h-[700px] lg:overflow-y-auto">
             <div className="mx-auto w-full max-w-xl">
-              <nav className="mb-8 inline-flex w-full rounded-2xl border border-white/40 bg-secondary/60 p-1.5 dark:border-white/10">
-                <Link to="/registrar" className={navClass('registrar')}>
-                  <UserPlus className="h-4 w-4" />
-                  Registrar
-                </Link>
-                <Link to="/consulta" className={navClass('consulta')}>
-                  <Search className="h-4 w-4" />
-                  Consultar
-                </Link>
-              </nav>
+              {nav}
 
               {children}
             </div>
           </section>
         </div>
+        )}
       </main>
     </div>
   )
@@ -289,6 +336,9 @@ function ConsultarPersonas() {
   const [hasPrev, setHasPrev] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const navigate = useNavigate()
+  const debounceRef = useRef(null)
+  const controllerRef = useRef(null)
 
   const headers = useMemo(
     () => ({ 'X-Consulta-Password': getConsultaHash() }),
@@ -297,12 +347,18 @@ function ConsultarPersonas() {
 
   const runSearch = useCallback(
     async (q, pageNumber = 1) => {
+      controllerRef.current?.abort()
+      const controller = new AbortController()
+      controllerRef.current = controller
       setLoading(true)
       setError('')
       try {
         const params = new URLSearchParams({ page: String(pageNumber) })
         if (q) params.set('q', q)
-        const res = await fetch(`${API_PERSONAS_URL}?${params}`, { headers })
+        const res = await fetch(`${API_PERSONAS_URL}?${params}`, {
+          headers,
+          signal: controller.signal,
+        })
         if (res.status === 403) {
           throw new Error('Contraseña de consulta inválida. Vuelve a ingresarla.')
         }
@@ -314,6 +370,7 @@ function ConsultarPersonas() {
         setHasNext(Boolean(data.next))
         setHasPrev(Boolean(data.previous))
       } catch (err) {
+        if (err.name === 'AbortError') return
         setError(err.message)
         setResults([])
         setCount(0)
@@ -325,20 +382,25 @@ function ConsultarPersonas() {
   )
 
   useEffect(() => {
-    runSearch('', 1)
-  }, [runSearch])
+    debounceRef.current = setTimeout(() => {
+      runSearch(query.trim(), 1)
+    }, 400)
+    return () => clearTimeout(debounceRef.current)
+  }, [query, runSearch])
 
   function handleSubmit(e) {
     e.preventDefault()
+    clearTimeout(debounceRef.current)
     runSearch(query.trim(), 1)
   }
 
   function goToPage(pageNumber) {
+    clearTimeout(debounceRef.current)
     runSearch(query.trim(), pageNumber)
   }
 
   return (
-    <div className="mx-auto w-full max-w-3xl">
+    <div className="mx-auto w-full">
       <div className="mb-8">
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
           CRUD SNIES
@@ -381,7 +443,6 @@ function ConsultarPersonas() {
               className="h-12"
               onClick={() => {
                 setQuery('')
-                runSearch('', 1)
               }}
             >
               <X className="h-4 w-4" />
@@ -435,6 +496,7 @@ function ConsultarPersonas() {
                 <th className="hidden px-4 py-3 text-left font-medium lg:table-cell">
                   Email
                 </th>
+                <th className="px-4 py-3 text-right font-medium">Acción</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border/60">
@@ -467,6 +529,21 @@ function ConsultarPersonas() {
                       <Mail className="h-3.5 w-3.5" />
                       {p.email || '—'}
                     </span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex justify-end">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() =>
+                          navigate('/registrar', { state: { persona: p } })
+                        }
+                      >
+                        <UserPlus className="h-3.5 w-3.5" />
+                        Llenar registro
+                      </Button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -508,7 +585,7 @@ function ConsultaPage() {
   const [authed, setAuthed] = useState(() => Boolean(getConsultaHash()))
 
   return (
-    <PageShell active="consulta">
+    <PageShell active="consulta" wide>
       {authed ? (
         <ConsultarPersonas />
       ) : (
@@ -519,7 +596,11 @@ function ConsultaPage() {
 }
 
 function RegistrarPage() {
-  const [form, setForm] = useState(INITIAL_FORM)
+  const location = useLocation()
+  const [form, setForm] = useState(() => {
+    const persona = location.state?.persona
+    return persona ? personaToForm(persona) : INITIAL_FORM
+  })
   const [editingId, setEditingId] = useState(null)
   const [aceptaTratamiento, setAceptaTratamiento] = useState(false)
   const [error, setError] = useState('')

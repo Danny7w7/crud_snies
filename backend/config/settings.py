@@ -36,6 +36,10 @@ ALLOWED_HOSTS = []
 # Nunca guardar el texto plano en el repositorio.
 CONSULTA_PASSWORD_HASH = os.getenv('CONSULTA_PASSWORD_HASH')
 
+# Programas de extension/idiomas que no deben ni mostrarse en la consulta
+# ni permitirse en el registro (registros adicionales no academicos).
+PROGRAMAS_EXCLUIDOS = (50, 51, 52, 60)
+
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
     'http://127.0.0.1:5173',

@@ -1,4 +1,5 @@
 import hmac
+import time
 
 from django.conf import settings
 from django.db import connections
@@ -15,6 +16,14 @@ from .serializers import (
     PersonaSerializer,
     ProgramaSerializer,
 )
+
+# Programas (extension/idiomas) que no deben aparecer en la consulta.
+PROGRAMAS_EXCLUIDOS = settings.PROGRAMAS_EXCLUIDOS
+
+# Los datos de 'historico' (tabla SWA) no se actualizan, por lo que el set de
+# codigos de reintegro puede cachearse por mucho tiempo en memoria.
+_REINTEGRO_CACHE_TTL = 3600
+_reintegro_cache = {'timestamp': 0, 'codes': None}
 
 
 class ConsultaPasswordPermission(BasePermission):
@@ -36,9 +45,13 @@ class ConsultaPasswordPermission(BasePermission):
 
 class EstudianteViewSet(viewsets.ModelViewSet):
     """CRUD local de estudiantes, sin borrado y solo para estudiantes
-    que existen en la base institucional (validado en el serializer)."""
+    que existen en la base institucional (validado en el serializer).
 
-    queryset = Estudiante.objects.all()
+    Excluye los programas de extension/idiomas (no se listan ni editan)."""
+
+    queryset = Estudiante.objects.exclude(
+        programa__in=[str(p) for p in PROGRAMAS_EXCLUIDOS]
+    )
     serializer_class = EstudianteSerializer
     http_method_names = ['get', 'post', 'put', 'patch', 'head', 'options']
 
@@ -63,7 +76,15 @@ def _reintegro_codes():
 
     El estado 'P' (pagado sin matricula) se excluye porque no representa una
     matricula real y no debe influir en la deteccion.
+
+    El resultado se cachea en memoria (_REINTEGRO_CACHE_TTL segundos) porque
+    la tabla 'historico' de la base SWA no se actualiza.
     """
+    now = time.time()
+    cached = _reintegro_cache['codes']
+    if cached is not None and now - _reintegro_cache['timestamp'] < _REINTEGRO_CACHE_TTL:
+        return cached
+
     sql = """
         SELECT DISTINCT estudiante FROM (
             SELECT estudiante, periodo,
@@ -77,7 +98,11 @@ def _reintegro_codes():
     """
     with connections['produccion'].cursor() as cursor:
         cursor.execute(sql)
-        return {row[0] for row in cursor.fetchall()}
+        codes = {row[0] for row in cursor.fetchall()}
+
+    _reintegro_cache['timestamp'] = now
+    _reintegro_cache['codes'] = codes
+    return codes
 
 
 class PersonaViewSet(viewsets.ReadOnlyModelViewSet):
@@ -85,7 +110,12 @@ class PersonaViewSet(viewsets.ReadOnlyModelViewSet):
 
     queryset = (
         EstudianteSwa.objects.select_related('persona')
-        .exclude(Q(persona__isnull=True) | Q(codigo__isnull=True) | Q(codigo=''))
+        .exclude(
+            Q(persona__isnull=True)
+            | Q(codigo__isnull=True)
+            | Q(codigo='')
+            | Q(programa__in=PROGRAMAS_EXCLUIDOS)
+        )
     )
     serializer_class = PersonaSerializer
     permission_classes = [ConsultaPasswordPermission]
@@ -123,11 +153,25 @@ class PersonaViewSet(viewsets.ReadOnlyModelViewSet):
         elif reintegro_filter == '0':
             qs = qs.filter(es_reintegro=False)
 
+        tipo = self.request.query_params.get('tipo_identificacion', '').strip()
+        if tipo:
+            qs = qs.filter(persona__tipo_identificacion=tipo)
+
+        programa = self.request.query_params.get('programa', '').strip()
+        if programa:
+            qs = qs.filter(programa=programa)
+
         return qs.order_by('persona__apellido', 'persona__nombre')
 
 
 class ProgramaViewSet(viewsets.ReadOnlyModelViewSet):
-    """Catalogo de programas activos de la base de produccion."""
+    """Catalogo de programas activos de la base de produccion.
 
-    queryset = Programa.objects.filter(activo=1)
+    Excluye los programas de extension/idiomas que no deben registrarse.
+    """
+
+    queryset = (
+        Programa.objects.filter(activo=1)
+        .exclude(codigo__in=PROGRAMAS_EXCLUIDOS)
+    )
     serializer_class = ProgramaSerializer

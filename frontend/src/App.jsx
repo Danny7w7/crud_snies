@@ -81,6 +81,10 @@ const TIPO_DOCUMENTO_LABELS = {
   9: 'Sec. Educación',
 }
 
+const TIPO_DOCUMENTO_FILTER_OPTIONS = Object.entries(TIPO_DOCUMENTO_LABELS).map(
+  ([value, label]) => ({ value, label }),
+)
+
 const TIPO_DOCUMENTO_TO_CODE = {
   1: 'CC',
   2: 'PA',
@@ -351,6 +355,9 @@ function ConsultaPasswordGate({ onSuccess }) {
 function ConsultarPersonas() {
   const [query, setQuery] = useState('')
   const [reintegro, setReintegro] = useState('')
+  const [tipoIdentificacion, setTipoIdentificacion] = useState('')
+  const [programa, setPrograma] = useState('')
+  const [programas, setProgramas] = useState([])
   const [results, setResults] = useState([])
   const [count, setCount] = useState(0)
   const [page, setPage] = useState(1)
@@ -367,8 +374,14 @@ function ConsultarPersonas() {
     [],
   )
 
+  const programaOptions = useMemo(
+    () => programas.map((p) => ({ value: String(p.codigo), label: p.nombre })),
+    [programas],
+  )
+
   const runSearch = useCallback(
-    async (q, pageNumber = 1, reintegroValue = reintegro) => {
+    async (q, pageNumber = 1, filters = {}) => {
+      const { reintegro: reintegroValue, tipoIdentificacion: tipoValue, programa: programaValue } = filters
       controllerRef.current?.abort()
       const controller = new AbortController()
       controllerRef.current = controller
@@ -378,6 +391,8 @@ function ConsultarPersonas() {
         const params = new URLSearchParams({ page: String(pageNumber) })
         if (q) params.set('q', q)
         if (reintegroValue) params.set('reintegro', reintegroValue)
+        if (tipoValue) params.set('tipo_identificacion', tipoValue)
+        if (programaValue) params.set('programa', programaValue)
         const res = await fetch(`${API_PERSONAS_URL}?${params}`, {
           headers,
           signal: controller.signal,
@@ -401,25 +416,47 @@ function ConsultarPersonas() {
         setLoading(false)
       }
     },
-    [headers, reintegro],
+    [headers],
   )
 
   useEffect(() => {
+    let cancelled = false
+    async function loadProgramas() {
+      try {
+        const res = await fetch('/api/programas/')
+        if (!res.ok) throw new Error('Error al cargar programas')
+        const data = await res.json()
+        if (!cancelled) setProgramas(data)
+      } catch (err) {
+        if (!cancelled) setError(err.message)
+      }
+    }
+    loadProgramas()
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  useEffect(() => {
     debounceRef.current = setTimeout(() => {
-      runSearch(query.trim(), 1, reintegro)
+      runSearch(query.trim(), 1, {
+        reintegro,
+        tipoIdentificacion,
+        programa,
+      })
     }, 400)
     return () => clearTimeout(debounceRef.current)
-  }, [query, reintegro, runSearch])
+  }, [query, reintegro, tipoIdentificacion, programa, runSearch])
 
   function handleSubmit(e) {
     e.preventDefault()
     clearTimeout(debounceRef.current)
-    runSearch(query.trim(), 1, reintegro)
+    runSearch(query.trim(), 1, { reintegro, tipoIdentificacion, programa })
   }
 
   function goToPage(pageNumber) {
     clearTimeout(debounceRef.current)
-    runSearch(query.trim(), pageNumber, reintegro)
+    runSearch(query.trim(), pageNumber, { reintegro, tipoIdentificacion, programa })
   }
 
   return (
@@ -431,70 +468,93 @@ function ConsultarPersonas() {
         <h2 className="mt-3 text-3xl font-semibold tracking-tight text-foreground">
           Consultar personas
         </h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Resultados de la base de datos institucional (solo lectura)
-        </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="mb-6 space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="busqueda" className="text-sm font-medium text-foreground">
+      <form onSubmit={handleSubmit} className="mb-6 space-y-3">
+        <div className="space-y-1.5">
+          <Label htmlFor="busqueda" className="text-xs font-medium text-foreground">
             Buscar por nombre, documento o código de estudiante
           </Label>
           <div className="group relative">
-            <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground transition-colors z-20 group-focus-within:text-accent" />
+            <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground transition-colors z-20 group-focus-within:text-accent" />
             <Input
               id="busqueda"
               name="busqueda"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Ej: María, 1044431897, 2026001234"
-              className="pl-12 h-12"
+              className="pl-10 h-10"
             />
           </div>
         </div>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <div className="space-y-2">
-            <Label htmlFor="filtro_reintegro" className="text-sm font-medium text-foreground">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <div className="space-y-1.5">
+            <Label htmlFor="filtro_reintegro" className="text-xs font-medium text-foreground">
               Reintegro
             </Label>
-            <div className="group relative">
-              <GraduationCap className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground transition-colors z-20 group-focus-within:text-accent" />
-              <SearchableSelect
-                id="filtro_reintegro"
-                value={reintegro}
-                onValueChange={setReintegro}
-                options={[
-                  { value: '', label: 'Todos' },
-                  { value: '1', label: 'Sí' },
-                  { value: '0', label: 'No' },
-                ]}
-                placeholder="Todos"
-                className="pl-12 h-12"
-              />
-            </div>
+            <SearchableSelect
+              id="filtro_reintegro"
+              value={reintegro}
+              onValueChange={setReintegro}
+              options={[
+                { value: '', label: 'Todos' },
+                { value: '1', label: 'Sí' },
+                { value: '0', label: 'No' },
+              ]}
+              placeholder="Todos"
+              className="h-9"
+            />
           </div>
-          <div className="flex items-end">
-            <Button type="submit" size="lg" className="h-12 flex-1">
-              <Search className="h-4 w-4" />
-              Buscar
-            </Button>
-            {query && (
-              <Button
-                type="button"
-                variant="outline"
-                size="lg"
-                className="ml-3 h-12"
-                onClick={() => {
-                  setQuery('')
-                  setReintegro('')
-                }}
-              >
-                <X className="h-4 w-4" />
-                Limpiar
-              </Button>
-            )}
+          <div className="space-y-1.5">
+            <Label htmlFor="filtro_tipo" className="text-xs font-medium text-foreground">
+              Tipo de documento
+            </Label>
+            <SearchableSelect
+              id="filtro_tipo"
+              value={tipoIdentificacion}
+              onValueChange={setTipoIdentificacion}
+              options={TIPO_DOCUMENTO_FILTER_OPTIONS}
+              placeholder="Todos"
+              searchPlaceholder="Buscar tipo..."
+              className="h-9"
+            />
           </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="filtro_programa" className="text-xs font-medium text-foreground">
+              Programa
+            </Label>
+            <SearchableSelect
+              id="filtro_programa"
+              value={programa}
+              onValueChange={setPrograma}
+              options={programaOptions}
+              placeholder="Todos"
+              searchPlaceholder="Buscar programa..."
+              className="h-9"
+            />
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 pt-1">
+          <Button type="submit" size="sm" className="h-9 flex-1">
+            <Search className="h-4 w-4" />
+            Buscar
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="h-9"
+            onClick={() => {
+              setQuery('')
+              setReintegro('')
+              setTipoIdentificacion('')
+              setPrograma('')
+            }}
+          >
+            <X className="h-4 w-4" />
+            Limpiar
+          </Button>
         </div>
       </form>
 

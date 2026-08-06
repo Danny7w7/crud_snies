@@ -1,3 +1,4 @@
+from django.conf import settings
 from rest_framework import serializers
 
 from .models import Departamento, Estudiante, EstudianteSwa, Municipio, Programa
@@ -17,6 +18,18 @@ class EstudianteSerializer(serializers.ModelSerializer):
                 'El estudiante no existe en la base institucional. '
                 'No se permite guardar información.'
             )
+        return value
+
+    def validate_programa(self, value):
+        if value is not None and value != '':
+            try:
+                codigo = int(value)
+            except (TypeError, ValueError):
+                codigo = None
+            if codigo in settings.PROGRAMAS_EXCLUIDOS:
+                raise serializers.ValidationError(
+                    'El programa seleccionado no está habilitado para registro.'
+                )
         return value
 
     def get_municipio_detalle(self, obj):

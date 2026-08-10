@@ -2,13 +2,20 @@ import hmac
 import time
 
 from django.conf import settings
-from django.db import connections
-from django.db.models import BooleanField, Case, Exists, OuterRef, Q, Subquery, Value, When
+from django.db import connection, connections
+from django.db.models import BooleanField, Case, Exists, OuterRef, Q, Value, When
 from rest_framework import viewsets
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import BasePermission
 
-from .models import Departamento, Estudiante, EstudianteSwa, Historico, Municipio, Programa
+from .models import (
+    Departamento,
+    EstudianteSwa,
+    Historico,
+    Municipio,
+    Programa,
+    VinculoPersona,
+)
 from .serializers import (
     DepartamentoSerializer,
     EstudianteSerializer,
@@ -37,13 +44,32 @@ class ConsultaPasswordPermission(BasePermission):
 
 
 class EstudianteViewSet(viewsets.ModelViewSet):
+    """CRUD de estudiantes: validado contra swa y guardado en la ERP local.
 
+    El listado corresponde a los vinculos tipo 'Estudiante' de la ERP,
+    excluyendo los programas de extension/idiomas.
+    """
 
-    queryset = Estudiante.objects.exclude(
-        programa__in=[str(p) for p in PROGRAMAS_EXCLUIDOS]
-    )
     serializer_class = EstudianteSerializer
     http_method_names = ['get', 'post', 'put', 'patch', 'head', 'options']
+
+    def get_queryset(self):
+        qs = (
+            VinculoPersona.objects.filter(tipo_vinculo__nombre__iexact='Estudiante')
+            .select_related('persona')
+            .order_by('-id')
+        )
+        excluidos = [str(p) for p in PROGRAMAS_EXCLUIDOS]
+        if excluidos:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    'SELECT id FROM academico_programa WHERE codigo_interno = ANY(%s)',
+                    [excluidos],
+                )
+                ids = [row[0] for row in cursor.fetchall()]
+            if ids:
+                qs = qs.exclude(programa_id__in=ids)
+        return qs
 
 
 class MunicipioViewSet(viewsets.ReadOnlyModelViewSet):

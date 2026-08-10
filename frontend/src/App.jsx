@@ -34,6 +34,7 @@ import AtmosphereBackground from './components/AtmosphereBackground'
 
 const API_URL = '/api/estudiantes/'
 const API_PERSONAS_URL = '/api/personas/'
+const API_UBICACIONES_URL = '/api/ubicaciones/'
 
 const CONSULTA_HASH_KEY = 'consulta_password_hash'
 const CONSULTA_ACTIVITY_KEY = 'consulta_password_last_activity'
@@ -50,6 +51,7 @@ const TIPOS_IDENTIFICACION = [
 const INITIAL_FORM = {
   tipo_identificacion: 'CC',
   numero_identificacion: '',
+  fecha_expedicion_documento: '',
   primer_nombre: '',
   segundo_nombre: '',
   primer_apellido: '',
@@ -62,6 +64,21 @@ const INITIAL_FORM = {
   periodo_anio: '',
   periodo_semestre: '',
 }
+
+const CAMPOS_OBLIGATORIOS = [
+  ['numero_identificacion', 'Número de identificación'],
+  ['fecha_expedicion_documento', 'Fecha de expedición del documento'],
+  ['primer_nombre', 'Primer nombre'],
+  ['primer_apellido', 'Primer apellido'],
+  ['segundo_apellido', 'Segundo apellido'],
+  ['codigo_estudiante', 'Código de estudiante'],
+  ['programa', 'Programa'],
+  ['municipio', 'Municipio'],
+  ['pais_nacimiento', 'País de nacimiento'],
+  ['municipio_nacimiento', 'Municipio de nacimiento'],
+  ['periodo_anio', 'Periodo'],
+  ['periodo_semestre', 'Semestre'],
+]
 
 const ANIO_ACTUAL = new Date().getFullYear()
 const aniosOptions = Array.from(
@@ -121,6 +138,7 @@ function personaToForm(persona) {
   return {
     tipo_identificacion: TIPO_DOCUMENTO_TO_CODE[persona.tipo_identificacion] || 'CC',
     numero_identificacion: persona.identificacion || '',
+    fecha_expedicion_documento: '',
     primer_nombre: nombres.first,
     segundo_nombre: nombres.rest,
     primer_apellido: apellidos.first,
@@ -752,6 +770,9 @@ function UbicarPage() {
   const [aceptaTratamiento, setAceptaTratamiento] = useState(false)
   const [error, setError] = useState('')
   const [saved, setSaved] = useState(false)
+  const [programaModal, setProgramaModal] = useState(false)
+  const [yaUbicado, setYaUbicado] = useState(null)
+  const [fechaUbicacion, setFechaUbicacion] = useState('')
   const [municipios, setMunicipios] = useState([])
   const [loadingMunicipios, setLoadingMunicipios] = useState(true)
   const [programas, setProgramas] = useState([])
@@ -817,6 +838,7 @@ function UbicarPage() {
           setEditingId(local.id)
           setForm({
             ...personaToForm(persona),
+            fecha_expedicion_documento: local.fecha_expedicion_documento ?? '',
             programa: local.programa || '',
             municipio: local.municipio ?? '',
             municipio_nacimiento: local.municipio_nacimiento ?? '',
@@ -829,6 +851,36 @@ function UbicarPage() {
       }
     }
     buscarRegistroLocal()
+    return () => {
+      cancelled = true
+    }
+  }, [persona])
+
+  useEffect(() => {
+    if (!persona?.codigo_estudiante) return
+    let cancelled = false
+    async function verificarUbicacion() {
+      try {
+        const res = await fetch(
+          `${API_UBICACIONES_URL}?codigo=${encodeURIComponent(persona.codigo_estudiante)}`,
+        )
+        if (!res.ok) throw new Error('Error al verificar la ubicación')
+        const rows = await res.json()
+        if (cancelled) return
+        if (rows.length > 0) {
+          setYaUbicado(true)
+          setFechaUbicacion(rows[0].fecha_ubicacion || '')
+        } else {
+          setYaUbicado(false)
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setYaUbicado(false)
+          setError(err.message)
+        }
+      }
+    }
+    verificarUbicacion()
     return () => {
       cancelled = true
     }
@@ -849,6 +901,14 @@ function UbicarPage() {
       return
     }
 
+    const faltantes = CAMPOS_OBLIGATORIOS.filter(
+      ([key]) => !String(form[key] ?? '').trim(),
+    )
+    if (faltantes.length > 0) {
+      setError(`Completa los campos: ${faltantes.map(([, label]) => label).join(', ')}`)
+      return
+    }
+
     const method = editingId ? 'PUT' : 'POST'
     const url = editingId ? `${API_URL}${editingId}/` : API_URL
     try {
@@ -859,6 +919,10 @@ function UbicarPage() {
       })
       if (!res.ok) {
         const data = await res.json()
+        if (data.programa) {
+          setProgramaModal(true)
+          return
+        }
         const msg = Object.values(data)
           .flat()
           .join(', ')
@@ -907,6 +971,32 @@ function UbicarPage() {
             </Link>
           </Button>
         </div>
+      ) : yaUbicado ? (
+        <div className="flex flex-col items-center gap-3 rounded-2xl border border-white/40 bg-secondary/40 px-6 py-14 text-center dark:border-white/10">
+          <ShieldCheck className="h-10 w-10 text-emerald-500" />
+          <p className="font-medium text-foreground">Este estudiante ya fue ubicado</p>
+          {fechaUbicacion && (
+            <p className="text-sm text-muted-foreground">
+              Registrado el{' '}
+              {new Date(fechaUbicacion).toLocaleDateString('es-CO', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+              })}
+            </p>
+          )}
+          <Button asChild variant="outline" size="lg" className="mt-2 h-12">
+            <Link to="/consulta">
+              <Search className="h-4 w-4" />
+              Volver a consultar
+            </Link>
+          </Button>
+        </div>
+      ) : yaUbicado === null ? (
+        <div className="flex flex-col items-center gap-3 rounded-2xl border border-white/40 bg-secondary/40 px-6 py-14 text-center dark:border-white/10">
+          <div className="h-10 w-10 animate-spin rounded-full border-2 border-accent border-t-transparent" />
+          <p className="text-sm text-muted-foreground">Verificando si el estudiante ya fue ubicado...</p>
+        </div>
       ) : (
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-5 gap-3">
@@ -946,6 +1036,24 @@ function UbicarPage() {
                 className={inputWithIconClass}
               />
             </div>
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="fecha_expedicion_documento" className="text-sm font-medium text-foreground">
+            Fecha de expedición del documento <span className="text-accent">*</span>
+          </Label>
+          <div className="group relative">
+            <Calendar className={`${inputIconClass} group-focus-within:text-accent`} />
+            <Input
+              id="fecha_expedicion_documento"
+              name="fecha_expedicion_documento"
+              type="date"
+              value={form.fecha_expedicion_documento}
+              onChange={handleChange}
+              required
+              className={inputWithIconClass}
+            />
           </div>
         </div>
 
@@ -1049,7 +1157,7 @@ function UbicarPage() {
 
         <div className="space-y-2">
           <Label htmlFor="programa" className="text-sm font-medium text-foreground">
-            Programa al que pertenece
+            Programa al que pertenece <span className="text-accent">*</span>
           </Label>
           <div className="group relative">
             <BookOpen className={`${inputIconClass} group-focus-within:text-accent`} />
@@ -1070,7 +1178,7 @@ function UbicarPage() {
         <div className="grid grid-cols-3 gap-3">
           <div className="space-y-2">
             <Label htmlFor="municipio" className="text-sm font-medium text-foreground">
-              Municipio
+              Municipio <span className="text-accent">*</span>
             </Label>
             <div className="group relative">
               <MapPin className={`${inputIconClass} group-focus-within:text-accent`} />
@@ -1090,7 +1198,7 @@ function UbicarPage() {
 
           <div className="space-y-2">
             <Label htmlFor="periodo_anio" className="text-sm font-medium text-foreground">
-              Periodo de 1er semestre
+              Periodo que cursó 1er semestre <span className="text-accent">*</span>
             </Label>
             <div className="group relative">
               <Calendar className={`${inputIconClass} group-focus-within:text-accent`} />
@@ -1113,7 +1221,7 @@ function UbicarPage() {
 
           <div className="space-y-2">
             <Label htmlFor="periodo_semestre" className="text-sm font-medium text-foreground">
-              Semestre
+              Semestre <span className="text-accent">*</span>
             </Label>
             <div className="group relative">
               <Calendar className={`${inputIconClass} group-focus-within:text-accent`} />
@@ -1137,7 +1245,7 @@ function UbicarPage() {
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-2">
             <Label htmlFor="pais_nacimiento" className="text-sm font-medium text-foreground">
-              País de nacimiento
+              País de nacimiento <span className="text-accent">*</span>
             </Label>
             <div className="group relative">
               <Globe className={`${inputIconClass} group-focus-within:text-accent`} />
@@ -1156,7 +1264,7 @@ function UbicarPage() {
 
           <div className="space-y-2">
             <Label htmlFor="municipio_nacimiento" className="text-sm font-medium text-foreground">
-              Municipio de nacimiento
+              Municipio de nacimiento <span className="text-accent">*</span>
             </Label>
             <div className="group relative">
               <MapPin className={`${inputIconClass} group-focus-within:text-accent`} />
@@ -1216,6 +1324,39 @@ function UbicarPage() {
           </Button>
         </div>
       </form>
+      )}
+
+      {programaModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={() => setProgramaModal(false)}
+          />
+          <div className="relative w-full max-w-md rounded-2xl border border-white/40 bg-secondary p-6 shadow-xl dark:border-white/10">
+            <button
+              type="button"
+              onClick={() => setProgramaModal(false)}
+              className="absolute right-4 top-4 text-muted-foreground transition-colors hover:text-foreground"
+              aria-label="Cerrar"
+            >
+              <X className="h-5 w-5" />
+            </button>
+            <h3 className="text-lg font-semibold text-foreground">
+              No se encontró el programa
+            </h3>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              Comunícate con el administrador
+            </p>
+            <Button
+              type="button"
+              size="lg"
+              className="mt-5 h-11 w-full"
+              onClick={() => setProgramaModal(false)}
+            >
+              Entendido
+            </Button>
+          </div>
+        </div>
       )}
     </PageShell>
   )

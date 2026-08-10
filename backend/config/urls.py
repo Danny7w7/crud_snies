@@ -25,13 +25,15 @@ from api.views import (
     PersonaViewSet,
     ProgramaViewSet,
 )
+from ubicacion.views import UbicacionViewSet
 
 router = DefaultRouter()
-router.register('estudiantes', EstudianteViewSet)
+router.register('estudiantes', EstudianteViewSet, basename='estudiante')
 router.register('municipios', MunicipioViewSet)
 router.register('departamentos', DepartamentoViewSet)
 router.register('personas', PersonaViewSet)
 router.register('programas', ProgramaViewSet)
+router.register('ubicaciones', UbicacionViewSet)
 
 
 

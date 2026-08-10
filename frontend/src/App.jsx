@@ -10,7 +10,6 @@ import {
   GraduationCap,
   Save,
   X,
-  UserPlus,
   FileText,
   ClipboardList,
   Search,
@@ -37,6 +36,8 @@ const API_URL = '/api/estudiantes/'
 const API_PERSONAS_URL = '/api/personas/'
 
 const CONSULTA_HASH_KEY = 'consulta_password_hash'
+const CONSULTA_ACTIVITY_KEY = 'consulta_password_last_activity'
+const CONSULTA_INACTIVITY_MS = 15 * 60 * 1000
 
 const TIPOS_IDENTIFICACION = [
   { value: 'CC', label: 'Cédula de Ciudadanía' },
@@ -143,7 +144,19 @@ async function sha256Hex(text) {
 }
 
 function getConsultaHash() {
-  return sessionStorage.getItem(CONSULTA_HASH_KEY) || ''
+  const hash = sessionStorage.getItem(CONSULTA_HASH_KEY)
+  if (!hash) return ''
+  const lastActivity = Number(sessionStorage.getItem(CONSULTA_ACTIVITY_KEY) || 0)
+  if (Date.now() - lastActivity > CONSULTA_INACTIVITY_MS) {
+    sessionStorage.removeItem(CONSULTA_HASH_KEY)
+    sessionStorage.removeItem(CONSULTA_ACTIVITY_KEY)
+    return ''
+  }
+  return hash
+}
+
+function touchActivity() {
+  sessionStorage.setItem(CONSULTA_ACTIVITY_KEY, String(Date.now()))
 }
 
 function ThemeToggle() {
@@ -226,15 +239,6 @@ function PageShell({ active, children, wide = false }) {
             <div className="relative space-y-5">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5">
-                  <UserPlus className="h-5 w-5 text-accent" />
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-white/90">Registro</p>
-                  <p className="text-xs text-white/45">Nuevos estudiantes al sistema</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5">
                   <FileText className="h-5 w-5 text-accent" />
                 </div>
                 <div>
@@ -292,6 +296,7 @@ function ConsultaPasswordGate({ onSuccess }) {
       }
       if (!res.ok) throw new Error('Error al validar la contraseña')
       sessionStorage.setItem(CONSULTA_HASH_KEY, hash)
+      touchActivity()
       onSuccess()
     } catch (err) {
       setError(err.message || 'No se pudo validar la contraseña')
@@ -434,6 +439,16 @@ function ConsultarPersonas() {
     loadProgramas()
     return () => {
       cancelled = true
+    }
+  }, [])
+
+  useEffect(() => {
+    const onActivity = () => touchActivity()
+    document.addEventListener('pointerdown', onActivity)
+    document.addEventListener('keydown', onActivity)
+    return () => {
+      document.removeEventListener('pointerdown', onActivity)
+      document.removeEventListener('keydown', onActivity)
     }
   }, [])
 
@@ -707,6 +722,14 @@ function ConsultarPersonas() {
 
 function ConsultaPage() {
   const [authed, setAuthed] = useState(() => Boolean(getConsultaHash()))
+
+  useEffect(() => {
+    if (!authed) return
+    const interval = setInterval(() => {
+      if (!getConsultaHash()) setAuthed(false)
+    }, 30 * 1000)
+    return () => clearInterval(interval)
+  }, [authed])
 
   return (
     <PageShell active="consulta" wide>
@@ -1067,7 +1090,7 @@ function UbicarPage() {
 
           <div className="space-y-2">
             <Label htmlFor="periodo_anio" className="text-sm font-medium text-foreground">
-              Periodo que cursó 1er semestre
+              Periodo de 1er semestre
             </Label>
             <div className="group relative">
               <Calendar className={`${inputIconClass} group-focus-within:text-accent`} />

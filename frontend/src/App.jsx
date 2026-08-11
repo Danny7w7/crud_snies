@@ -21,6 +21,8 @@ import {
   Globe,
   Calendar,
   Locate,
+  Eye,
+  EyeOff,
 } from 'lucide-react'
 import countryList from 'react-select-country-list'
 import { Button } from './components/ui/button'
@@ -301,6 +303,7 @@ function PageShell({ active, children, wide = false }) {
 
 function ConsultaPasswordGate({ onSuccess }) {
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -355,13 +358,25 @@ function ConsultaPasswordGate({ onSuccess }) {
             <Input
               id="consulta_password"
               name="consulta_password"
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
               autoFocus
-              className="pl-12 h-12"
+              className="pl-12 pr-12 h-12"
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword((v) => !v)}
+              aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+              className="absolute right-4 top-1/2 z-20 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
+            >
+              {showPassword ? (
+                <EyeOff className="h-5 w-5" />
+              ) : (
+                <Eye className="h-5 w-5" />
+              )}
+            </button>
           </div>
         </div>
 

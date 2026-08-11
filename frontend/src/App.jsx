@@ -80,6 +80,11 @@ const CAMPOS_OBLIGATORIOS = [
   ['periodo_semestre', 'Semestre'],
 ]
 
+function etiquetaCampo(clave) {
+  const found = CAMPOS_OBLIGATORIOS.find(([key]) => key === clave)
+  return found ? found[1] : clave
+}
+
 const ANIO_ACTUAL = new Date().getFullYear()
 const aniosOptions = Array.from(
   { length: ANIO_ACTUAL + 1 - 2000 + 1 },
@@ -762,6 +767,7 @@ function ConsultaPage() {
 
 function UbicarPage() {
   const location = useLocation()
+  const navigate = useNavigate()
   const persona = location.state?.persona
   const [form, setForm] = useState(() =>
     persona ? personaToForm(persona) : INITIAL_FORM,
@@ -769,8 +775,7 @@ function UbicarPage() {
   const [editingId, setEditingId] = useState(null)
   const [aceptaTratamiento, setAceptaTratamiento] = useState(false)
   const [error, setError] = useState('')
-  const [saved, setSaved] = useState(false)
-  const [programaModal, setProgramaModal] = useState(false)
+  const [resultadoModal, setResultadoModal] = useState(null)
   const [yaUbicado, setYaUbicado] = useState(null)
   const [fechaUbicacion, setFechaUbicacion] = useState('')
   const [municipios, setMunicipios] = useState([])
@@ -887,17 +892,21 @@ function UbicarPage() {
   }, [persona])
 
   function handleChange(e) {
-    setSaved(false)
     setForm({ ...form, [e.target.name]: e.target.value })
   }
 
   async function handleSubmit(e) {
     e.preventDefault()
     setError('')
-    setSaved(false)
+    setResultadoModal(null)
 
     if (!aceptaTratamiento) {
-      setError('Debes aceptar la autorización para el tratamiento de datos personales')
+      setResultadoModal({
+        type: 'error',
+        title: 'Autorización requerida',
+        message: 'Debes aceptar la autorización para el tratamiento de datos personales.',
+        fields: ['Autorización de datos personales'],
+      })
       return
     }
 
@@ -905,7 +914,12 @@ function UbicarPage() {
       ([key]) => !String(form[key] ?? '').trim(),
     )
     if (faltantes.length > 0) {
-      setError(`Completa los campos: ${faltantes.map(([, label]) => label).join(', ')}`)
+      setResultadoModal({
+        type: 'error',
+        title: 'Campos incompletos',
+        message: 'Completa los siguientes campos obligatorios:',
+        fields: faltantes.map(([, label]) => label),
+      })
       return
     }
 
@@ -920,20 +934,51 @@ function UbicarPage() {
       if (!res.ok) {
         const data = await res.json()
         if (data.programa) {
-          setProgramaModal(true)
+          setResultadoModal({
+            type: 'error',
+            title: 'No se encontró el programa',
+            message: 'El programa seleccionado no está disponible. Comunícate con el administrador.',
+            fields: ['Programa'],
+          })
           return
         }
-        const msg = Object.values(data)
-          .flat()
+        const entradas = Object.entries(data)
+        const fields = entradas.map(([clave]) => etiquetaCampo(clave))
+        const msg = entradas
+          .map(([, valores]) => (Array.isArray(valores) ? valores.join(', ') : String(valores)))
           .join(', ')
-        throw new Error(msg || 'Error al guardar la información del estudiante')
+        setResultadoModal({
+          type: 'error',
+          title: 'No se pudo guardar',
+          message: msg || 'Error al guardar la información del estudiante.',
+          fields,
+        })
+        return
       }
       setAceptaTratamiento(false)
-      setSaved(true)
+      setResultadoModal({
+        type: 'success',
+        title: 'Información guardada',
+        message: 'La información del estudiante se guardó correctamente.',
+        fields: [],
+      })
     } catch (err) {
-      setError(err.message)
+      setResultadoModal({
+        type: 'error',
+        title: 'Error al guardar',
+        message: err.message || 'No se pudo guardar la información.',
+        fields: [],
+      })
     }
   }
+
+  useEffect(() => {
+    if (resultadoModal?.type !== 'success') return
+    const timer = setTimeout(() => {
+      navigate('/ubicar', { replace: true, state: null })
+    }, 4000)
+    return () => clearTimeout(timer)
+  }, [resultadoModal, navigate])
 
   const inputIconClass =
     'pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground transition-colors z-20'
@@ -1198,7 +1243,7 @@ function UbicarPage() {
 
           <div className="space-y-2">
             <Label htmlFor="periodo_anio" className="text-sm font-medium text-foreground">
-              Periodo que cursó 1er semestre <span className="text-accent">*</span>
+              Periodo - 1er semestre <span className="text-accent">*</span>
             </Label>
             <div className="group relative">
               <Calendar className={`${inputIconClass} group-focus-within:text-accent`} />
@@ -1301,12 +1346,6 @@ function UbicarPage() {
           </Label>
         </div>
 
-        {saved && (
-          <p className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-800">
-            Información guardada correctamente.
-          </p>
-        )}
-
         {error && (
           <p className="rounded-lg border border-destructive/40 bg-destructive/20 px-3 py-2 text-sm text-destructive-foreground">
             {error}
@@ -1326,35 +1365,70 @@ function UbicarPage() {
       </form>
       )}
 
-      {programaModal && (
+      {resultadoModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-            onClick={() => setProgramaModal(false)}
+            onClick={() => setResultadoModal(null)}
           />
           <div className="relative w-full max-w-md rounded-2xl border border-white/40 bg-secondary p-6 shadow-xl dark:border-white/10">
             <button
               type="button"
-              onClick={() => setProgramaModal(false)}
+              onClick={() => setResultadoModal(null)}
               className="absolute right-4 top-4 text-muted-foreground transition-colors hover:text-foreground"
               aria-label="Cerrar"
             >
               <X className="h-5 w-5" />
             </button>
-            <h3 className="text-lg font-semibold text-foreground">
-              No se encontró el programa
-            </h3>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              Comunícate con el administrador
-            </p>
-            <Button
-              type="button"
-              size="lg"
-              className="mt-5 h-11 w-full"
-              onClick={() => setProgramaModal(false)}
-            >
-              Entendido
-            </Button>
+            <div className="flex flex-col items-center text-center">
+              {resultadoModal.type === 'success' ? (
+                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-500/20">
+                  <ShieldCheck className="h-7 w-7 text-emerald-600 dark:text-emerald-400" />
+                </div>
+              ) : (
+                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-destructive/20">
+                  <X className="h-7 w-7 text-destructive" />
+                </div>
+              )}
+              <h3 className="text-lg font-semibold text-foreground">
+                {resultadoModal.title}
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                {resultadoModal.message}
+              </p>
+              {resultadoModal.fields.length > 0 && (
+                <div className="mt-4 w-full rounded-xl border border-border/60 bg-input-background p-3 text-left">
+                  <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                    Campos relacionados
+                  </p>
+                  <ul className="space-y-1.5">
+                    {resultadoModal.fields.map((campo) => (
+                      <li
+                        key={campo}
+                        className="flex items-center gap-2 text-sm text-foreground"
+                      >
+                        <X className="h-3.5 w-3.5 shrink-0 text-destructive" />
+                        {campo}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              <Button
+                type="button"
+                size="lg"
+                className="mt-5 h-11 w-full"
+                onClick={() => {
+                  if (resultadoModal.type === 'success') {
+                    navigate('/ubicar', { replace: true, state: null })
+                  } else {
+                    setResultadoModal(null)
+                  }
+                }}
+              >
+                {resultadoModal.type === 'success' ? 'Volver a Ubicar' : 'Entendido'}
+              </Button>
+            </div>
           </div>
         </div>
       )}

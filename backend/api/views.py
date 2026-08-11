@@ -3,7 +3,7 @@ import time
 
 from django.conf import settings
 from django.db import connection, connections
-from django.db.models import BooleanField, Case, Exists, OuterRef, Q, Value, When
+from django.db.models import BooleanField, Case, Exists, OuterRef, Q, Subquery, Value, When
 from rest_framework import viewsets
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import BasePermission

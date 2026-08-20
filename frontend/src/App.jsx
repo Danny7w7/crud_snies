@@ -10,6 +10,7 @@ import {
   GraduationCap,
   Save,
   X,
+  Check,
   FileText,
   ClipboardList,
   Search,
@@ -54,6 +55,7 @@ const INITIAL_FORM = {
   tipo_identificacion: 'CC',
   numero_identificacion: '',
   fecha_expedicion_documento: '',
+  lugar_expedicion_documento: '',
   primer_nombre: '',
   segundo_nombre: '',
   primer_apellido: '',
@@ -70,6 +72,7 @@ const INITIAL_FORM = {
 const CAMPOS_OBLIGATORIOS = [
   ['numero_identificacion', 'Número de identificación'],
   ['fecha_expedicion_documento', 'Fecha de expedición del documento'],
+  ['lugar_expedicion_documento', 'Lugar de expedición del documento'],
   ['primer_nombre', 'Primer nombre'],
   ['primer_apellido', 'Primer apellido'],
   ['segundo_apellido', 'Segundo apellido'],
@@ -138,6 +141,38 @@ function formatPeriodoIngreso(value) {
   return anio ? `${anio}-${semestre}` : null
 }
 
+function limpiarTelefono(raw) {
+  const texto = String(raw || '')
+  const digitos = texto.replace(/\D/g, '')
+  let numero = digitos
+  if (digitos.length === 12 && digitos.startsWith('57')) numero = digitos.slice(2)
+  if (numero.length === 10 && numero[0] !== '0') return numero
+
+  const bloques = texto.match(/(?:^|\D)(\d{10})(?:\D|$)/g) || []
+  for (const bloque of bloques) {
+    const grupo = bloque.replace(/\D/g, '')
+    if (grupo.length === 10 && grupo[0] !== '0') return grupo
+  }
+  return null
+}
+
+const EMAILS_PLACEHOLDER = new Set([
+  'sinemail@corsalud.edu.co',
+  'sindefnir@corsalud.edu.co',
+])
+
+function sanitizarEmail(raw) {
+  let texto = String(raw || '').trim()
+  if (texto.startsWith('@')) texto = texto.slice(1)
+  return texto.toLowerCase()
+}
+
+function limpiarEmail(raw) {
+  const texto = sanitizarEmail(raw)
+  if (!texto || EMAILS_PLACEHOLDER.has(texto)) return null
+  return /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(texto) ? texto : null
+}
+
 function personaToForm(persona) {
   const nombres = splitNameParts(persona.nombre)
   const apellidos = splitNameParts(persona.apellido)
@@ -146,6 +181,7 @@ function personaToForm(persona) {
     tipo_identificacion: TIPO_DOCUMENTO_TO_CODE[persona.tipo_identificacion] || 'CC',
     numero_identificacion: persona.identificacion || '',
     fecha_expedicion_documento: '',
+    lugar_expedicion_documento: '',
     primer_nombre: nombres.first,
     segundo_nombre: nombres.rest,
     primer_apellido: apellidos.first,
@@ -791,6 +827,18 @@ function UbicarPage() {
   const [aceptaTratamiento, setAceptaTratamiento] = useState(false)
   const [error, setError] = useState('')
   const [resultadoModal, setResultadoModal] = useState(null)
+  const [confirmandoDatos, setConfirmandoDatos] = useState(false)
+  const [telefonoSugerido, setTelefonoSugerido] = useState(null)
+  const [telefonoEditando, setTelefonoEditando] = useState(false)
+  const [telefonoEditado, setTelefonoEditado] = useState('')
+  const [telefonoError, setTelefonoError] = useState('')
+  const [telefonoConfirmado, setTelefonoConfirmado] = useState(null)
+  const [emailSugerido, setEmailSugerido] = useState(null)
+  const [emailEditando, setEmailEditando] = useState(false)
+  const [emailEditado, setEmailEditado] = useState('')
+  const [emailError, setEmailError] = useState('')
+  const [emailConfirmado, setEmailConfirmado] = useState(null)
+  const [guardando, setGuardando] = useState(false)
   const [yaUbicado, setYaUbicado] = useState(null)
   const [fechaUbicacion, setFechaUbicacion] = useState('')
   const [municipios, setMunicipios] = useState([])
@@ -859,6 +907,7 @@ function UbicarPage() {
           setForm({
             ...personaToForm(persona),
             fecha_expedicion_documento: local.fecha_expedicion_documento ?? '',
+            lugar_expedicion_documento: local.lugar_expedicion_documento ?? '',
             programa: local.programa || '',
             municipio: local.municipio ?? '',
             municipio_nacimiento: local.municipio_nacimiento ?? '',
@@ -910,41 +959,17 @@ function UbicarPage() {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
 
-  async function handleSubmit(e) {
-    e.preventDefault()
+  async function enviarGuardado(datos) {
     setError('')
     setResultadoModal(null)
-
-    if (!aceptaTratamiento) {
-      setResultadoModal({
-        type: 'error',
-        title: 'Autorización requerida',
-        message: 'Debes aceptar la autorización para el tratamiento de datos personales.',
-        fields: ['Autorización de datos personales'],
-      })
-      return
-    }
-
-    const faltantes = CAMPOS_OBLIGATORIOS.filter(
-      ([key]) => !String(form[key] ?? '').trim(),
-    )
-    if (faltantes.length > 0) {
-      setResultadoModal({
-        type: 'error',
-        title: 'Campos incompletos',
-        message: 'Completa los siguientes campos obligatorios:',
-        fields: faltantes.map(([, label]) => label),
-      })
-      return
-    }
-
     const method = editingId ? 'PUT' : 'POST'
     const url = editingId ? `${API_URL}${editingId}/` : API_URL
+    const payload = { ...form, ...datos }
     try {
       const res = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify(payload),
       })
       if (!res.ok) {
         const data = await res.json()
@@ -984,7 +1009,81 @@ function UbicarPage() {
         message: err.message || 'No se pudo guardar la información.',
         fields: [],
       })
+    } finally {
+      setConfirmandoDatos(false)
+      setGuardando(false)
     }
+  }
+
+  function abrirModalDatos(telefonoValido, emailValido) {
+    setTelefonoSugerido(telefonoConfirmado || telefonoValido || '')
+    setTelefonoEditando(!telefonoConfirmado && !telefonoValido)
+    setTelefonoEditado(telefonoConfirmado || telefonoValido || '')
+    setTelefonoError('')
+    setEmailSugerido(emailConfirmado || emailValido || '')
+    setEmailEditando(!emailConfirmado && !emailValido)
+    setEmailEditado(emailConfirmado || emailValido || sanitizarEmail(persona?.email) || '')
+    setEmailError('')
+    setConfirmandoDatos(true)
+  }
+
+  function guardarDatosContacto() {
+    const telefono = telefonoEditando ? telefonoEditado : telefonoSugerido
+    const email = emailEditando ? emailEditado : emailSugerido
+    if (!/^[1-9]\d{9}$/.test(telefono)) {
+      setTelefonoError('El número debe tener exactamente 10 dígitos, solo números')
+      return
+    }
+    const emailFinal = limpiarEmail(email)
+    if (!emailFinal) {
+      setEmailError('Correo inválido. Debe tener el formato usuario@dominio.com')
+      return
+    }
+    setTelefonoConfirmado(telefono)
+    setEmailConfirmado(emailFinal)
+    setConfirmandoDatos(false)
+    setGuardando(true)
+    enviarGuardado({ telefono, email: emailFinal, sexo: persona?.sexo })
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault()
+    setError('')
+    setResultadoModal(null)
+
+    if (!aceptaTratamiento) {
+      setResultadoModal({
+        type: 'error',
+        title: 'Autorización requerida',
+        message: 'Debes aceptar la autorización para el tratamiento de datos personales.',
+        fields: ['Autorización de datos personales'],
+      })
+      return
+    }
+
+    const faltantes = CAMPOS_OBLIGATORIOS.filter(
+      ([key]) => !String(form[key] ?? '').trim(),
+    )
+    if (faltantes.length > 0) {
+      setResultadoModal({
+        type: 'error',
+        title: 'Campos incompletos',
+        message: 'Completa los siguientes campos obligatorios:',
+        fields: faltantes.map(([, label]) => label),
+      })
+      return
+    }
+
+    if (!telefonoConfirmado || !emailConfirmado) {
+      abrirModalDatos(
+        limpiarTelefono(persona?.telefono),
+        limpiarEmail(persona?.email),
+      )
+      return
+    }
+
+    setGuardando(true)
+    enviarGuardado({ telefono: telefonoConfirmado, email: emailConfirmado, sexo: persona?.sexo })
   }
 
   useEffect(() => {
@@ -1112,6 +1211,28 @@ function UbicarPage() {
               value={form.fecha_expedicion_documento}
               onChange={handleChange}
               required
+              className={inputWithIconClass}
+            />
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="lugar_expedicion_documento" className="text-sm font-medium text-foreground">
+            Lugar de expedición del documento <span className="text-accent">*</span>
+          </Label>
+          <div className="group relative">
+            <MapPin className={`${inputIconClass} group-focus-within:text-accent`} />
+            <SearchableSelect
+              id="lugar_expedicion_documento"
+              value={form.lugar_expedicion_documento}
+              onValueChange={(value) =>
+                setForm({ ...form, lugar_expedicion_documento: value })
+              }
+              options={municipioOptions}
+              placeholder="Selecciona un municipio"
+              searchPlaceholder="Buscar municipio..."
+              emptyLabel="No hay municipios."
+              isLoading={loadingMunicipios}
               className={inputWithIconClass}
             />
           </div>
@@ -1372,9 +1493,19 @@ function UbicarPage() {
             type="submit"
             size="lg"
             className="h-12 flex-1"
+            disabled={guardando}
           >
-            <Save className="h-4 w-4" />
-            Guardar información
+            {guardando ? (
+              <>
+                <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                Guardando...
+              </>
+            ) : (
+              <>
+                <Save className="h-4 w-4" />
+                Guardar información
+              </>
+            )}
           </Button>
         </div>
       </form>
@@ -1435,6 +1566,17 @@ function UbicarPage() {
                 className="mt-5 h-11 w-full"
                 onClick={() => {
                   if (resultadoModal.type === 'success') {
+                    setResultadoModal(null)
+                    setConfirmandoDatos(false)
+                    setTelefonoConfirmado(null)
+                    setTelefonoEditado('')
+                    setTelefonoError('')
+                    setEmailConfirmado(null)
+                    setEmailEditado('')
+                    setEmailError('')
+                    setGuardando(false)
+                    setForm(INITIAL_FORM)
+                    setEditingId(null)
                     navigate('/ubicar', { replace: true, state: null })
                   } else {
                     setResultadoModal(null)
@@ -1442,6 +1584,170 @@ function UbicarPage() {
                 }}
               >
                 {resultadoModal.type === 'success' ? 'Volver a Ubicar' : 'Entendido'}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {confirmandoDatos && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={() => {
+              if (!guardando) setConfirmandoDatos(false)
+            }}
+          />
+          <div className="relative w-full max-w-md rounded-2xl border border-white/40 bg-secondary p-6 shadow-xl dark:border-white/10">
+            <button
+              type="button"
+              onClick={() => {
+                if (!guardando) setConfirmandoDatos(false)
+              }}
+              disabled={guardando}
+              className="absolute right-4 top-4 text-muted-foreground transition-colors hover:text-foreground disabled:opacity-50"
+              aria-label="Cerrar"
+            >
+              <X className="h-5 w-5" />
+            </button>
+            <div className="flex flex-col items-center text-center">
+              <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-accent/20">
+                <Phone className="h-7 w-7 text-accent" />
+              </div>
+              <h3 className="text-lg font-semibold text-foreground">
+                Confirmar datos de contacto
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                Verifica el número de teléfono y el correo electrónico antes de
+                guardar.
+              </p>
+
+              <div className="mt-5 w-full space-y-4 text-left">
+                <div className="rounded-xl border border-border/60 bg-input-background p-3">
+                  <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                    Teléfono
+                  </p>
+                  {telefonoEditando ? (
+                    <div>
+                      <Input
+                        id="telefono_editado"
+                        name="telefono_editado"
+                        value={telefonoEditado}
+                        onChange={(e) =>
+                          setTelefonoEditado(
+                            e.target.value.replace(/\D/g, '').slice(0, 10),
+                          )
+                        }
+                        maxLength={10}
+                        inputMode="numeric"
+                        autoFocus
+                        disabled={guardando}
+                        className="h-12 text-center text-lg tracking-widest"
+                      />
+                      {telefonoError && (
+                        <p className="mt-2 rounded-lg border border-destructive/40 bg-destructive/20 px-3 py-2 text-sm text-destructive-foreground">
+                          {telefonoError}
+                        </p>
+                      )}
+                      <button
+                        type="button"
+                        disabled={guardando}
+                        onClick={() => setTelefonoEditando(false)}
+                        className="mt-2 text-xs font-medium text-muted-foreground underline transition-colors hover:text-foreground disabled:opacity-50"
+                      >
+                        Cancelar
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="text-lg font-semibold tracking-wider text-foreground">
+                        {telefonoSugerido || '—'}
+                      </p>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="h-9 shrink-0"
+                        disabled={guardando}
+                        onClick={() => setTelefonoEditando(true)}
+                      >
+                        No, editarlo
+                      </Button>
+                    </div>
+                  )}
+                </div>
+
+                <div className="rounded-xl border border-border/60 bg-input-background p-3">
+                  <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                    Correo electrónico
+                  </p>
+                  {emailEditando ? (
+                    <div>
+                      <Input
+                        id="email_editado"
+                        name="email_editado"
+                        type="email"
+                        value={emailEditado}
+                        onChange={(e) =>
+                          setEmailEditado(e.target.value.slice(0, 254))
+                        }
+                        maxLength={254}
+                        disabled={guardando}
+                        autoFocus
+                        className="h-12 text-center text-base"
+                      />
+                      {emailError && (
+                        <p className="mt-2 rounded-lg border border-destructive/40 bg-destructive/20 px-3 py-2 text-sm text-destructive-foreground">
+                          {emailError}
+                        </p>
+                      )}
+                      <button
+                        type="button"
+                        disabled={guardando}
+                        onClick={() => setEmailEditando(false)}
+                        className="mt-2 text-xs font-medium text-muted-foreground underline transition-colors hover:text-foreground disabled:opacity-50"
+                      >
+                        Cancelar
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="truncate text-base font-medium text-foreground">
+                        {emailSugerido || '—'}
+                      </p>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="h-9 shrink-0"
+                        disabled={guardando}
+                        onClick={() => setEmailEditando(true)}
+                      >
+                        No, editarlo
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <Button
+                type="button"
+                size="lg"
+                className="mt-5 h-11 w-full"
+                disabled={guardando}
+                onClick={guardarDatosContacto}
+              >
+                {guardando ? (
+                  <>
+                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                    Guardando...
+                  </>
+                ) : (
+                  <>
+                    <Check className="h-4 w-4" />
+                    Sí, guárdalo
+                  </>
+                )}
               </Button>
             </div>
           </div>

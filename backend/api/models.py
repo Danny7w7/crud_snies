@@ -31,7 +31,13 @@ class DatosSecundarios(models.Model):
 
     id = models.BigAutoField(primary_key=True)
     fecha_expedicion_documento = models.DateField(null=True, blank=True)
-    lugar_expedicion_documento = models.CharField(max_length=50, null=True, blank=True)
+    lugar_expedicion_documento = models.ForeignKey(
+        'Municipio',
+        on_delete=models.DO_NOTHING,
+        related_name='datos_secundarios_expedicion',
+        null=True,
+        blank=True,
+    )
     barrio = models.CharField(max_length=100)
     direccion = models.CharField(max_length=200)
     telefono_fijo = models.CharField(max_length=15, null=True, blank=True)
@@ -42,7 +48,12 @@ class DatosSecundarios(models.Model):
     libreta_militar = models.CharField(max_length=50, null=True, blank=True)
     distrito_militar = models.CharField(max_length=50, null=True, blank=True)
     pais_nacimiento = models.CharField(max_length=3)
-    lugar_nacimiento = models.CharField(max_length=100, null=True, blank=True)
+    lugar_nacimiento = models.ForeignKey(
+        'Municipio',
+        on_delete=models.DO_NOTHING,
+        null=True,
+        blank=True,
+    )
     fecha_nacimiento = models.DateField(null=True, blank=True)
     afp_id = models.IntegerField(null=True, blank=True)
     arl_id = models.IntegerField(null=True, blank=True)

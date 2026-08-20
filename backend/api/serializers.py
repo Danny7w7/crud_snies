@@ -1,5 +1,6 @@
 from datetime import date
 
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import connection
 from rest_framework import serializers
 
@@ -17,6 +18,12 @@ from ubicacion.models import Ubicacion
 
 # Codigos de tipo de documento del frontend -> codigo en erp_tipodocumentoidentidad
 TIPO_DOCUMENTO_ERP = {'CC': 'CC', 'CE': 'CE', 'TI': 'TI', 'PA': 'PP', 'RC': 'RC'}
+
+# Correos institucionales de relleno que no se permiten guardar.
+EMAILS_PLACEHOLDER = {'sinemail@corsalud.edu.co', 'sindefnir@corsalud.edu.co'}
+
+# Sexo SWA (M/F) -> codigo sexo_biologico de la ERP.
+SEXO_MAP = {'M': 1, 'F': 2}
 
 # pais_nacimiento: el frontend usa ISO-2, la ERP guarda ISO-3.
 ISO2_TO_ISO3 = {
@@ -83,18 +90,6 @@ def _programa_codigo_front(programa_id):
     return row[0] if row else ''
 
 
-def _municipio_id_por_lugar(lugar):
-    """El lugar de nacimiento se guarda como 'NOMBRE - CODIGO'; se intenta
-    devolver el id del municipio ERP que coincide por nombre."""
-    if not lugar:
-        return None
-    nombre = lugar.split(' - ')[0].strip() if ' - ' in lugar else lugar.strip()
-    if not nombre:
-        return None
-    municipio = Municipio.objects.filter(nombre__iexact=nombre).first()
-    return municipio.id if municipio else None
-
-
 def _periodo_anio_semestre(periodo):
     if not periodo or '-' not in periodo:
         return '', ''
@@ -112,7 +107,17 @@ class EstudianteSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     tipo_identificacion = serializers.CharField()
     numero_identificacion = serializers.CharField()
+    telefono = serializers.IntegerField(
+        required=True,
+        validators=[
+            MinValueValidator(1000000000),
+            MaxValueValidator(9999999999),
+        ],
+    )
+    email = serializers.EmailField(required=True, max_length=254)
+    sexo = serializers.ChoiceField(choices=[('M', 'M'), ('F', 'F')], required=True)
     fecha_expedicion_documento = serializers.DateField(required=True)
+    lugar_expedicion_documento = serializers.IntegerField(required=True)
     primer_nombre = serializers.CharField()
     segundo_nombre = serializers.CharField(required=False, allow_blank=True, default='')
     primer_apellido = serializers.CharField()
@@ -131,7 +136,11 @@ class EstudianteSerializer(serializers.ModelSerializer):
             'id',
             'tipo_identificacion',
             'numero_identificacion',
+            'telefono',
+            'email',
+            'sexo',
             'fecha_expedicion_documento',
+            'lugar_expedicion_documento',
             'primer_nombre',
             'segundo_nombre',
             'primer_apellido',
@@ -158,6 +167,14 @@ class EstudianteSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('Tipo de identificación no válido')
         return value
 
+    def validate_email(self, value):
+        email = (value or '').strip().lower()
+        if email in EMAILS_PLACEHOLDER:
+            raise serializers.ValidationError(
+                'Correo institucional de relleno no permitido'
+            )
+        return email
+
     def validate_programa(self, value):
         if not value:
             return value
@@ -181,6 +198,18 @@ class EstudianteSerializer(serializers.ModelSerializer):
             )
         return tipo_documento_id, nro_documento
 
+    def _rescatar_direccion_swa(self, codigo_estudiante):
+        """Direccion de la persona en SWA, limitada al tamano de la ERP (200)."""
+        estudiante = (
+            EstudianteSwa.objects.select_related('persona')
+            .filter(codigo=codigo_estudiante)
+            .first()
+        )
+        direccion = ''
+        if estudiante and estudiante.persona and estudiante.persona.direccion:
+            direccion = estudiante.persona.direccion[:200]
+        return direccion
+
     def _aplicar_persona(self, persona, data, tipo_documento_id, nro_documento):
         persona.nro_documento = nro_documento
         persona.tipo_documento_id = tipo_documento_id
@@ -188,30 +217,33 @@ class EstudianteSerializer(serializers.ModelSerializer):
         persona.segundo_nombre = data.get('segundo_nombre', '')
         persona.primer_apellido = data['primer_apellido']
         persona.segundo_apellido = data.get('segundo_apellido', '')
-        persona.email = persona.email or ''
-        persona.direccion = persona.direccion or ''
+        persona.email = data['email']
+        if 'telefono' in data:
+            persona.telefono = data['telefono']
+        direccion = self._rescatar_direccion_swa(data['codigo_estudiante'])
+        if direccion:
+            persona.direccion = direccion
         persona.save()
         return persona
 
     def _aplicar_datos_secundarios(self, persona, data):
         municipio_id = data.get('municipio')
         municipio_nacimiento = data.get('municipio_nacimiento')
-        lugar_nacimiento = ''
-        if municipio_nacimiento:
-            municipio = Municipio.objects.filter(id=municipio_nacimiento).first()
-            if municipio:
-                lugar_nacimiento = f'{municipio.nombre} - {municipio.codigo}'
         pais = data.get('pais_nacimiento', '').strip().upper()
         pais_iso3 = ISO2_TO_ISO3.get(pais, pais or 'XXX')
 
         datos, _ = DatosSecundarios.objects.get_or_create(persona=persona)
         datos.barrio = datos.barrio or ''
         datos.direccion = datos.direccion or ''
+        datos.lugar_expedicion_documento_id = data.get('lugar_expedicion_documento')
         fecha_expedicion = data.get('fecha_expedicion_documento')
         if fecha_expedicion:
             datos.fecha_expedicion_documento = fecha_expedicion
         datos.municipio_id = municipio_id if municipio_id else datos.municipio_id
-        datos.lugar_nacimiento = lugar_nacimiento or datos.lugar_nacimiento
+        datos.lugar_nacimiento_id = (
+            municipio_nacimiento if municipio_nacimiento else datos.lugar_nacimiento_id
+        )
+        datos.sexo_biologico = SEXO_MAP[data['sexo']]
         datos.pais_nacimiento = pais_iso3 if pais else datos.pais_nacimiento
         datos.save()
         return datos
@@ -321,6 +353,9 @@ class EstudianteSerializer(serializers.ModelSerializer):
                 if datos and datos.fecha_expedicion_documento
                 else None
             ),
+            'lugar_expedicion_documento': (
+                datos.lugar_expedicion_documento_id if datos else None
+            ),
             'primer_nombre': persona.primer_nombre,
             'segundo_nombre': persona.segundo_nombre,
             'primer_apellido': persona.primer_apellido,
@@ -328,9 +363,7 @@ class EstudianteSerializer(serializers.ModelSerializer):
             'codigo_estudiante': obj.codigo_aspirante or '',
             'programa': _programa_codigo_front(obj.programa_id),
             'municipio': datos.municipio_id if datos else None,
-            'municipio_nacimiento': (
-                _municipio_id_por_lugar(datos.lugar_nacimiento) if datos else None
-            ),
+            'municipio_nacimiento': datos.lugar_nacimiento_id if datos else None,
             'pais_nacimiento': pais,
             'periodo_anio': anio,
             'periodo_semestre': semestre,

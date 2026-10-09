@@ -39,5 +39,6 @@ router.register('ubicaciones', UbicacionViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/migracion/', include('migracion.urls')),
     path('api/', include(router.urls)),
 ]

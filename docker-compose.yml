@@ -1,0 +1,24 @@
+# Base local de migracion SWA -> ERP.
+# public    : copia de la base del ERP (destino final)
+# swa_raw   : copia cruda de SWA (solo lectura logica)
+# migra     : datos depurados, mapeos y lotes
+# revision  : casos irregulares que requieren una decision humana
+services:
+  db_migracion:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: ${MIGRA_DB_NAME:-erp_migracion}
+      POSTGRES_USER: ${MIGRA_DB_USER:-admin}
+      POSTGRES_PASSWORD: ${MIGRA_DB_PASSWORD:-admin}
+    ports:
+      - "127.0.0.1:${MIGRA_DB_PORT:-5434}:5432"
+    volumes:
+      - migracion_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${MIGRA_DB_USER:-admin} -d ${MIGRA_DB_NAME:-erp_migracion}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  migracion_data:

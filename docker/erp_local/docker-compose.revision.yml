@@ -1,0 +1,28 @@
+# Levanta el ERP (codigo local, rama feature/migracion-swa-soporte) contra la COPIA de
+# migracion `erp_migracion` para revisar en sus pantallas lo migrado de SWA.
+# No toca db_erp ni produccion. No ejecuta migrate (carpetas migrations/ vacias).
+#
+# Uso (desde la raiz de ERP_Unicorsalud):
+#   docker compose -f docker-compose.yml \
+#     -f ../../../Pictures/crud_snies/docker/erp_local/docker-compose.revision.yml up -d redis web front
+services:
+  web:
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+    environment:
+      DJANGO_SETTINGS_MODULE: settings_sin_migraciones
+      PYTHONPATH: /opt/erp_override:/app
+      DB_HOST: db_migracion
+      DB_PORT: "5432"
+      DB_NAME: erp_migracion
+      DB_USER: admin
+      DB_PASSWORD: admin
+    volumes:
+      - ./../../../Pictures/crud_snies/docker/erp_local/settings_sin_migraciones.py:/opt/erp_override/settings_sin_migraciones.py:ro
+    networks:
+      - default
+      - migracion
+
+networks:
+  migracion:
+    external: true
+    name: crud_snies_default

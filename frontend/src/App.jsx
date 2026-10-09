@@ -24,6 +24,7 @@ import {
   Locate,
   Eye,
   EyeOff,
+  DatabaseZap,
 } from 'lucide-react'
 import countryList from 'react-select-country-list'
 import { Button } from './components/ui/button'
@@ -34,6 +35,7 @@ import { SearchableSelect } from './components/SearchableSelect'
 import { ThemeProvider, useTheme } from './contexts/ThemeContext'
 import { useDarkMode } from './hooks/useDarkMode'
 import AtmosphereBackground from './components/AtmosphereBackground'
+import MigracionApp from './migracion/MigracionApp'
 
 const API_URL = '/api/estudiantes/'
 const API_PERSONAS_URL = '/api/personas/'
@@ -253,6 +255,10 @@ function PageShell({ active, children, wide = false }) {
       <Link to="/consulta" className={navClass('consulta')}>
         <Search className="h-4 w-4" />
         Consultar
+      </Link>
+      <Link to="/migracion" className={navClass('migracion')}>
+        <DatabaseZap className="h-4 w-4" />
+        Migración
       </Link>
     </nav>
   )
@@ -809,6 +815,34 @@ function ConsultaPage() {
     <PageShell active="consulta" wide>
       {authed ? (
         <ConsultarPersonas />
+      ) : (
+        <ConsultaPasswordGate onSuccess={() => setAuthed(true)} />
+      )}
+    </PageShell>
+  )
+}
+
+function MigracionPage({ seccion }) {
+  const [authed, setAuthed] = useState(() => Boolean(getConsultaHash()))
+  const getHash = useCallback(() => {
+    const hash = getConsultaHash()
+    if (hash) touchActivity()
+    return hash
+  }, [])
+  const onSesionExpirada = useCallback(() => setAuthed(false), [])
+
+  useEffect(() => {
+    if (!authed) return
+    const interval = setInterval(() => {
+      if (!getConsultaHash()) setAuthed(false)
+    }, 30 * 1000)
+    return () => clearInterval(interval)
+  }, [authed])
+
+  return (
+    <PageShell active="migracion" wide>
+      {authed ? (
+        <MigracionApp seccion={seccion} getHash={getHash} onSesionExpirada={onSesionExpirada} />
       ) : (
         <ConsultaPasswordGate onSuccess={() => setAuthed(true)} />
       )}
@@ -1765,6 +1799,12 @@ function App() {
         <Route path="/ubicar" element={<UbicarPage />} />
         <Route path="/registrar" element={<Navigate to="/ubicar" replace />} />
         <Route path="/consulta" element={<ConsultaPage />} />
+        <Route path="/migracion" element={<MigracionPage seccion="resumen" />} />
+        <Route path="/migracion/casos" element={<MigracionPage seccion="casos" />} />
+        <Route path="/migracion/personas" element={<MigracionPage seccion="personas" />} />
+        <Route path="/migracion/apartados" element={<MigracionPage seccion="apartados" />} />
+        <Route path="/migracion/duplicados" element={<MigracionPage seccion="duplicados" />} />
+        <Route path="/migracion/erp" element={<MigracionPage seccion="erp" />} />
         <Route path="*" element={<UbicarPage />} />
       </Routes>
     </ThemeProvider>

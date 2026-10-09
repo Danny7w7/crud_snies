@@ -1,0 +1,14 @@
+# Levanta el backend del ERP sin validar migraciones (sus carpetas migrations/ estan vacias
+# y la base local ya tiene el esquema de produccion). No modifica el repo ni la base.
+#
+# Uso (desde la raiz de ERP_Unicorsalud):
+#   docker compose -f docker-compose.yml \
+#     -f ../../../Pictures/crud_snies/docker/erp_local/docker-compose.override.yml up -d web
+services:
+  web:
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+    environment:
+      DJANGO_SETTINGS_MODULE: settings_sin_migraciones
+      PYTHONPATH: /opt/erp_override:/app
+    volumes:
+      - ./../../../Pictures/crud_snies/docker/erp_local/settings_sin_migraciones.py:/opt/erp_override/settings_sin_migraciones.py:ro

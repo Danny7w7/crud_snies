@@ -23,6 +23,7 @@ class ProductionRouter:
         return None
 
     def allow_migrate(self, db, app_label, model_name=None, **hints):
-        if db == 'produccion':
+        # 'migracion' es la copia del ERP + esquemas de trabajo: se gestiona con SQL.
+        if db in ('produccion', 'migracion'):
             return False
         return None

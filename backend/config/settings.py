@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'api',
     'ubicacion',
+    'migracion',
 ]
 
 MIDDLEWARE = [
@@ -115,6 +116,16 @@ DATABASES = {
             'connect_timeout': 15,
         },
     },
+}
+
+# Base local de migracion SWA -> ERP (ver docker-compose.yml en la raiz).
+DATABASES['migracion'] = {
+    'ENGINE': 'django.db.backends.postgresql',
+    'NAME': os.getenv('MIGRA_DB_NAME', 'erp_migracion'),
+    'USER': os.getenv('MIGRA_DB_USER', 'admin'),
+    'PASSWORD': os.getenv('MIGRA_DB_PASSWORD', 'admin'),
+    'HOST': os.getenv('MIGRA_DB_HOST', '127.0.0.1'),
+    'PORT': os.getenv('MIGRA_DB_PORT', '5434'),
 }
 
 DATABASE_ROUTERS = ['config.routers.ProductionRouter']

@@ -1,0 +1,30 @@
+# Corre el backend del ERP (codigo local) contra la COPIA de migracion `erp_migracion`
+# (servicio db_migracion de crud_snies, por su red Docker). No toca db_erp ni produccion.
+#
+# Uso (desde la raiz de ERP_Unicorsalud):
+#   docker compose -f docker-compose.yml \
+#     -f ../../../Pictures/crud_snies/docker/erp_local/docker-compose.verificacion.yml \
+#     run --rm --no-deps web python manage.py shell -c \
+#     "exec(open('/opt/erp_override/verificar_migracion.py', encoding='utf-8').read())"
+services:
+  web:
+    environment:
+      DJANGO_SETTINGS_MODULE: settings_sin_migraciones
+      PYTHONPATH: /opt/erp_override:/app
+      DB_HOST: db_migracion
+      DB_PORT: "5432"
+      DB_NAME: erp_migracion
+      DB_USER: admin
+      DB_PASSWORD: admin
+      CACHE_LOCAL: "1"
+    volumes:
+      - ./../../../Pictures/crud_snies/docker/erp_local/settings_sin_migraciones.py:/opt/erp_override/settings_sin_migraciones.py:ro
+      - ./../../../Pictures/crud_snies/docker/erp_local/verificar_migracion.py:/opt/erp_override/verificar_migracion.py:ro
+    networks:
+      - default
+      - migracion
+
+networks:
+  migracion:
+    external: true
+    name: crud_snies_default

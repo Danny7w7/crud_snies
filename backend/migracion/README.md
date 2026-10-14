@@ -47,6 +47,37 @@ docker exec erp_unicorsalud-db_local-1 pg_dump -U admin -d db_erp_prod_original 
 - Periodo 2026-2 en adelante: matrícula activa y notas en curso (`academico_asignaturamatricula`).
 - Inglés (programas 51 y 52): cada módulo aprobado → `academico_homologacioningles` con motivo `MIGRACION_SWA`.
 
+## Reporte de anomalías
+
+`python manage.py migra_anomalias [--excel ruta.xlsx] [--severidad ALTA] [--gravedad ...] [--responsable ...] [--sin-regenerar]`
+(o el botón de la vista `/migracion/anomalias`, que exporta con los filtros de la pantalla) documenta
+todo lo que SWA permitió y no debería: registros C/P, notas que no cuadran, aprobaciones sin matrícula legalizada,
+sin pago o sin prerrequisito, graduados con pendientes y módulos de inglés sin soporte. Requiere haber depurado
+(usa `migra` para marcar si cada caso viaja al ERP). Solo lee; no cambia la depuración ni la carga.
+
+- Resultado en el esquema `anomalias` (`anomalia`: un caso por fila; `ejecucion`: historial). Las tablas `aux_*`
+  son auxiliares y se reconstruyen.
+- El catálogo (qué pasó, riesgo, recomendación, responsable y la frase legible de cada caso) está en
+  `anomalias.py`. Una regla sin casos también se reporta como verificada.
+- Sin doble conteo: todo se evalúa por persona (varios códigos SWA cuentan una vez y los pagos de cualquiera de
+  ellos valen), las reglas de pensum usan la nota final del periodo, las homologaciones no exigen matrícula, pago
+  ni prerrequisitos y cada situación cae en una sola regla. Severidad `INFO` = contexto, no cuenta como anomalía.
+- Exportación: Excel con hojas Resumen (por regla), Casos (un caso por fila, en palabras) y Por persona.
+- Pagos: un recibo está cubierto si su estado es pagado/financiado, si tiene pagos en `pago_recibo`, si las cuotas
+  de su crédito se pagaron o si un beneficio cubrió el 100 % (`aux_recibo.cubierto_por`). En SWA el crédito vale
+  el neto del recibo y sus cuotas dicen quién lo cubrió (`tipo_cuota`: estudiante, ICETEX/convenios/cajas,
+  descuentos, 7 = saldo a favor); ver `CLASES_CUOTA`. Vacacional y validación de inglés no pagan la matrícula.
+- Saldos a favor (categoría SALDOS, todo ALTA con gravedad 1 Crítica ≥ $2M, 2 Alta ≥ $500.000, 3 Moderada):
+  libro por persona en `aux_saldo` (generado − usado − devuelto). SWA registra cada saldo dos veces (cuota 7 y
+  `pago_recibo.saldo_a_favor`; uso en cuota 7 positiva/auxilio SF y `bajar_saldo_a_favor`): se toma el mayor.
+- Verificación independiente de pagos: `sql/verificar_pagos.sql` (solo lee `swa_raw`; su PARTE 5 cruza con el
+  reporte y lista los casos sin pago que el reporte deje escapar).
+- Requiere en `swa_raw` los catálogos `auxilio`, `grupo_auxilio`, `tipo_cuota` y `novedad_devolucion`
+  (incluidos en `copia_swa.py`).
+- Pagos: usa las tablas financieras de SWA copiadas a `swa_raw` (`recibo_swa`, `pago_recibo`, `credito`,
+  `cuota`, `concepto_cambio`…). Los recibos existen desde 2017-1; antes no hay soporte financiero.
+  Estados inferidos de los datos: recibo 10 pagado, 1 financiado, 0 sin pagar, 2 anulado.
+
 ## Corte por periodo
 
 - `PERIODO_CORTE` (`depuracion.py`, hoy `20262`): las notas de ese periodo en adelante se **aplazan**

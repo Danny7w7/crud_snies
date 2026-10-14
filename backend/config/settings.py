@@ -104,6 +104,9 @@ DATABASES = {
         'PASSWORD': os.getenv('DB_PASSWORD', 'admin'),
         'HOST': os.getenv('DB_HOST', 'localhost'),
         'PORT': os.getenv('DB_PORT', '5432'),
+        'OPTIONS': {
+            'connect_timeout': 10,
+        },
     },
     'produccion': {
         'ENGINE': 'config.db_postgres',

@@ -1805,6 +1805,7 @@ function App() {
         <Route path="/migracion/apartados" element={<MigracionPage seccion="apartados" />} />
         <Route path="/migracion/duplicados" element={<MigracionPage seccion="duplicados" />} />
         <Route path="/migracion/erp" element={<MigracionPage seccion="erp" />} />
+        <Route path="/migracion/anomalias" element={<MigracionPage seccion="anomalias" />} />
         <Route path="*" element={<UbicarPage />} />
       </Routes>
     </ThemeProvider>

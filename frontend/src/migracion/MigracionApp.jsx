@@ -1,11 +1,12 @@
 import { Link, useNavigate } from 'react-router-dom'
-import { BarChart3, FileSearch, Archive, Users, Copy, GraduationCap } from 'lucide-react'
+import { BarChart3, FileSearch, Archive, Users, Copy, GraduationCap, TriangleAlert } from 'lucide-react'
 import ResumenMigracion from './ResumenMigracion'
 import CasosMigracion from './CasosMigracion'
 import PersonasMigracion from './PersonasMigracion'
 import ApartadosMigracion from './ApartadosMigracion'
 import DuplicadosMigracion from './DuplicadosMigracion'
 import EstudiantesErp from './EstudiantesErp'
+import AnomaliasMigracion from './AnomaliasMigracion'
 
 const SECCIONES = [
   ['resumen', 'Resumen antes / después', BarChart3, ''],
@@ -14,6 +15,7 @@ const SECCIONES = [
   ['duplicados', 'Ya existen en el ERP', Copy, '/duplicados'],
   ['erp', 'Estudiantes en el ERP', GraduationCap, '/erp'],
   ['apartados', 'Información apartada', Archive, '/apartados'],
+  ['anomalias', 'Anomalías SWA', TriangleAlert, '/anomalias'],
 ]
 
 /** Módulo de migración SWA → ERP (solo estudiantes con matrícula activa comprobada). */
@@ -50,6 +52,7 @@ export default function MigracionApp({ seccion, getHash, onSesionExpirada }) {
       {seccion === 'duplicados' && <DuplicadosMigracion {...props} />}
       {seccion === 'erp' && <EstudiantesErp {...props} />}
       {seccion === 'apartados' && <ApartadosMigracion {...props} />}
+      {seccion === 'anomalias' && <AnomaliasMigracion {...props} />}
     </div>
   )
 }

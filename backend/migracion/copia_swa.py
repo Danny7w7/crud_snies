@@ -45,6 +45,22 @@ TABLAS_ACADEMICAS = {
     'area': None,
 }
 
+# Tablas financieras: solo se usan para el reporte de anomalias (pagos vs matricula/notas).
+TABLAS_FINANCIERAS = {
+    'recibo_swa': None,
+    'pago_recibo': None,
+    'credito': None,
+    'cuota': None,
+    'concepto_cambio': None,
+    'cambio_recibo': None,
+    'novedad_descuento': None,
+    'novedad_devolucion': None,
+    'auxilio': None,
+    'grupo_auxilio': None,
+    'tipo_cuota': None,
+}
+TABLAS_ACADEMICAS.update(TABLAS_FINANCIERAS)
+
 
 def _columnas(cur, tabla):
     cur.execute("""

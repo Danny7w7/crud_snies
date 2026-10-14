@@ -1,6 +1,7 @@
 from django.urls import path
 
 from . import views
+from .anomalias_api import AnomaliasExportarView, AnomaliasGenerarView, AnomaliasResumenView, AnomaliasView
 from .duplicados import DuplicadosErpView
 from .erp_consulta import (
     EstudianteErpDetalleView,
@@ -20,6 +21,10 @@ urlpatterns = [
     path('casos/sugerencia-masiva/', views.CasosSugerenciaMasivaView.as_view()),
     path('casos/<int:caso_id>/decidir/', views.CasoDecisionView.as_view()),
     path('descartes/', views.DescartesView.as_view()),
+    path('anomalias/', AnomaliasView.as_view()),
+    path('anomalias/resumen/', AnomaliasResumenView.as_view()),
+    path('anomalias/exportar/', AnomaliasExportarView.as_view()),
+    path('anomalias/generar/', AnomaliasGenerarView.as_view()),
     path('duplicados-erp/', DuplicadosErpView.as_view()),
     path('erp/estudiantes/', EstudiantesErpView.as_view()),
     path('erp/estudiantes/opciones/', EstudiantesErpOpcionesView.as_view()),

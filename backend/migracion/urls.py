@@ -9,6 +9,7 @@ from .erp_consulta import (
     EstudiantesErpOpcionesView,
     EstudiantesErpView,
 )
+from .pagos_api import PagosPeriodoExcelVistaView, PagosPeriodoExportarView, PagosPeriodoPdfView, PagosPeriodoView
 from .preparacion import PreparacionItemView, PreparacionView
 
 urlpatterns = [
@@ -25,6 +26,10 @@ urlpatterns = [
     path('anomalias/resumen/', AnomaliasResumenView.as_view()),
     path('anomalias/exportar/', AnomaliasExportarView.as_view()),
     path('anomalias/generar/', AnomaliasGenerarView.as_view()),
+    path('pagos-periodo/', PagosPeriodoView.as_view()),
+    path('pagos-periodo/exportar/', PagosPeriodoExportarView.as_view()),
+    path('pagos-periodo/pdf/', PagosPeriodoPdfView.as_view()),
+    path('pagos-periodo/excel/', PagosPeriodoExcelVistaView.as_view()),
     path('duplicados-erp/', DuplicadosErpView.as_view()),
     path('erp/estudiantes/', EstudiantesErpView.as_view()),
     path('erp/estudiantes/opciones/', EstudiantesErpOpcionesView.as_view()),

@@ -78,6 +78,26 @@ sin pago o sin prerrequisito, graduados con pendientes y módulos de inglés sin
   `cuota`, `concepto_cambio`…). Los recibos existen desde 2017-1; antes no hay soporte financiero.
   Estados inferidos de los datos: recibo 10 pagado, 1 financiado, 0 sin pagar, 2 anulado.
 
+## Pagos del periodo (SWA directo)
+
+`python manage.py migra_pagos_periodo [--periodo 20262] [--excel ruta.xlsx] [--programa 29] [--grupo 3] [--veredicto 2D] [--documento ...]`
+(o la vista `/migracion/pagos`, que exporta con los filtros de la pantalla): quién tiene asignaturas vinculadas en
+el periodo (con o sin nota) sin pago comprobado de matrícula, con los créditos apartados y las anomalías de los
+descuentos. A diferencia del resto, **lee SWA directo** (solo lectura): el periodo en curso cambia a diario.
+La consulta y los veredictos están documentados en `sql/pagos_periodo.sql` (también corre en DBeaver).
+
+- Pago comprobado = dinero en una cuenta real. `pago_recibo` en las cuentas del banco 900 "VALORES X CONCEPTOS"
+  (9001 saldos a favor, 9003 periodos anteriores, 9004 descuentos, 9005 menor cuantía, 9006 convenios, 9007 becas)
+  no es dinero, como tampoco las cuotas de ajuste (18) ni de saldo a favor (7).
+- Misma persona con otro documento (`unificar`): el Centro de Idiomas crea al estudiante de carrera con un documento
+  ficticio (4 dígitos, tipo 0) o mal digitado. Se une con su registro de carrera si el nombre coincide (o casi, o con
+  el mismo correo) y el parecido es único; queda en `documentos_unificados` y en la hoja "Personas unificadas".
+- Grupos: 1 pago comprobado, 2 crédito (apartado; 2D/2E sin ningún pago), 3 sin pago comprobado, 4 cubierto sin
+  dinero (con "respaldo en dinero" del año anterior), 5 sin pago propio pero con otro pago.
+- PDF (`POST pagos-periodo/pdf/`, `pagos_pdf.py`, requiere `reportlab`): la vista de casos o de anomalías con los
+  filtros de la pantalla; si se marcan filas, solo esas (`seleccion`: `documento|programa` o `anomalía|recibo|documento`).
+- El Excel y el PDF traen documentos y nombres: no se guardan en el repositorio.
+
 ## Corte por periodo
 
 - `PERIODO_CORTE` (`depuracion.py`, hoy `20262`): las notas de ese periodo en adelante se **aplazan**

@@ -43,6 +43,7 @@ htmlcov/
 .coverage
 .coverage.*
 .cache
+/backend/reportes/
 nosetests.xml
 coverage.xml
 *.cover
@@ -61,6 +62,10 @@ local_settings.py
 db.sqlite3
 db.sqlite3-journal
 **/migrations/
+!backend/api/migrations/
+!backend/api/migrations/*.py
+!backend/ubicacion/migrations/
+!backend/ubicacion/migrations/*.py
 
 # Flask stuff:
 instance/
@@ -220,3 +225,7 @@ __marimo__/
 
 # Node.js
 node_modules/
+
+# Graphify: resultados locales, caches y rutas del entorno.
+graphify-out/
+.graphify_cache/

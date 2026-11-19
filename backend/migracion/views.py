@@ -261,23 +261,23 @@ class EnviarView(MigracionView):
     """Enviar a la copia (ensayo): re-depura con las decisiones vigentes y carga lo LISTA a la copia del ERP."""
 
     def post(self, request):
-        metricas = depurar(log=lambda *_: None)
         try:
             resultado = enviar(log=lambda *_: None)
-        except Exception as exc:  # el lote queda FALLIDO y el ERP intacto (transaccion)
-            return Response({'detail': f'La carga fallo y no se aplico ningun cambio: {exc}'},
+        except ValueError as exc:
+            return Response({'detail': str(exc)}, status=status.HTTP_409_CONFLICT)
+        except Exception:
+            return Response({'detail': 'La carga falló. Revisa el destino local y el estado del lote.'},
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        resultado['metricas'] = metricas
         return Response(resultado)
 
 
 class RevertirLoteView(MigracionView):
     def post(self, request, lote_id):
-        lote = _uno('SELECT estado FROM migra.lote WHERE id = %s', (lote_id,))
-        if not lote or lote['estado'] != 'COMPLETADO':
-            return Response({'detail': 'Solo se pueden revertir lotes completados'},
-                            status=status.HTTP_400_BAD_REQUEST)
-        return Response({'lote': lote_id, 'borrados': revertir(lote_id, log=lambda *_: None)})
+        try:
+            borrados = revertir(lote_id, log=lambda *_: None)
+        except ValueError as exc:
+            return Response({'detail': str(exc)}, status=status.HTTP_409_CONFLICT)
+        return Response({'lote': lote_id, 'borrados': borrados})
 
 
 class ResultadoView(MigracionView):

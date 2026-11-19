@@ -180,7 +180,7 @@ export function PersonaDetalle({ nid, getHash, onSesionExpirada }) {
                 ['Correo', p.email || '—'],
                 ['Teléfono', p.telefono ?? '—'],
                 ['Fecha nacimiento', p.fecha_nacimiento || '—'],
-                ['Código (ID en el ERP)', p.codigo_swa || 'Se genera uno nuevo'],
+                ['Código (ID en el ERP)', p.erp_persona_id || p.codigo_swa || 'Pendiente de revisión'],
                 ['Todos sus códigos SWA', p.codigos_swa.join(', ') || '—'],
                 ['Registros SWA unificados', p.swa_ids.join(', ')],
                 ['Vínculos', despues.vinculos.map((v) => `${v.programa}${v.activo ? ' (activo)' : ''}`).join(', ') || '—'],

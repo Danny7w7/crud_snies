@@ -1,33 +1,41 @@
 """Conexiones directas (psycopg) usadas por el proceso de migracion.
 
 - SWA: base origen en produccion. Siempre en modo solo lectura.
-- Destino: base local de migracion (docker-compose.yml) que contiene la copia
-  del ERP en `public` y los esquemas de trabajo `swa_raw`, `migra` y `revision`.
+- Destino: copia local del ERP configurada en `default`.
 """
-import os
-
 import psycopg
 
+from config.db_postgres.source import (abrir_swa, esquema_swa, fijar_direccion_origen,
+                                       parametros_swa, verificar_origen_copia)
+from config.destino_migracion import parametros_destino, verificar_cursor_destino
 
-def conectar_swa():
-    conn = psycopg.connect(
-        host=os.getenv('DB_PROD_HOST'),
-        port=os.getenv('DB_PROD_PORT', '5432'),
-        dbname=os.getenv('DB_PROD_NAME'),
-        user=os.getenv('DB_PROD_USER'),
-        password=os.getenv('DB_PROD_PASSWORD'),
-        connect_timeout=15,
-    )
-    conn.read_only = True
-    return conn
+
+def conectar_swa(tablas_copia=None):
+    parametros = parametros_swa()
+    if tablas_copia is None:
+        return abrir_swa(parametros)
+    if esquema_swa() != 'public':
+        raise ValueError('La extracción requiere una conexión a la fuente SWA.')
+    parametros = fijar_direccion_origen(parametros)
+    conexion = abrir_swa(parametros)
+    try:
+        verificar_origen_copia(conexion, parametros, tablas_copia)
+    except BaseException:
+        conexion.close()
+        raise
+    return conexion
 
 
 def conectar_destino(autocommit=False):
-    return psycopg.connect(
-        host=os.getenv('MIGRA_DB_HOST', '127.0.0.1'),
-        port=os.getenv('MIGRA_DB_PORT', '5434'),
-        dbname=os.getenv('MIGRA_DB_NAME', 'erp_migracion'),
-        user=os.getenv('MIGRA_DB_USER', 'admin'),
-        password=os.getenv('MIGRA_DB_PASSWORD', 'admin'),
-        autocommit=autocommit,
-    )
+    parametros = parametros_destino()
+    if not parametros.get('password'):
+        parametros.pop('password', None)
+    conexion = psycopg.connect(**parametros, autocommit=True, options='', target_session_attrs='any')
+    try:
+        with conexion.cursor() as cursor:
+            verificar_cursor_destino(cursor, parametros)
+        conexion.autocommit = autocommit
+    except BaseException:
+        conexion.close()
+        raise
+    return conexion

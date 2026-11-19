@@ -15,6 +15,11 @@ from .models import (
     VinculoPersona,
 )
 from ubicacion.models import Ubicacion
+from config.destino_migracion import bloqueo_migracion
+from .codigos_persona import (
+    TIPOS_DOCUMENTO, tipos_documento_destino, obtener_o_crear_persona, registrar_equivalencia,
+)
+from .esquema_destino import validar_esquema_destino
 
 # Codigos de tipo de documento del frontend -> codigo en erp_tipodocumentoidentidad
 TIPO_DOCUMENTO_ERP = {'CC': 'CC', 'CE': 'CE', 'TI': 'TI', 'PA': 'PP', 'RC': 'RC'}
@@ -41,16 +46,6 @@ ISO2_TO_ISO3 = {
 ISO3_TO_ISO2 = {v: k for k, v in ISO2_TO_ISO3.items()}
 
 
-def _tipo_documento_erp_id(codigo):
-    codigo_erp = TIPO_DOCUMENTO_ERP.get(codigo, codigo)
-    with connection.cursor() as cursor:
-        cursor.execute(
-            'SELECT id FROM erp_tipodocumentoidentidad WHERE codigo = %s', [codigo_erp]
-        )
-        row = cursor.fetchone()
-    return row[0] if row else None
-
-
 def _tipo_documento_front(tipo_documento_id):
     with connection.cursor() as cursor:
         cursor.execute(
@@ -68,26 +63,27 @@ def _tipo_documento_front(tipo_documento_id):
 
 
 def _programa_erp_id(codigo):
+    """Valida que el codigo (SWA) exista como id en academico_programa."""
     if not codigo:
+        return None
+    try:
+        programa_id = int(codigo)
+    except (TypeError, ValueError):
         return None
     with connection.cursor() as cursor:
         cursor.execute(
-            'SELECT id FROM academico_programa WHERE codigo_interno = %s',
-            [str(codigo)],
+            'SELECT 1 FROM academico_programa WHERE id = %s',
+            [programa_id],
         )
         row = cursor.fetchone()
-    return row[0] if row else None
+    return programa_id if row else None
 
 
 def _programa_codigo_front(programa_id):
+    """El id de academico_programa ES el codigo del programa en el SWA."""
     if not programa_id:
         return ''
-    with connection.cursor() as cursor:
-        cursor.execute(
-            'SELECT codigo_interno FROM academico_programa WHERE id = %s', [programa_id]
-        )
-        row = cursor.fetchone()
-    return row[0] if row else ''
+    return str(programa_id)
 
 
 def _periodo_anio_semestre(periodo):
@@ -105,6 +101,13 @@ class EstudianteSerializer(serializers.ModelSerializer):
     erp_vinculopersona con vinculo 'Estudiante')."""
 
     id = serializers.IntegerField(read_only=True)
+    codigo_persona = serializers.CharField(source='persona_id', read_only=True)
+    estado_general = serializers.ChoiceField(
+        choices=PersonaErp.EstadoGeneral.choices, required=False,
+    )
+    codigos_estudiante_swa = serializers.ListField(
+        child=serializers.CharField(), read_only=True,
+    )
     tipo_identificacion = serializers.CharField()
     numero_identificacion = serializers.CharField()
     telefono = serializers.IntegerField(
@@ -124,6 +127,7 @@ class EstudianteSerializer(serializers.ModelSerializer):
     segundo_apellido = serializers.CharField()
     codigo_estudiante = serializers.CharField()
     programa = serializers.CharField()
+    programa_secundario = serializers.IntegerField(source='programa_secundario_id', read_only=True)
     municipio = serializers.IntegerField(required=True)
     pais_nacimiento = serializers.CharField()
     municipio_nacimiento = serializers.IntegerField(required=True)
@@ -134,6 +138,10 @@ class EstudianteSerializer(serializers.ModelSerializer):
         model = VinculoPersona
         fields = [
             'id',
+            'codigo_persona',
+            'estado_general',
+            'codigos_estudiante_swa',
+            'programa_secundario',
             'tipo_identificacion',
             'numero_identificacion',
             'telefono',
@@ -184,14 +192,14 @@ class EstudianteSerializer(serializers.ModelSerializer):
             )
         return value
 
-    def _datos_validados(self, data):
+    def _datos_validados(self, data, tipos):
         try:
             nro_documento = int(data['numero_identificacion'])
         except (TypeError, ValueError):
             raise serializers.ValidationError(
                 {'numero_identificacion': 'Debe ser un número válido'}
             )
-        tipo_documento_id = _tipo_documento_erp_id(data['tipo_identificacion'])
+        tipo_documento_id = tipos.get(TIPO_DOCUMENTO_ERP.get(data['tipo_identificacion']))
         if tipo_documento_id is None:
             raise serializers.ValidationError(
                 {'tipo_identificacion': 'Tipo de documento no encontrado en la ERP'}
@@ -210,133 +218,131 @@ class EstudianteSerializer(serializers.ModelSerializer):
             direccion = estudiante.persona.direccion[:200]
         return direccion
 
-    def _aplicar_persona(self, persona, data, tipo_documento_id, nro_documento):
-        persona.nro_documento = nro_documento
-        persona.tipo_documento_id = tipo_documento_id
-        persona.primer_nombre = data['primer_nombre']
-        persona.segundo_nombre = data.get('segundo_nombre', '')
-        persona.primer_apellido = data['primer_apellido']
-        persona.segundo_apellido = data.get('segundo_apellido', '')
-        persona.email = data['email']
-        if 'telefono' in data:
-            persona.telefono = data['telefono']
-        direccion = self._rescatar_direccion_swa(data['codigo_estudiante'])
-        if direccion:
-            persona.direccion = direccion
-        persona.save()
-        return persona
+    def _actualizar_contacto_persona(self, persona, data):
+        cambios = {campo: data[campo] for campo in ('email', 'telefono')
+                   if campo in data and getattr(persona, campo) != data[campo]}
+        if cambios:
+            PersonaErp.objects.using('default').filter(pk=persona.pk).update(**cambios)
 
-    def _aplicar_datos_secundarios(self, persona, data):
-        municipio_id = data.get('municipio')
-        municipio_nacimiento = data.get('municipio_nacimiento')
+    def _aplicar_datos_secundarios(self, persona, data, editar=False):
         pais = data.get('pais_nacimiento', '').strip().upper()
-        pais_iso3 = ISO2_TO_ISO3.get(pais, pais or 'XXX')
+        datos, _ = DatosSecundarios.objects.using('default').select_for_update().get_or_create(persona=persona)
+        campos = {
+            'lugar_expedicion_documento_id': data.get('lugar_expedicion_documento'),
+            'fecha_expedicion_documento': data.get('fecha_expedicion_documento'),
+            'municipio_id': data.get('municipio'),
+            'lugar_nacimiento_id': data.get('municipio_nacimiento'),
+            'sexo_biologico': SEXO_MAP[data['sexo']],
+            'pais_nacimiento': ISO2_TO_ISO3.get(pais, pais),
+        }
+        direccion_swa = self._rescatar_direccion_swa(data['codigo_estudiante'])
+        from scripts.migrar_swa import _es_direccion_invalida
+        if not datos.direccion and direccion_swa and not _es_direccion_invalida(direccion_swa):
+            campos['direccion'] = direccion_swa
+        cambios = {campo: valor for campo, valor in campos.items() if valor not in (None, '')
+                   and (editar or getattr(datos, campo) in (None, '')) and getattr(datos, campo) != valor}
+        if cambios:
+            DatosSecundarios.objects.using('default').filter(pk=datos.pk).update(**cambios)
 
-        datos, _ = DatosSecundarios.objects.get_or_create(persona=persona)
-        datos.barrio = datos.barrio or ''
-        datos.direccion = datos.direccion or ''
-        datos.lugar_expedicion_documento_id = data.get('lugar_expedicion_documento')
-        fecha_expedicion = data.get('fecha_expedicion_documento')
-        if fecha_expedicion:
-            datos.fecha_expedicion_documento = fecha_expedicion
-        datos.municipio_id = municipio_id if municipio_id else datos.municipio_id
-        datos.lugar_nacimiento_id = (
-            municipio_nacimiento if municipio_nacimiento else datos.lugar_nacimiento_id
-        )
-        datos.sexo_biologico = SEXO_MAP[data['sexo']]
-        datos.pais_nacimiento = pais_iso3 if pais else datos.pais_nacimiento
-        datos.save()
-        return datos
-
-    def _aplicar_vinculo(self, vinculo, persona, data):
-        programa_id = _programa_erp_id(data.get('programa', ''))
-        anio = data.get('periodo_anio', '')
-        semestre = data.get('periodo_semestre', '')
-        if anio and semestre:
-            periodo = f'{anio}-{semestre}'
-        elif anio:
-            periodo = f'{anio}-1'
-        else:
-            periodo = vinculo.periodo or f'{date.today().year}-1'
-        vinculo.persona = persona
-        vinculo.activo = True
-        vinculo.periodo = periodo
-        vinculo.codigo_aspirante = data['codigo_estudiante']
-        vinculo.programa_id = programa_id
-        if anio:
-            vinculo.fecha_inicio = date(int(anio), 1, 1)
-        return vinculo
-
-    def create(self, validated_data):
-        tipo_documento_id, nro_documento = self._datos_validados(validated_data)
-        persona, creada = PersonaErp.objects.get_or_create(
-            tipo_documento_id=tipo_documento_id,
-            nro_documento=nro_documento,
-            defaults={
+    def _preparar_persona(self, validated_data):
+        from .codigos_persona import cargar_grupos, nombre_persona
+        try:
+            validar_esquema_destino('registro')
+            grupos, _, estudiantes = cargar_grupos()
+            estudiante = next((e for e in estudiantes if e.codigo == validated_data['codigo_estudiante']), None)
+            if estudiante is None or estudiante.persona_id not in grupos:
+                raise ValueError('Identidad SWA pendiente de revision.')
+            grupo = grupos[estudiante.persona_id]
+            tipos = tipos_documento_destino()
+            tipo_id, documento = self._datos_validados(validated_data, tipos)
+            if TIPOS_DOCUMENTO[grupo.tipo_swa] not in tipos:
+                raise ValueError('Tipo de documento pendiente en el ERP.')
+            permitidos = {tipos[c] for c in ('CC', 'TI') if c in tipos} if grupo.tipo_swa in (1, 4) else {tipos[TIPOS_DOCUMENTO[grupo.tipo_swa]]}
+            nombre = PersonaErp(primer_nombre=validated_data['primer_nombre'],
+                segundo_nombre=validated_data.get('segundo_nombre', ''),
+                primer_apellido=validated_data['primer_apellido'],
+                segundo_apellido=validated_data.get('segundo_apellido', ''))
+            if documento != grupo.documento or tipo_id not in permitidos or nombre_persona(nombre) != grupo.nombre:
+                raise ValueError('Los datos del formulario no corresponden a la identidad SWA.')
+            persona, _ = obtener_o_crear_persona(grupo, tipos, {
                 'primer_nombre': validated_data['primer_nombre'],
                 'segundo_nombre': validated_data.get('segundo_nombre', ''),
                 'primer_apellido': validated_data['primer_apellido'],
                 'segundo_apellido': validated_data.get('segundo_apellido', ''),
-                'email': '',
-                'direccion': '',
-                'telefono': None,
-            },
-        )
-        self._aplicar_persona(persona, validated_data, tipo_documento_id, nro_documento)
-        self._aplicar_datos_secundarios(persona, validated_data)
+                'email': validated_data['email'], 'telefono': validated_data.get('telefono'),
+                'estado_general': validated_data.get('estado_general'),
+            })
+        except ValueError as exc:
+            raise serializers.ValidationError({'codigo_estudiante': str(exc)}) from exc
+        mapa = {pk: persona.pk for pk, identidad in grupos.items() if identidad.persona_id == grupo.persona_id}
+        return persona, estudiante, estudiantes, mapa
 
-        tipo_estudiante = TipoVinculo.objects.filter(nombre__iexact='Estudiante').first()
-        if tipo_estudiante is None:
-            raise serializers.ValidationError(
-                {'codigo_estudiante': 'No existe el vínculo "Estudiante" en la ERP'}
-            )
-        vinculo = (
-            VinculoPersona.objects.filter(persona=persona, tipo_vinculo=tipo_estudiante)
-            .order_by('-id')
-            .first()
-        )
-        if vinculo is None:
-            vinculo = VinculoPersona(persona=persona, tipo_vinculo=tipo_estudiante)
-            vinculo.fecha_inicio = date.today()
-        vinculo = self._aplicar_vinculo(vinculo, persona, validated_data)
-        vinculo.save()
-        self._marcar_ubicado(persona, validated_data['codigo_estudiante'])
+    def _guardar_vinculo_fuente(self, persona, estudiante, data, estudiantes, mapa, instance=None):
+        from .codigos_persona import PROGRAMAS_INGLES
+        from .programas_swa import (cargar_academico, resolver_vinculo_ingles,
+                                   tiene_carrera, guardar_asociacion, vinculo_principal)
+        tipo = TipoVinculo.objects.using('default').filter(nombre__iexact='Estudiante').first()
+        if tipo is None:
+            raise serializers.ValidationError({'codigo_estudiante': 'No existe el vinculo Estudiante.'})
+        try:
+            if estudiante.programa in PROGRAMAS_INGLES and tiene_carrera(persona.pk, estudiantes, mapa):
+                periodo = int(f"{data['periodo_anio']}{data['periodo_semestre']}")
+                sedes, matriculas, _ = cargar_academico()
+                vinculo, motivo = resolver_vinculo_ingles(estudiante, periodo, persona.pk,
+                                                         estudiantes, mapa, sedes, matriculas)
+                if vinculo is None:
+                    raise ValueError(motivo)
+                vinculo = VinculoPersona.objects.using('default').select_for_update().get(pk=vinculo.pk)
+                if vinculo.programa_secundario_id not in (None, estudiante.programa):
+                    raise ValueError('El vinculo ya tiene otro programa secundario.')
+                if instance is not None and instance.pk != vinculo.pk:
+                    raise ValueError('El formulario no corresponde al vinculo existente.')
+                if data.get('programa') and int(data['programa']) != vinculo.programa_id:
+                    raise ValueError('La carrera del formulario no corresponde a la asociacion de ingles.')
+                vinculo.programa_secundario_id = estudiante.programa
+                vinculo.save(using='default', update_fields=['programa_secundario'])
+                guardar_asociacion(estudiante, periodo, persona.pk, vinculo, '')
+            else:
+                if data.get('programa') and int(data['programa']) != estudiante.programa:
+                    raise ValueError('El programa debe corresponder al registro SWA.')
+                vinculo, _ = vinculo_principal(estudiante, persona.pk, tipo, alta_manual=True)
+                if instance is not None and instance.pk != vinculo.pk:
+                    raise ValueError('No se puede reasignar el vinculo existente.')
+                registrar_equivalencia(estudiante, vinculo)
+        except (ValueError, TypeError) as exc:
+            raise serializers.ValidationError({'codigo_estudiante': str(exc)}) from exc
+        self._marcar_ubicado(persona, estudiante.codigo)
         return vinculo
+
+    @bloqueo_migracion()
+    def create(self, validated_data):
+        persona, estudiante, estudiantes, mapa = self._preparar_persona(validated_data)
+        self._aplicar_datos_secundarios(persona, validated_data)
+        return self._guardar_vinculo_fuente(persona, estudiante, validated_data, estudiantes, mapa)
 
     def _marcar_ubicado(self, persona, codigo_estudiante):
         """Registra en la tabla managed que el estudiante ya se ubico."""
-        Ubicacion.objects.update_or_create(
+        Ubicacion.objects.using('default').update_or_create(
             codigo_estudiante=codigo_estudiante,
             defaults={'persona_id': persona.id},
         )
 
+    @bloqueo_migracion()
     def update(self, instance, validated_data):
-        tipo_documento_id, nro_documento = self._datos_validados(validated_data)
-        persona, creada = PersonaErp.objects.get_or_create(
-            tipo_documento_id=tipo_documento_id,
-            nro_documento=nro_documento,
-            defaults={
-                'primer_nombre': validated_data['primer_nombre'],
-                'segundo_nombre': validated_data.get('segundo_nombre', ''),
-                'primer_apellido': validated_data['primer_apellido'],
-                'segundo_apellido': validated_data.get('segundo_apellido', ''),
-                'email': '',
-                'direccion': '',
-                'telefono': None,
-            },
-        )
-        self._aplicar_persona(persona, validated_data, tipo_documento_id, nro_documento)
-        self._aplicar_datos_secundarios(persona, validated_data)
-        instance = self._aplicar_vinculo(instance, persona, validated_data)
-        instance.save()
-        self._marcar_ubicado(persona, validated_data['codigo_estudiante'])
-        return instance
+        persona, estudiante, estudiantes, mapa = self._preparar_persona(validated_data)
+        if instance.persona_id != persona.pk:
+            raise serializers.ValidationError({'codigo_estudiante': 'La persona existente tiene otro ID.'})
+        self._actualizar_contacto_persona(persona, validated_data)
+        self._aplicar_datos_secundarios(persona, validated_data, editar=True)
+        return self._guardar_vinculo_fuente(persona, estudiante, validated_data, estudiantes, mapa, instance)
 
     def to_representation(self, obj):
         persona = obj.persona
+        codigos = sorted({e.codigo_estudiante for e in obj.equivalencias_swa.all()} |
+                         {a.codigo_estudiante for a in obj.programas_swa.all() if not a.motivo_pendiente})
         datos = None
         try:
-            datos = persona.datos_secundarios.get()
+            datos = persona.datos_secundarios
         except DatosSecundarios.DoesNotExist:
             datos = None
 
@@ -346,6 +352,10 @@ class EstudianteSerializer(serializers.ModelSerializer):
             pais = ISO3_TO_ISO2.get(datos.pais_nacimiento.upper(), datos.pais_nacimiento)
         return {
             'id': obj.id,
+            'codigo_persona': str(persona.pk),
+            'estado_general': persona.estado_general,
+            'programa_secundario': obj.programa_secundario_id,
+            'codigos_estudiante_swa': codigos,
             'tipo_identificacion': _tipo_documento_front(persona.tipo_documento_id),
             'numero_identificacion': str(persona.nro_documento),
             'fecha_expedicion_documento': (
@@ -360,7 +370,7 @@ class EstudianteSerializer(serializers.ModelSerializer):
             'segundo_nombre': persona.segundo_nombre,
             'primer_apellido': persona.primer_apellido,
             'segundo_apellido': persona.segundo_apellido,
-            'codigo_estudiante': obj.codigo_aspirante or '',
+            'codigo_estudiante': codigos[0] if codigos else '',
             'programa': _programa_codigo_front(obj.programa_id),
             'municipio': datos.municipio_id if datos else None,
             'municipio_nacimiento': datos.lugar_nacimiento_id if datos else None,
@@ -396,10 +406,15 @@ class PersonaSerializer(serializers.ModelSerializer):
     """
 
     id = serializers.CharField(source='codigo', read_only=True)
+    codigo_persona = serializers.CharField(read_only=True, default=None)
+    codigos_estudiante_swa = serializers.ListField(child=serializers.CharField(), read_only=True, default=list)
+    programa_principal = serializers.IntegerField(read_only=True, allow_null=True, default=None)
+    programa_secundario = serializers.IntegerField(read_only=True, allow_null=True, default=None)
+    periodo_contexto = serializers.IntegerField(read_only=True, allow_null=True, default=None)
     codigo_estudiante = serializers.CharField(source='codigo', read_only=True)
     es_reintegro = serializers.BooleanField(read_only=True)
     identificacion = serializers.CharField(source='persona.identificacion', default=None, read_only=True)
-    tipo_identificacion = serializers.IntegerField(source='persona.tipo_identificacion', default=None, read_only=True)
+    tipo_identificacion = serializers.IntegerField(source='tipo_identificacion_canonico', default=None, read_only=True)
     nombre = serializers.CharField(source='persona.nombre', default=None, read_only=True)
     apellido = serializers.CharField(source='persona.apellido', default=None, read_only=True)
     direccion = serializers.CharField(source='persona.direccion', default=None, read_only=True)
@@ -410,7 +425,8 @@ class PersonaSerializer(serializers.ModelSerializer):
     class Meta:
         model = EstudianteSwa
         fields = [
-            'id',
+            'id', 'codigo_persona', 'codigos_estudiante_swa',
+            'programa_principal', 'programa_secundario', 'periodo_contexto',
             'identificacion',
             'tipo_identificacion',
             'nombre',

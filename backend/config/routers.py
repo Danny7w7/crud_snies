@@ -16,7 +16,7 @@ class ProductionRouter:
 
     def db_for_write(self, model, **hints):
         if model._meta.model_name in PRODUCTION_MODELS:
-            return 'produccion'
+            raise PermissionError('La base SWA (produccion) es de solo lectura.')
         return None
 
     def allow_relation(self, obj1, obj2, **hints):

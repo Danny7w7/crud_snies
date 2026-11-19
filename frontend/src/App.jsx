@@ -36,6 +36,7 @@ import { ThemeProvider, useTheme } from './contexts/ThemeContext'
 import { useDarkMode } from './hooks/useDarkMode'
 import AtmosphereBackground from './components/AtmosphereBackground'
 import MigracionApp from './migracion/MigracionApp'
+import PendientesNotas from './pages/PendientesNotas'
 
 const API_URL = '/api/estudiantes/'
 const API_PERSONAS_URL = '/api/personas/'
@@ -178,7 +179,7 @@ function limpiarEmail(raw) {
 function personaToForm(persona) {
   const nombres = splitNameParts(persona.nombre)
   const apellidos = splitNameParts(persona.apellido)
-  const periodo = parsePeriodoIngreso(persona.periodo_ingreso)
+  const periodo = parsePeriodoIngreso(persona.periodo_contexto ?? persona.periodo_ingreso)
   return {
     tipo_identificacion: TIPO_DOCUMENTO_TO_CODE[persona.tipo_identificacion] || 'CC',
     numero_identificacion: persona.identificacion || '',
@@ -189,7 +190,7 @@ function personaToForm(persona) {
     primer_apellido: apellidos.first,
     segundo_apellido: apellidos.rest,
     codigo_estudiante: persona.codigo_estudiante || '',
-    programa: persona.programa != null ? String(persona.programa) : '',
+    programa: (persona.programa_principal ?? persona.programa) != null ? String(persona.programa_principal ?? persona.programa) : '',
     municipio: '',
     pais_nacimiento: '',
     municipio_nacimiento: '',
@@ -240,14 +241,14 @@ function ThemeToggle() {
 
 function PageShell({ active, children, wide = false }) {
   const navClass = (name) =>
-    `inline-flex flex-1 items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
+    `inline-flex min-w-0 items-center justify-center gap-1.5 rounded-xl px-2 py-2.5 text-xs font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent sm:px-4 sm:text-sm [&>svg]:shrink-0 ${
       active === name
         ? 'bg-primary text-primary-foreground shadow-sm'
         : 'text-muted-foreground hover:text-foreground'
     }`
 
   const nav = (
-    <nav className="mb-8 inline-flex w-full rounded-2xl border border-white/40 bg-secondary/60 p-1.5 dark:border-white/10">
+    <nav className="mb-8 grid w-full grid-cols-2 gap-1 rounded-2xl border border-white/40 bg-secondary/60 p-1.5 dark:border-white/10 sm:grid-cols-4">
       <Link to="/ubicar" className={navClass('ubicar')}>
         <Locate className="h-4 w-4" />
         Ubicar
@@ -259,6 +260,10 @@ function PageShell({ active, children, wide = false }) {
       <Link to="/migracion" className={navClass('migracion')}>
         <DatabaseZap className="h-4 w-4" />
         Migración
+      </Link>
+      <Link to="/pendientes" className={navClass('pendientes')}>
+        <ClipboardList className="h-4 w-4" />
+        Pendientes
       </Link>
     </nav>
   )
@@ -343,7 +348,7 @@ function PageShell({ active, children, wide = false }) {
   )
 }
 
-function ConsultaPasswordGate({ onSuccess }) {
+function ConsultaPasswordGate({ onSuccess, validationUrl = API_PERSONAS_URL, title = 'Consulta de personas' }) {
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
@@ -355,7 +360,7 @@ function ConsultaPasswordGate({ onSuccess }) {
     setLoading(true)
     try {
       const hash = await sha256Hex(password)
-      const res = await fetch(API_PERSONAS_URL, {
+      const res = await fetch(validationUrl, {
         headers: { 'X-Consulta-Password': hash },
       })
       if (res.status === 403) {
@@ -383,7 +388,7 @@ function ConsultaPasswordGate({ onSuccess }) {
           Acceso restringido
         </p>
         <h2 className="mt-3 text-3xl font-semibold tracking-tight text-foreground">
-          Consulta de personas
+          {title}
         </h2>
         <p className="mt-2 text-sm text-muted-foreground">
           Esta sección está protegida. Ingresa la contraseña de consulta para continuar.
@@ -800,7 +805,7 @@ function ConsultarPersonas() {
   )
 }
 
-function ConsultaPage() {
+function ConsultaPage({ pendientes = false }) {
   const [authed, setAuthed] = useState(() => Boolean(getConsultaHash()))
 
   useEffect(() => {
@@ -812,11 +817,13 @@ function ConsultaPage() {
   }, [authed])
 
   return (
-    <PageShell active="consulta" wide>
+    <PageShell active={pendientes ? 'pendientes' : 'consulta'} wide>
       {authed ? (
-        <ConsultarPersonas />
+        pendientes ? <PendientesNotas getConsultaHash={getConsultaHash} touchActivity={touchActivity}
+          onUnauthorized={() => setAuthed(false)} /> : <ConsultarPersonas />
       ) : (
-        <ConsultaPasswordGate onSuccess={() => setAuthed(true)} />
+        <ConsultaPasswordGate onSuccess={() => setAuthed(true)} title={pendientes ? 'Pendientes de notas' : undefined}
+          validationUrl={pendientes ? '/api/pendientes-notas/resumen/' : API_PERSONAS_URL} />
       )}
     </PageShell>
   )
@@ -844,7 +851,8 @@ function MigracionPage({ seccion }) {
       {authed ? (
         <MigracionApp seccion={seccion} getHash={getHash} onSesionExpirada={onSesionExpirada} />
       ) : (
-        <ConsultaPasswordGate onSuccess={() => setAuthed(true)} />
+        <ConsultaPasswordGate onSuccess={() => setAuthed(true)}
+          title="Migración" validationUrl="/api/migracion/resumen/" />
       )}
     </PageShell>
   )
@@ -934,7 +942,8 @@ function UbicarPage() {
         const lista = await res.json()
         if (cancelled) return
         const local = lista.find(
-          (e) => e.codigo_estudiante === persona.codigo_estudiante,
+          (e) => e.codigo_estudiante === persona.codigo_estudiante
+            || e.codigos_estudiante_swa?.includes(persona.codigo_estudiante),
         )
         if (local) {
           setEditingId(local.id)
@@ -945,8 +954,8 @@ function UbicarPage() {
             programa: local.programa || '',
             municipio: local.municipio ?? '',
             municipio_nacimiento: local.municipio_nacimiento ?? '',
-            periodo_anio: local.periodo_anio ?? '',
-            periodo_semestre: local.periodo_semestre ?? '',
+            periodo_anio: persona.programa_secundario != null ? personaToForm(persona).periodo_anio : local.periodo_anio ?? '',
+            periodo_semestre: persona.programa_secundario != null ? personaToForm(persona).periodo_semestre : local.periodo_semestre ?? '',
           })
         }
       } catch (err) {
@@ -1387,6 +1396,11 @@ function UbicarPage() {
               isLoading={loadingProgramas}
               className={inputWithIconClass}
             />
+            {persona?.programa_secundario != null && (
+              <p className="text-xs text-muted-foreground">
+                Programa secundario: {programas.find((p) => String(p.codigo) === String(persona.programa_secundario))?.nombre ?? persona.programa_secundario}
+              </p>
+            )}
           </div>
         </div>
 
@@ -1807,6 +1821,7 @@ function App() {
         <Route path="/migracion/erp" element={<MigracionPage seccion="erp" />} />
         <Route path="/migracion/anomalias" element={<MigracionPage seccion="anomalias" />} />
         <Route path="/migracion/pagos" element={<MigracionPage seccion="pagos" />} />
+        <Route path="/pendientes" element={<ConsultaPage pendientes />} />
         <Route path="*" element={<UbicarPage />} />
       </Routes>
     </ThemeProvider>

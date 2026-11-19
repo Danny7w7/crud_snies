@@ -4,7 +4,7 @@
 -- Responde: en el periodo, ¿quien tiene asignaturas vinculadas (con o sin nota) SIN un pago comprobado de la
 -- matricula? Aparta los creditos (financiaciones) y marca las anomalias de los descuentos.
 -- Se ejecuta directo sobre SWA (produccion) y solo hace SELECT. Lo usa `pagos_periodo.py`
--- (comando `migra_pagos_periodo`); tambien sirve en DBeaver/pgAdmin cambiando el periodo de `par`.
+-- (comando `migra_pagos_periodo`), que abre y verifica una conexión de solo lectura con autocommit.
 --
 -- PAGO COMPROBADO = dinero que entro a una cuenta real (pago_recibo.estado = 1 en Davivienda, Efecty, tarjeta,
 -- PayGateway...). Las cuentas del banco 900 "VALORES X CONCEPTOS" NO son dinero: 9001 saldos a favor, 9003 valor
@@ -31,7 +31,7 @@ WITH
 par AS (SELECT /*PERIODO*/20262::int AS periodo, to_char(current_date, 'YYYYMMDD')::int AS hoy),
 -- registros de la misma persona con otro documento (el Centro de Idiomas crea al estudiante de carrera con un
 -- documento ficticio de 4 digitos o mal digitado): documento normalizado del duplicado -> el real. Lo calcula
--- `pagos_periodo.unificar`; en DBeaver queda vacio (cada documento es una persona).
+-- `pagos_periodo.unificar`; sin ese mapa cada documento representa una persona.
 mapa(dup, real) AS (SELECT * FROM unnest(/*MAPA*/ARRAY[]::text[], ARRAY[]::text[])),
 -- codigo -> persona: documento normalizado (mismo criterio que la depuracion; X...X son duplicados anulados)
 est0 AS (

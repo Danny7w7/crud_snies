@@ -1,0 +1,2 @@
+# Herramienta de desarrollo; independiente de las dependencias del backend.
+graphifyy==0.9.71

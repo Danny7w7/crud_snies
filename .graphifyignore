@@ -1,0 +1,27 @@
+# Graphify analiza codigo y documentacion, nunca datos operativos ni secretos.
+.env
+.env.*
+**/*.pem
+**/*.key
+backend/config/settings.py
+backend/reportes/
+backend/api/fixtures/
+.cache/
+**/*.csv
+**/*.sqlite3
+**/*.sql
+**/*.dump
+**/*.bak
+
+# Dependencias, archivos generados y recursos visuales de la plantilla.
+venv/
+.venv/
+node_modules/
+**/node_modules/
+**/__pycache__/
+**/dist/
+graphify-out/
+.graphify_cache/
+frontend/package-lock.json
+frontend/src/assets/
+frontend/public/

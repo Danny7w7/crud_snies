@@ -15,12 +15,14 @@ import re
 import unicodedata
 from datetime import date
 from pathlib import Path
+from types import SimpleNamespace
 
-from .conexiones import conectar_destino
+from api.codigos_persona import TIPOS_DOCUMENTO, normalizar_nombre, resolver_estado_persona, resolver_grupos
+from api.notas_swa import clasificar_notas
+from config.destino_migracion import bloqueo_migracion, cursor_migracion
 
 SQL_DIR = Path(__file__).resolve().parent / 'sql'
 
-CODIGO_SWA_RE = re.compile(r'^[0-9]{5,15}$')
 # Primer periodo cuyas notas aun no cierran en SWA: sus notas se aplazan y se migran al cierre
 # (al cerrar 2026-2 se cambia a 20271, se vuelve a copiar SWA y se re-depura).
 PERIODO_CORTE = 20262
@@ -31,10 +33,6 @@ CENTROS_IDIOMAS = (51, 52)
 PROGRAMAS_EXTENSION = (50, 51, 52, 57, 60)
 HOY = date.today()
 
-# SWA tipo_identificacion -> erp_tipodocumentoidentidad.id
-TIPO_SWA_A_ERP = {1: 1, 3: 2, 4: 3, 2: 7, 5: 6}
-TIPO_CC, TIPO_TI = 1, 3
-NOMBRE_TIPO_ERP = {1: 'CC', 2: 'CE', 3: 'TI', 4: 'PPT', 5: 'DE', 6: 'CA', 7: 'PS'}
 
 PARTICULAS = {'DE', 'DEL', 'LA', 'LAS', 'LOS', 'SAN', 'SANTA', 'DA', 'DI', 'VAN', 'VON', 'Y', 'MC'}
 EMAIL_RE = re.compile(r'^[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}$')
@@ -157,10 +155,15 @@ class Revision:
                 entidad = EXCLUDED.entidad, severidad = EXCLUDED.severidad,
                 titulo = EXCLUDED.titulo, datos = EXCLUDED.datos,
                 sugerencia = EXCLUDED.sugerencia, opciones = EXCLUDED.opciones,
-                filas_afectadas = EXCLUDED.filas_afectadas, vigente = true
+                filas_afectadas = EXCLUDED.filas_afectadas, vigente = true,
+                decision = CASE WHEN revision.caso.datos = EXCLUDED.datos THEN revision.caso.decision END,
+                correccion = CASE WHEN revision.caso.datos = EXCLUDED.datos THEN revision.caso.correccion END
+            RETURNING decision, correccion
         """, (tipo, str(clave), entidad, severidad, titulo, json.dumps(datos, default=str),
               json.dumps(sugerencia, default=str) if sugerencia is not None else None,
               opciones, filas))
+        decision, correccion = self.cur.fetchone()
+        self.decisiones[(tipo, str(clave))] = decision, correccion or {}
         return self.decision(tipo, clave)
 
 
@@ -198,13 +201,14 @@ def _paso_persona_fuente(cur):
         )
         INSERT INTO migra.persona_fuente
             (swa_id, nid, identificacion, tipo_swa, nombre, apellido, email, telefono,
-             celular, fecha_nacimiento, marcada_x, ultimo_periodo, origen)
+             celular, fecha_nacimiento, marcada_x, ultimo_periodo, origen, estado_general)
         SELECT p.id,
                regexp_replace(regexp_replace(upper(p.identificacion), '^X(?=[0-9])|(?<=[0-9])X$', '', 'g'),
                               '[^0-9A-Z]', '', 'g'),
                p.identificacion, p.tipo_identificacion, p.nombre, p.apellido,
                coalesce(nullif(trim(ult.email), ''), p.email), p.telefono, ult.celular,
-               ult.fecha_nacimiento, upper(p.identificacion) ~ 'X', a.ultimo, a.origen
+               ult.fecha_nacimiento, upper(p.identificacion) ~ 'X', a.ultimo, a.origen,
+               to_jsonb(p)->>'estado_general'
         FROM alcance a
         JOIN swa_raw.persona p ON p.id = a.persona
         LEFT JOIN LATERAL (
@@ -233,7 +237,7 @@ def _paso_persona_fuente(cur):
 def _paso_personas(cur, rev):
     cur.execute("""
         SELECT swa_id, nid, identificacion, tipo_swa, nombre, apellido, email, telefono,
-               celular, fecha_nacimiento, marcada_x, ultimo_periodo, origen
+               celular, fecha_nacimiento, marcada_x, ultimo_periodo, origen, estado_general
         FROM migra.persona_fuente ORDER BY nid, swa_id
     """)
     columnas = [d.name for d in cur.description]
@@ -241,6 +245,16 @@ def _paso_personas(cur, rev):
     for fila in cur.fetchall():
         f = dict(zip(columnas, fila))
         grupos.setdefault(f['nid'], []).append(f)
+
+    cur.execute('SELECT persona_swa_id, persona_erp_id FROM public.ubicacion_equivalenciapersonaswa')
+    identidades_erp = dict(cur.fetchall())
+
+    cur.execute('SELECT codigo, min(id) FROM public.erp_tipodocumentoidentidad GROUP BY codigo HAVING count(*) = 1')
+    tipos_por_codigo = dict(cur.fetchall())
+    tipos_swa_erp = {tipo: tipos_por_codigo.get(codigo) for tipo, codigo in TIPOS_DOCUMENTO.items()}
+    tipo_cc, tipo_ti = tipos_por_codigo.get('CC'), tipos_por_codigo.get('TI')
+    if not tipo_cc or not tipo_ti:
+        raise ValueError('El ERP requiere códigos únicos CC y TI en el catálogo de documentos.')
 
     # primer periodo/programa con matricula M (para el prefijo del codigo ERP)
     cur.execute("""
@@ -265,11 +279,9 @@ def _paso_personas(cur, rev):
     for p, per, prog in cur.fetchall():
         primero.setdefault(p, (per, prog))
 
-    # personas propias del ERP (las creadas por lotes anteriores de esta migracion no cuentan)
+    # Los reintentos verifican también los registros de lotes anteriores.
     cur.execute('SELECT id, tipo_documento_id, nro_documento, primer_nombre, segundo_nombre, '
-                'primer_apellido, segundo_apellido FROM public.erp_persona p '
-                "WHERE NOT EXISTS (SELECT 1 FROM migra.mapa m WHERE m.entidad = 'persona' "
-                'AND m.creado AND m.erp_id = p.id)')
+                'primer_apellido, segundo_apellido FROM public.erp_persona')
     erp = {}
     ids_erp = set()
     for pid, tipo, nro, n1, n2, a1, a2 in cur.fetchall():
@@ -289,6 +301,18 @@ def _paso_personas(cur, rev):
     for persona, codigo, programa, ult_m, ult_h, ingreso in cur.fetchall():
         codigos_por_swa.setdefault(persona, []).append(
             ((codigo or '').strip(), programa, ult_m or 0, ult_h or 0, ingreso or 0))
+
+    personas_compartidas = [
+        SimpleNamespace(pk=f['swa_id'], identificacion=f['identificacion'],
+                        tipo_identificacion=f['tipo_swa'], nombre=f['nombre'],
+                        apellido=f['apellido'], estado_general=f['estado_general'])
+        for grupo in grupos.values() for f in grupo
+    ]
+    estudiantiles = [SimpleNamespace(persona_id=persona, codigo=codigo, programa=programa, periodo_ingreso=ingreso)
+                     for persona, codigos in codigos_por_swa.items()
+                     for codigo, programa, _, _, ingreso in codigos]
+    canonicos, _ = resolver_grupos(personas_compartidas, estudiantiles)
+    personas_por_id = {p.pk: p for p in personas_compartidas}
 
     filas = []
     for nid, filas_swa in grupos.items():
@@ -390,46 +414,20 @@ def _paso_personas(cur, rev):
         if not fecha_nac and any(f['fecha_nacimiento'] for f in filas_swa):
             alertas.append('FECHA_NACIMIENTO_NO_PLAUSIBLE')
 
-        # tipo de documento (nunca se baja una CC a TI)
-        ordenadas = sorted(filas_swa, key=lambda f: f['ultimo_periodo'] or 0, reverse=True)
-        tipos = [TIPO_SWA_A_ERP.get(f['tipo_swa']) for f in ordenadas]
-        tipo_principal = TIPO_SWA_A_ERP.get(principal['tipo_swa'])
-        especial = next((t for t in tipos if t not in (None, TIPO_CC, TIPO_TI)), None)
-        regla_tipo = None
-        if especial:
-            tipo = especial
-        elif TIPO_CC in tipos:
-            tipo = TIPO_CC
-        elif TIPO_TI in tipos:
-            ultimo_ti = max((f['ultimo_periodo'] or 0) for f, t in zip(ordenadas, tipos) if t == TIPO_TI)
-            if fecha_nac:
-                tipo = TIPO_CC if edad(fecha_nac) >= 18 else TIPO_TI
-            else:
-                # una TI se expide hasta los 17 anos: 11 anos despues ya es mayor de edad
-                tipo = TIPO_CC if HOY.year - ultimo_ti // 10 >= 11 else TIPO_TI
-            if tipo == TIPO_CC:
-                regla_tipo = 'TI_ACTUALIZADA_A_CC_POR_EDAD'
-        elif fecha_nac:
-            tipo = TIPO_CC if edad(fecha_nac) >= 18 else TIPO_TI
-            regla_tipo = 'TIPO_INDEFINIDO_RESUELTO_POR_EDAD'
-        else:
-            tipo = None
-        if regla_tipo:
-            transformaciones.append(regla_tipo)
-        elif tipo is not None and tipo != tipo_principal:
-            transformaciones.append('TIPO_DOCUMENTO_DE_OTRO_REGISTRO')
-        if tipo is None:
-            decision, corr = rev.caso(
-                'TIPO_DOCUMENTO_INDEFINIDO', nid, 'persona', 'MEDIA',
-                'Tipo de documento POR DEFINIR (o sin equivalente en el ERP) y sin fecha de nacimiento valida',
-                {'filas_swa': filas_swa}, ['CORREGIR', 'EXCLUIR'], {'tipo_documento_id': TIPO_CC})
-            if decision == 'CORREGIR' and corr.get('tipo_documento_id'):
-                tipo = int(corr['tipo_documento_id'])
-                transformaciones.append('TIPO_DOCUMENTO_CORREGIDO_MANUAL')
-            elif decision == 'EXCLUIR':
-                estado = 'EXCLUIDA'
-            elif estado == 'LISTA':
-                estado = 'REVISION'
+        ids = {f['swa_id'] for f in filas_swa}
+        grupo = canonicos.get(principal['swa_id'])
+        codigo_swa = None
+        tipo = None
+        if grupo and {p.pk for p in grupo.personas} == ids:
+            codigo_swa = str(grupo.persona_id)
+            tipo = tipos_swa_erp.get(grupo.tipo_swa)
+            nro = grupo.documento
+        if not tipo and estado == 'LISTA':
+            decision, _ = rev.caso(
+                'IDENTIDAD_SWA_AMBIGUA', nid, 'persona', 'ALTA',
+                'La identidad fuente o su tipo de documento requiere conciliaci?n.',
+                {'swa_ids': sorted(ids)}, ['EXCLUIR'])
+            estado = 'EXCLUIDA' if decision == 'EXCLUIR' else 'REVISION'
 
         email = email_valido(*[f['email'] for f in sorted(filas_swa, key=lambda f: f['ultimo_periodo'] or 0, reverse=True)])
         if not email:
@@ -440,78 +438,78 @@ def _paso_personas(cur, rev):
             alertas.append('SIN_TELEFONO_VALIDO')
 
         per, prog = min((primero[f['swa_id']] for f in filas_swa if f['swa_id'] in primero), default=(None, None))
-        prefijo = f'{per // 10}{per % 10}{prog}' if per else None
-
-        # El id de la persona en el ERP sera su codigo SWA mas reciente (papeleria y gestion).
-        # Sus demas codigos se conservan en cada matricula.
-        # Prioridad: codigo de carrera antes que de idiomas/extension; luego el de la matricula
-        # mas reciente, la ultima prematricula y el ultimo ingreso.
+        # Los c?digos de estudiante se conservan como referencias de origen.
         candidatos_codigo = sorted(
             (c for f in filas_swa for c in codigos_por_swa.get(f['swa_id'], [])),
-            key=lambda c: (c[1] in PROGRAMAS_EXTENSION, -c[2], -c[3], -c[4], c[0]), reverse=False)
-        codigos = []
-        for c in candidatos_codigo:
-            if c[0] not in codigos:
-                codigos.append(c[0])
-        validos = [c for c in codigos if CODIGO_SWA_RE.match(c)]
-        codigo_swa = validos[0] if validos else None
-        if codigo_swa and int(codigo_swa) in ids_erp:
-            decision, corr = rev.caso(
-                'CODIGO_SWA_EN_USO', nid, 'persona', 'ALTA',
-                f'El codigo SWA {codigo_swa} ya es el id de otra persona en el ERP',
-                {'codigo_swa': codigo_swa, 'codigos_swa': codigos}, ['CORREGIR', 'GENERAR_CODIGO_ERP'],
-                {'codigo': next((c for c in validos[1:] if int(c) not in ids_erp), '')})
-            codigo_swa = None
-            if decision == 'CORREGIR' and CODIGO_SWA_RE.match(str(corr.get('codigo', ''))):
-                codigo_swa = str(corr['codigo'])
-            elif decision != 'GENERAR_CODIGO_ERP' and estado == 'LISTA':
-                estado = 'REVISION'
-        elif not codigo_swa:
-            decision, corr = rev.caso(
-                'CODIGO_SWA_INVALIDO', nid, 'persona', 'MEDIA',
-                'Ningun codigo de estudiante SWA valido para usarlo como codigo en el ERP',
-                {'codigos_swa': codigos}, ['CORREGIR', 'GENERAR_CODIGO_ERP'],
-                {'codigo': re.sub(r'\D', '', codigos[0]) if codigos else ''})
-            if decision == 'CORREGIR' and CODIGO_SWA_RE.match(str(corr.get('codigo', ''))):
-                codigo_swa = str(corr['codigo'])
-                transformaciones.append('CODIGO_SWA_CORREGIDO_MANUAL')
-            elif decision != 'GENERAR_CODIGO_ERP' and estado == 'LISTA':
-                estado = 'REVISION'
+            key=lambda c: (c[1] in PROGRAMAS_EXTENSION, -c[2], -c[3], -c[4], c[0]))
+        codigos = list(dict.fromkeys(c[0] for c in candidatos_codigo if c[0]))
         if len(codigos) > 1:
             transformaciones.append('VARIOS_CODIGOS_SWA')
 
-        # cruce con personas que ya existen en el ERP
         erp_id, accion = None, 'CREAR'
         candidatos = erp.get(nro, []) if nro else []
-        if candidatos:
-            compatibles = [c for c in candidatos if nombres_compatibles((c[2], c[3]), (nombre, apellido))]
-            if len(compatibles) == 1:
-                erp_id, accion = compatibles[0][0], 'VINCULAR'
-                transformaciones.append('VINCULADA_A_PERSONA_ERP')
-            else:
-                decision, corr = rev.caso(
+        if candidatos and tipo and grupo:
+            tipos_compatibles = {tipo_cc, tipo_ti} if tipo in (tipo_cc, tipo_ti) else {tipo}
+            compatibles = [c for c in candidatos if c[1] in tipos_compatibles
+                           and normalizar_nombre(f'{c[2]} {c[3]}') == grupo.nombre]
+            if len(candidatos) == len(compatibles) == 1:
+                candidato = compatibles[0][0]
+                trazas = {identidades_erp[pk] for pk in ids if pk in identidades_erp}
+                if (not trazas or trazas == {candidato}) and (candidato == grupo.persona_id or trazas):
+                    erp_id, accion = candidato, 'VINCULAR'
+                else:
+                    decision, corr = rev.caso(
+                        'IDENTIDAD_ERP_OTRO_ID', nid, 'persona', 'ALTA',
+                        'La identidad compatible ya existe con otro ID en el ERP.',
+                        {'erp_persona_id': candidato}, ['VINCULAR', 'EXCLUIR'])
+                    if (not trazas and decision == 'VINCULAR'
+                            and str(corr.get('erp_persona_id')) == str(candidato)):
+                        erp_id, accion = candidato, 'VINCULAR'
+                    elif estado == 'LISTA':
+                        estado = 'EXCLUIDA' if decision == 'EXCLUIR' else 'REVISION'
+            elif estado == 'LISTA':
+                decision, _ = rev.caso(
                     'CONFLICTO_PERSONA_ERP', nid, 'persona', 'ALTA',
-                    'El documento ya existe en el ERP con otro nombre',
-                    {'erp': candidatos, 'swa': {'nombre': nombre, 'apellido': apellido}},
-                    ['VINCULAR', 'EXCLUIR'], {'erp_persona_id': candidatos[0][0]})
-                if decision == 'VINCULAR':
-                    erp_id, accion = int(corr.get('erp_persona_id') or candidatos[0][0]), 'VINCULAR'
-                    transformaciones.append('VINCULADA_A_PERSONA_ERP_MANUAL')
-                elif decision == 'EXCLUIR':
-                    estado = 'EXCLUIDA'
-                elif estado == 'LISTA':
-                    estado = 'REVISION'
+                    'El documento ERP requiere conciliar la identidad.',
+                    {'swa_ids': sorted(ids)}, ['EXCLUIR'])
+                estado = 'EXCLUIDA' if decision == 'EXCLUIR' else 'REVISION'
 
-        filas.append((nid, [f['swa_id'] for f in filas_swa], principal['swa_id'], tipo, nro,
+        estado_general = None
+        if estado == 'LISTA' and accion == 'CREAR':
+            if codigo_swa is None or int(codigo_swa) in ids_erp or ids.intersection(identidades_erp):
+                decision, _ = rev.caso(
+                    'ID_PERSONA_SWA_EN_USO', nid, 'persona', 'ALTA',
+                    'El ID can?nico y sus equivalencias requieren conciliaci?n.',
+                    {'id_canonico': codigo_swa}, ['EXCLUIR'])
+                estado = 'EXCLUIDA' if decision == 'EXCLUIR' else 'REVISION'
+            else:
+                miembros = [personas_por_id[pk] for pk in ids]
+                try:
+                    estado_general = resolver_estado_persona(miembros)
+                except ValueError:
+                    decision, corr = rev.caso(
+                        'ESTADO_GENERAL_PENDIENTE', nid, 'persona', 'ALTA',
+                        'El ERP requiere evidencia del estado general de la persona.',
+                        {'swa_ids': sorted(ids)}, ['CORREGIR', 'EXCLUIR'])
+                    estado = 'EXCLUIDA' if decision == 'EXCLUIR' else 'REVISION'
+                    if decision == 'CORREGIR':
+                        try:
+                            estado_general = resolver_estado_persona(miembros, corr.get('estado_general'))
+                        except ValueError:
+                            pass
+                        else:
+                            estado = 'LISTA'
+
+        filas.append((nid, sorted(ids), int(codigo_swa) if codigo_swa else principal['swa_id'], tipo, nro,
                       primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, email,
-                      telefono, fecha_nac, per, prog, prefijo, codigo_swa, codigos, erp_id, accion, estado,
-                      transformaciones, alertas))
+                      telefono, fecha_nac, per, prog, codigo_swa, codigos, erp_id, accion, estado,
+                      estado_general, transformaciones, alertas))
 
     with cur.copy('COPY migra.persona (nid, swa_ids, swa_id_principal, tipo_documento_id, nro_documento, '
                   'primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, email, telefono, '
-                  'fecha_nacimiento, primer_periodo, primer_programa, prefijo, codigo_swa, codigos_swa, '
+                  'fecha_nacimiento, primer_periodo, primer_programa, codigo_swa, codigos_swa, '
                   'erp_persona_id, accion, '
-                  'estado, transformaciones, alertas) FROM STDIN') as copy:
+                  'estado, estado_general, transformaciones, alertas) FROM STDIN') as copy:
         for fila in filas:
             copy.write_row(fila)
 
@@ -556,11 +554,11 @@ def _paso_catalogos(cur):
         UPDATE migra.periodo mp SET erp_periodo_id = pa.id
         FROM public.academico_periodoacademico pa WHERE pa.nombre = mp.nombre;
 
-        INSERT INTO migra.asignatura (codigo, programa, nombre, creditos, ihs, erp_codigo)
+        INSERT INTO migra.asignatura (codigo, programa, nombre, creditos, ihs, tipo, erp_codigo)
         SELECT a.codigo, a.programa, trim(regexp_replace(a.nombre, '\\s+', ' ', 'g')),
                coalesce((SELECT max(pa.creditos) FROM swa_raw.pensum_asignatura pa
                          WHERE pa.programa = a.programa AND pa.asignatura = a.codigo), 0),
-               coalesce(a.ihs, 0), a.codigo::text
+               coalesce(a.ihs, 0), to_jsonb(a)->>'tipo', a.codigo::text
         FROM swa_raw.asignatura a;
 
         INSERT INTO migra.pensum (programa, codigo, descripcion, erp_codigo, activo, periodo_codigo)
@@ -733,60 +731,98 @@ def _paso_matriculas(cur, rev):
           AND EXISTS (SELECT 1 FROM migra.matricula p
                       WHERE p.nid = m.nid AND p.programa = m.programa AND p.periodo < m.periodo AND p.nivel > 0)
     """)
+    cur.execute("""
+        UPDATE migra.matricula SET estado = 'REVISION'
+        WHERE estado = 'LISTA' AND periodo >= %s
+    """, (PERIODO_CORTE,))
 
 
-def _paso_notas(cur):
+def _paso_notas(cur, rev):
     cur.execute("""
         INSERT INTO migra.descarte (entidad, clave, motivo, con_valor, datos)
         SELECT 'nota', concat_ws('|', r.periodo, r.programa, r.asignatura, r.grupo, r.estudiante),
                CASE r.estado WHEN 'P' THEN 'PREINSCRIPCION_SIN_CURSAR' ELSE 'ASIGNATURA_CANCELADA' END,
                coalesce(r.definitiva, 0) > 0, to_jsonb(r)
         FROM swa_raw.registro r JOIN migra.estudiante me ON me.codigo = r.estudiante
-        WHERE r.estado <> 'R';
-
+        WHERE r.estado <> 'R'
+    """)
+    cur.execute("""
         INSERT INTO migra.nota (periodo, programa, asignatura, grupo, estudiante, nid, definitiva,
                                 estado_definitiva, en_curso, estado)
         SELECT r.periodo, r.programa, r.asignatura, r.grupo, r.estudiante, me.nid,
-               round(r.definitiva::numeric, 2), r.estado_definitiva, r.periodo >= %(curso)s, m.estado
+               r.definitiva::numeric, r.estado_definitiva, r.periodo >= %s, m.estado
         FROM swa_raw.registro r
         JOIN migra.estudiante me ON me.codigo = r.estudiante
         JOIN migra.matricula m ON m.nid = me.nid AND m.programa = r.programa AND m.periodo = r.periodo
-        WHERE r.estado = 'R';
+        WHERE r.estado = 'R'
+    """, (PERIODO_CORTE,))
 
-        -- Misma asignatura varias veces en el mismo periodo. Los grupos negativos de SWA son
-        -- instancias especiales (-1/-5 homologacion, -2 validacion, -3 habilitacion, -4 curso):
-        -- su nota es el resultado final y reemplaza a la del grupo regular. Entre varias del
-        -- mismo tipo se conserva la mayor.
-        WITH dup AS (
-            SELECT ctid,
-                   row_number() OVER w AS rn,
-                   first_value(grupo) OVER w AS grupo_final
-            FROM migra.nota
-            WINDOW w AS (PARTITION BY nid, periodo, programa, asignatura
-                         ORDER BY (grupo < 0) DESC, definitiva DESC NULLS LAST, estudiante)
-        ),
-        borradas AS (
-            DELETE FROM migra.nota n USING dup WHERE n.ctid = dup.ctid AND dup.rn > 1
-            RETURNING n.*, dup.grupo_final
-        )
-        INSERT INTO migra.descarte (entidad, clave, motivo, con_valor, datos)
-        SELECT 'nota', concat_ws('|', periodo, programa, asignatura, grupo, estudiante),
-               CASE WHEN grupo_final = -3 THEN 'REEMPLAZADA_POR_HABILITACION'
-                    WHEN grupo_final = -2 THEN 'REEMPLAZADA_POR_VALIDACION'
-                    WHEN grupo_final IN (-1, -5) THEN 'REEMPLAZADA_POR_HOMOLOGACION'
-                    WHEN grupo_final = -4 THEN 'REEMPLAZADA_POR_CURSO_ESPECIAL'
-                    ELSE 'NOTA_DUPLICADA_MISMO_PERIODO' END,
-               false, to_jsonb(borradas) - 'grupo_final' FROM borradas;
+    cur.execute('SELECT grupo_nota, tipo_nota FROM swa_raw.grupo_tipo_nota')
+    esquemas = {}
+    for grupo, tipo in cur.fetchall():
+        esquemas.setdefault(grupo, []).append(tipo)
+    ultima = (0, 0, 0, 0, '')
+    while True:
+        cur.execute("""
+            SELECT n.periodo, n.programa, n.asignatura, n.grupo, n.estudiante,
+                   n.definitiva, n.estado_definitiva, g.grupo_nota,
+                   coalesce(c.calificaciones, '[]'::jsonb)
+            FROM migra.nota n
+            LEFT JOIN swa_raw.grupo g ON (g.periodo, g.programa, g.asignatura, g.codigo)
+                                        = (n.periodo, n.programa, n.asignatura, n.grupo)
+            LEFT JOIN LATERAL (
+                SELECT jsonb_agg(jsonb_build_object('tipo_nota', c.tipo_nota,
+                                 'estado', c.estado, 'nota', c.nota)) AS calificaciones
+                FROM swa_raw.calificacion c
+                WHERE (c.periodo, c.programa, c.asignatura, c.grupo, c.estudiante)
+                    = (n.periodo, n.programa, n.asignatura, n.grupo, n.estudiante)
+            ) c ON true
+            WHERE n.estado = 'LISTA' AND NOT n.en_curso
+              AND (n.periodo, n.programa, n.asignatura, n.grupo, n.estudiante) > (%s, %s, %s, %s, %s)
+            ORDER BY n.periodo, n.programa, n.asignatura, n.grupo, n.estudiante LIMIT 1000
+        """, ultima)
+        filas = cur.fetchall()
+        if not filas:
+            break
+        cambios = []
+        for *clave, definitiva, estado, grupo, calificaciones in filas:
+            registro = {'definitiva': definitiva, 'estado_definitiva': estado, 'grupo_nota': grupo}
+            try:
+                nota = clasificar_notas(registro, calificaciones, esquemas, historica=True)['definitiva']
+            except ValueError:
+                nota = None
+            if nota is None or nota != definitiva:
+                cambios.append((nota, 'LISTA' if nota is not None else 'REVISION', *clave))
+        if cambios:
+            cur.executemany("""
+                UPDATE migra.nota SET definitiva = %s, estado = %s
+                WHERE (periodo, programa, asignatura, grupo, estudiante) = (%s, %s, %s, %s, %s)
+            """, cambios)
+        ultima = filas[-1][:5]
 
-        -- Notas de periodos sin cierre: se apartan y se migran cuando SWA cierre el periodo
-        -- (los docentes siguen calificando en SWA; en el ERP no tendrian grupo ni cortes).
-        WITH aplazadas AS (
-            DELETE FROM migra.nota WHERE en_curso RETURNING *
-        )
-        INSERT INTO migra.descarte (entidad, clave, motivo, con_valor, datos)
-        SELECT 'nota', concat_ws('|', periodo, programa, asignatura, grupo, estudiante),
-               'PERIODO_EN_CURSO_SE_MIGRA_AL_CIERRE', false, to_jsonb(aplazadas) FROM aplazadas;
-    """.replace('%(curso)s', str(PERIODO_CORTE)))
+    # Un solo resultado por materia en la matrícula histórica. La fuente retiene todos los intentos.
+    cur.execute("""
+        SELECT n.nid, n.periodo, n.programa, m.erp_codigo,
+               array_agg(concat_ws('|', n.periodo, n.programa, n.asignatura, n.grupo, n.estudiante)
+                         ORDER BY n.asignatura, n.grupo, n.estudiante)
+        FROM migra.nota n JOIN migra.asignatura m ON m.codigo = n.asignatura
+        WHERE n.estado = 'LISTA'
+        GROUP BY n.nid, n.periodo, n.programa, m.erp_codigo HAVING count(*) > 1
+    """)
+    for nid, periodo, programa, asignatura, intentos in cur.fetchall():
+        decision, corr = rev.caso(
+            'INTENTOS_HISTORICOS_AMBIGUOS', f'{nid}|{periodo}|{programa}|{asignatura}', 'nota', 'ALTA',
+            'El expediente requiere conciliar varios intentos de la misma asignatura.',
+            {'intentos': intentos}, ['CORREGIR', 'EXCLUIR'], filas=len(intentos))
+        elegido = corr.get('intento') if decision == 'CORREGIR' else None
+        estado = 'EXCLUIDA' if decision == 'EXCLUIR' else 'REVISION'
+        cur.execute("""
+            UPDATE migra.nota n SET estado = %s FROM migra.asignatura a
+            WHERE a.codigo = n.asignatura AND a.erp_codigo = %s AND n.nid = %s
+              AND n.periodo = %s AND n.programa = %s AND n.estado = 'LISTA'
+              AND concat_ws('|', n.periodo, n.programa, n.asignatura, n.grupo, n.estudiante)
+                    IS DISTINCT FROM %s
+        """, (estado, asignatura, nid, periodo, programa, elegido))
 
 
 def _paso_ingles(cur, rev):
@@ -833,27 +869,37 @@ def _paso_vinculos(cur):
     """, (PERIODO_CORTE,))
 
 
-def depurar(log=print):
-    with conectar_destino() as conn:
-        cur = conn.cursor()
-        cur.execute((SQL_DIR / '01_esquema.sql').read_text(encoding='utf-8'))
-        rev = Revision(cur)
-        pasos = [
-            ('Personas fuente', lambda: _paso_persona_fuente(cur)),
-            ('Personas depuradas', lambda: _paso_personas(cur, rev)),
-            ('Catalogos academicos', lambda: _paso_catalogos(cur)),
-            ('Equivalencias de asignaturas', lambda: _paso_equivalencias(cur)),
-            ('Matriculas', lambda: _paso_matriculas(cur, rev)),
-            ('Notas', lambda: _paso_notas(cur)),
-            ('Ingles', lambda: _paso_ingles(cur, rev)),
-            ('Vinculos', lambda: _paso_vinculos(cur)),
-        ]
-        for nombre, paso in pasos:
-            log(f'- {nombre}...')
-            paso()
-        from .metricas import calcular_metricas
-        metricas = calcular_metricas(cur)
-        cur.execute('INSERT INTO migra.depuracion_log (metricas) VALUES (%s::jsonb)',
-                    (json.dumps(metricas, default=str),))
-        conn.commit()
+def _depurar_en_cursor(cur, log):
+    cur.execute("SELECT table_name FROM information_schema.tables WHERE table_schema = 'swa_raw'")
+    tablas = {nombre for nombre, in cur.fetchall()}
+    requeridas = {'persona', 'estudiante', 'historico', 'registro', 'periodo', 'asignatura',
+                  'pensum', 'pensum_asignatura', 'prerequisito', 'equivalencia', 'programa',
+                  'grupo', 'grupo_tipo_nota', 'calificacion'}
+    faltantes = sorted(requeridas - tablas)
+    if faltantes:
+        raise ValueError('Se requiere una instantánea local de SWA con: ' + ', '.join(faltantes))
+    cur.execute((SQL_DIR / '01_esquema.sql').read_text(encoding='utf-8'))
+    rev = Revision(cur)
+    pasos = [
+        ('Personas fuente', lambda: _paso_persona_fuente(cur)),
+        ('Personas depuradas', lambda: _paso_personas(cur, rev)),
+        ('Catálogos académicos', lambda: _paso_catalogos(cur)),
+        ('Equivalencias de asignaturas', lambda: _paso_equivalencias(cur)),
+        ('Matrículas', lambda: _paso_matriculas(cur, rev)),
+        ('Notas', lambda: _paso_notas(cur, rev)),
+        ('Inglés', lambda: _paso_ingles(cur, rev)),
+        ('Vínculos', lambda: _paso_vinculos(cur)),
+    ]
+    for nombre, paso in pasos:
+        log(f'- {nombre}...')
+        paso()
+    from .metricas import calcular_metricas
+    metricas = calcular_metricas(cur)
+    cur.execute('INSERT INTO migra.depuracion_log (metricas) VALUES (%s::jsonb)',
+                (json.dumps(metricas, default=str),))
     return metricas
+
+
+def depurar(log=print):
+    with bloqueo_migracion() as conexion, cursor_migracion(conexion) as cursor:
+        return _depurar_en_cursor(cursor, log)

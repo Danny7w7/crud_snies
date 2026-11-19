@@ -5,6 +5,7 @@
 CREATE EXTENSION IF NOT EXISTS unaccent;
 CREATE SCHEMA IF NOT EXISTS migra;
 CREATE SCHEMA IF NOT EXISTS revision;
+CREATE SCHEMA IF NOT EXISTS swa_raw;
 
 -- ---------------------------------------------------------------- migra
 DROP TABLE IF EXISTS migra.persona_fuente, migra.persona, migra.estudiante,
@@ -29,7 +30,8 @@ CREATE TABLE migra.persona_fuente (
     -- MATRICULA: tuvo al menos una matricula registrada (M) en cualquier periodo
     -- SOLO_NOTAS: nunca tuvo M pero tiene notas calificadas
     -- PREMATRICULA: solo prematricula (P): liquidada y nunca legalizada, sin notas
-    origen              text NOT NULL
+    origen              text NOT NULL,
+    estado_general      text
 );
 
 -- Persona depurada: una por documento.
@@ -48,12 +50,12 @@ CREATE TABLE migra.persona (
     fecha_nacimiento    date,
     primer_periodo      integer,
     primer_programa     integer,
-    prefijo             text,                  -- solo si hay que generar codigo ERP (respaldo)
-    codigo_swa          text,                  -- codigo SWA que sera el id de la persona en el ERP
+    codigo_swa          text,                  -- ID de la persona canónica del SWA
     codigos_swa         text[] NOT NULL DEFAULT '{}',  -- todos sus codigos SWA (mas reciente primero)
     erp_persona_id      bigint,               -- persona ya existente en el ERP
     accion              text,                  -- CREAR | VINCULAR
     estado              text NOT NULL DEFAULT 'LISTA',  -- LISTA | REVISION | EXCLUIDA
+    estado_general      text,
     transformaciones    text[] NOT NULL DEFAULT '{}',  -- correcciones aplicadas
     alertas             text[] NOT NULL DEFAULT '{}'   -- calidad: datos faltantes, no se corrigen
 );
@@ -81,6 +83,7 @@ CREATE TABLE migra.asignatura (
     nombre              text NOT NULL,
     creditos            integer NOT NULL DEFAULT 0,
     ihs                 integer NOT NULL DEFAULT 0,
+    tipo                text,
     erp_codigo          text NOT NULL,         -- codigo de la asignatura canonica en el ERP
     canonica            integer,               -- asignatura SWA que la representa (equivalencias)
     grupo_equivalencia  integer                -- grupo de asignaturas equivalentes (tabla SWA)
@@ -136,7 +139,7 @@ CREATE TABLE migra.nota (
     grupo               integer NOT NULL,
     estudiante          text NOT NULL,
     nid                 text NOT NULL,
-    definitiva          numeric(5,2),
+    definitiva          numeric,
     estado_definitiva   text,
     en_curso            boolean NOT NULL DEFAULT false,
     estado              text NOT NULL DEFAULT 'LISTA',
@@ -211,6 +214,7 @@ CREATE TABLE IF NOT EXISTS migra.mapa (
     creado              boolean NOT NULL DEFAULT true,  -- false: ya existia en el ERP (no se revierte)
     PRIMARY KEY (entidad, clave)
 );
+ALTER TABLE migra.mapa ADD COLUMN IF NOT EXISTS fila_importada jsonb;
 
 CREATE TABLE IF NOT EXISTS migra.depuracion_log (
     id                  bigserial PRIMARY KEY,

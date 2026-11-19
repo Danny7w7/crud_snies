@@ -1,13 +1,19 @@
 import json
 
-from django.core.management.base import BaseCommand
+from django.core.management.base import BaseCommand, CommandError
 
 from migracion.carga import enviar
 
 
 class Command(BaseCommand):
-    help = 'Envio a la copia (ensayo): carga lo depurado (estado LISTA) a la copia del ERP en una transaccion.'
+    help = 'Carga el histórico elegible en la copia local del ERP.'
+
+    def add_arguments(self, parser):
+        parser.add_argument('--periodo', type=int, help='Limitar este lote a un periodo cerrado AAAAP.')
 
     def handle(self, *args, **options):
-        resultado = enviar(log=self.stdout.write)
+        try:
+            resultado = enviar(log=self.stdout.write, periodo=options['periodo'])
+        except ValueError as exc:
+            raise CommandError(str(exc)) from exc
         self.stdout.write(json.dumps(resultado, indent=2, ensure_ascii=False))

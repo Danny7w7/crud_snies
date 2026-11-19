@@ -18,7 +18,8 @@ from dotenv import load_dotenv
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-load_dotenv(BASE_DIR.parent / '.env')
+if os.getenv('MIGRADOR_SIN_DOTENV') != '1':
+    load_dotenv(BASE_DIR.parent / '.env')
 
 
 # Quick-start development settings - unsuitable for production
@@ -38,7 +39,7 @@ CONSULTA_PASSWORD_HASH = os.getenv('CONSULTA_PASSWORD_HASH')
 
 # Programas de extension/idiomas que no deben ni mostrarse en la consulta
 # ni permitirse en el registro (registros adicionales no academicos).
-PROGRAMAS_EXCLUIDOS = (50, 51, 52, 60)
+PROGRAMAS_EXCLUIDOS = ()
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
@@ -96,6 +97,8 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+MIGRADOR_SWA_LOCAL = os.getenv('MIGRADOR_SWA_LOCAL') == '1'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -115,21 +118,16 @@ DATABASES = {
         'PASSWORD': os.getenv('DB_PROD_PASSWORD'),
         'HOST': os.getenv('DB_PROD_HOST'),
         'PORT': os.getenv('DB_PROD_PORT', '5432'),
-        'OPTIONS': {
-            'connect_timeout': 15,
-        },
+        'AUTOCOMMIT': True,
+        'ATOMIC_REQUESTS': False,
+        'DISABLE_SERVER_SIDE_CURSORS': True,
     },
 }
 
-# Base local de migracion SWA -> ERP (ver docker-compose.yml en la raiz).
-DATABASES['migracion'] = {
-    'ENGINE': 'django.db.backends.postgresql',
-    'NAME': os.getenv('MIGRA_DB_NAME', 'erp_migracion'),
-    'USER': os.getenv('MIGRA_DB_USER', 'admin'),
-    'PASSWORD': os.getenv('MIGRA_DB_PASSWORD', 'admin'),
-    'HOST': os.getenv('MIGRA_DB_HOST', '127.0.0.1'),
-    'PORT': os.getenv('MIGRA_DB_PORT', '5434'),
-}
+if DATABASES['default']['HOST'] in ('127.0.0.1', '::1'):
+    DATABASES['default']['OPTIONS'].update(
+        hostaddr=DATABASES['default']['HOST'], target_session_attrs='any',
+    )
 
 DATABASE_ROUTERS = ['config.routers.ProductionRouter']
 
@@ -158,7 +156,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Bogota'
 
 USE_I18N = True
 
@@ -174,3 +172,7 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Corte de la migracion, independiente de los multiples periodos activos.
+PERIODO_ACTUAL_MIGRACION_SWA = 20262
+SEDES_SWA_A_ERP = {1: 1, 3: 2}

@@ -2,7 +2,7 @@
 
 La consulta, los veredictos y las anomalías están documentados en sql/pagos_periodo.sql. Pago comprobado = dinero
 que entró a una cuenta real; los créditos se apartan y los descuentos se revisan (anomalías A1-A10).
-No usa la copia local (`swa_raw`): el periodo en curso cambia a diario.
+La fuente se configura en el alias `produccion`; en operación diaria se consulta SWA.
 """
 import io
 import re
@@ -169,7 +169,6 @@ def consultar(periodo, programas=(), grupos=(), veredictos=(), documento=None):
     donde_anom = ('WHERE ' + ' AND '.join(anom_f)) if anom_f else ''
     with conectar_swa() as conn:
         cur = conn.cursor(row_factory=dict_row)
-        cur.execute("SET statement_timeout = '300s'")
         unificados = unificar(cur, periodo)
         valores['dups'] = [u['dup'] for u in unificados]
         valores['reales'] = [u['real'] for u in unificados]

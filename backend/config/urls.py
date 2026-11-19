@@ -21,11 +21,13 @@ from rest_framework.routers import DefaultRouter
 from api.views import (
     DepartamentoViewSet,
     EstudianteViewSet,
+    MigracionView,
     MunicipioViewSet,
     PersonaViewSet,
     ProgramaViewSet,
 )
 from ubicacion.views import UbicacionViewSet
+from api.pendientes_notas import PendienteNotaViewSet
 
 router = DefaultRouter()
 router.register('estudiantes', EstudianteViewSet, basename='estudiante')
@@ -34,6 +36,7 @@ router.register('departamentos', DepartamentoViewSet)
 router.register('personas', PersonaViewSet)
 router.register('programas', ProgramaViewSet)
 router.register('ubicaciones', UbicacionViewSet)
+router.register('pendientes-notas', PendienteNotaViewSet, basename='pendiente-nota')
 
 
 
@@ -41,4 +44,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/migracion/', include('migracion.urls')),
     path('api/', include(router.urls)),
+    path('api/migrar/', MigracionView.as_view()),
+    path('api/migrar/personas/', MigracionView.as_view(etapa='personas')),
+    path('api/migrar/datos-secundarios/', MigracionView.as_view(etapa='datos-secundarios')),
+    path('api/migrar/programas/', MigracionView.as_view(etapa='programas')),
+    path('api/migrar/asignaturas/', MigracionView.as_view(etapa='asignaturas')),
+    path('api/migrar/vinculos/', MigracionView.as_view(etapa='vinculos')),
 ]

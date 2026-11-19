@@ -102,7 +102,7 @@ def calcular_metricas(cur):
     n_antes = _uno(cur, 'SELECT count(*) FROM swa_raw.registro r JOIN migra.estudiante e ON e.codigo = r.estudiante')
     n_lista, n_rev, n_excl, n_curso = _uno(cur, """
         SELECT count(*) FILTER (WHERE estado = 'LISTA'), count(*) FILTER (WHERE estado = 'REVISION'),
-               count(*) FILTER (WHERE estado = 'EXCLUIDA'), count(*) FILTER (WHERE en_curso AND estado = 'LISTA')
+               count(*) FILTER (WHERE estado = 'EXCLUIDA'), count(*) FILTER (WHERE en_curso AND estado = 'REVISION')
         FROM migra.nota
     """)
     descartes = dict(_filas(cur, "SELECT motivo, count(*) FROM migra.descarte WHERE entidad = 'nota' GROUP BY 1"))
@@ -110,8 +110,8 @@ def calcular_metricas(cur):
     sin_destino = n_antes - n_lista - n_rev - n_excl - sum(descartes.values())
     notas = _entidad(
         'Notas', n_antes, n_lista, sum(descartes.values()), n_excl + desc_valor + max(sin_destino, 0), n_rev, {
-            'aplazadas_periodo_en_curso': descartes.get('PERIODO_EN_CURSO_SE_MIGRA_AL_CIERRE', 0),
-            'historicas': n_lista - n_curso,
+            'aplazadas_periodo_en_curso': n_curso,
+            'historicas': n_lista,
             'descartes_por_regla': descartes,
             'descartes_con_valor': desc_valor,
             'sin_matricula_asociada': max(sin_destino, 0),
@@ -158,7 +158,7 @@ def calcular_metricas(cur):
                    (SELECT count(*) FROM migra.matricula WHERE estado = 'LISTA'),
                    (SELECT count(*) FROM migra.matricula WHERE estado = 'LISTA' AND activa),
                    (SELECT count(*) FROM migra.nota WHERE estado = 'LISTA' AND NOT en_curso),
-                   (SELECT count(*) FROM migra.descarte WHERE motivo = 'PERIODO_EN_CURSO_SE_MIGRA_AL_CIERRE'),
+                   (SELECT count(*) FROM migra.nota WHERE en_curso AND estado = 'REVISION'),
                    (SELECT count(*) FROM migra.homologacion_ingles),
                    (SELECT count(*) FROM migra.vinculo), (SELECT count(*) FROM migra.vinculo WHERE activo),
                    (SELECT count(*) FROM migra.persona WHERE estado = 'LISTA' AND cardinality(codigos_swa) > 1),
@@ -171,8 +171,8 @@ def calcular_metricas(cur):
         """)))
     vinculacion = [
         {'item': 'Personas', 'tabla': 'erp_persona', 'cantidad': v['crear_personas'],
-         'como': f"Su ID en el ERP es su código de estudiante de SWA más reciente (se conserva para papelería). "
-                 f"{v['personas_varios_codigos']} tienen varios códigos: los demás quedan en cada matrícula."},
+         'como': f"Su ID en el ERP es el ID de persona canónico de SWA. "
+                 f"{v['personas_varios_codigos']} tienen varios códigos que se conservan como equivalencias."},
         {'item': 'Personas que ya existen en el ERP', 'tabla': 'erp_persona', 'cantidad': v['vincular_personas'],
          'como': 'No se crean: el historial se enlaza a la ficha existente, buscada por número de documento.'},
         {'item': 'Matrículas', 'tabla': 'academico_matricula', 'cantidad': v['matriculas'],
@@ -187,10 +187,9 @@ def calcular_metricas(cur):
         {'item': 'Notas 2026-2 (aplazadas)', 'tabla': '—', 'cantidad': v['notas_aplazadas'],
          'como': 'El periodo aún no cierra en SWA: estas notas se migran cuando cierre (re-copia y re-depuración).'},
         {'item': 'Módulos de inglés aprobados', 'tabla': 'academico_homologacioningles', 'cantidad': v['modulos_ingles'],
-         'como': 'Cada módulo aprobado en el Centro de Idiomas (51/52) queda como completado (motivo MIGRACION_SWA).'},
+         'como': 'Los módulos aprobados quedan trazados y requieren un motivo de homologación válido en el ERP.'},
         {'item': 'Vínculos de estudiante', 'tabla': 'erp_vinculopersona', 'cantidad': v['vinculos'],
-         'como': f"Uno por persona y programa (tipo Estudiante). {v['vinculos_activos']} activos (matriculados en 2026-2 "
-                 'o después) con estado MATRICULADO.'},
+         'como': 'Vínculos de estudiante históricos y asociaciones con los códigos de origen.'},
         {'item': 'Periodos académicos', 'tabla': 'academico_periodoacademico',
          'cantidad': v['periodos_nuevos'],
          'como': f"Periodos históricos que no existen (se crean inactivos). {v['periodos_existentes']} ya existían y se reutilizan."},

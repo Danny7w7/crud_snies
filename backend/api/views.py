@@ -1,12 +1,34 @@
 import hmac
+import logging
 import time
 
 from django.conf import settings
-from django.db import connection, connections
+from .codigos_persona import periodo_ingreso_valido
+from django.db import connections
 from django.db.models import BooleanField, Case, Exists, OuterRef, Q, Subquery, Value, When
-from rest_framework import viewsets
+from rest_framework import status, viewsets
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import BasePermission
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from scripts.migrar_swa import (
+    ejecutar_migracion,
+    migrar_asignaturas,
+    migrar_datos_secundarios,
+    migrar_personas,
+    migrar_programas,
+    migrar_vinculos,
+)
+
+# Etapas de migracion expuestas como endpoints propios.
+ETAPAS_MIGRACION = {
+    'personas': migrar_personas,
+    'datos-secundarios': migrar_datos_secundarios,
+    'programas': migrar_programas,
+    'asignaturas': migrar_asignaturas,
+    'vinculos': migrar_vinculos,
+}
 
 from .models import (
     Departamento,
@@ -24,11 +46,12 @@ from .serializers import (
     ProgramaSerializer,
 )
 
-# Programas (extension/idiomas) que no deben aparecer en la consulta.
+# Programas (configurados como excluidos) que no deben aparecer en la consulta.
 PROGRAMAS_EXCLUIDOS = settings.PROGRAMAS_EXCLUIDOS
 
 _REINTEGRO_CACHE_TTL = 3600
 _reintegro_cache = {'timestamp': 0, 'personas': None}
+logger = logging.getLogger(__name__)
 
 
 class ConsultaPasswordPermission(BasePermission):
@@ -37,38 +60,65 @@ class ConsultaPasswordPermission(BasePermission):
 
     def has_permission(self, request, view):
         received = request.headers.get('X-Consulta-Password', '')
-        expected = settings.CONSULTA_PASSWORD_HASH or ''
+        expected = getattr(settings, 'CONSULTA_PASSWORD_HASH', '') or ''
         if not received or not expected:
             return False
         return hmac.compare_digest(received, expected)
+
+
+class MigracionView(APIView):
+    """Ejecuta la migración al ERP local mediante una solicitud autorizada."""
+
+    permission_classes = [ConsultaPasswordPermission]
+    authentication_classes = []
+    etapa = None
+
+    def post(self, request):
+        try:
+            if self.etapa is None:
+                resumen = ejecutar_migracion()
+            else:
+                funcion = ETAPAS_MIGRACION.get(self.etapa)
+                if funcion is None:
+                    return Response(
+                        {
+                            'ok': False,
+                            'error': f'Etapa desconocida: {self.etapa}',
+                            'etapas': list(ETAPAS_MIGRACION),
+                        },
+                        status=status.HTTP_404_NOT_FOUND,
+                    )
+                resumen = funcion()
+        except Exception:
+            logger.error('Falló la etapa de migración %s.', self.etapa or 'completa')
+            return Response(
+                {'ok': False, 'error': 'La migración no pudo completarse. Revisa el destino y los datos de origen.'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+        return Response({'ok': True, 'migracion': resumen})
 
 
 class EstudianteViewSet(viewsets.ModelViewSet):
     """CRUD de estudiantes: validado contra swa y guardado en la ERP local.
 
     El listado corresponde a los vinculos tipo 'Estudiante' de la ERP,
-    excluyendo los programas de extension/idiomas.
+    incluyendo carreras, extension e ingles.
     """
 
     serializer_class = EstudianteSerializer
     http_method_names = ['get', 'post', 'put', 'patch', 'head', 'options']
 
     def get_queryset(self):
+        # El id de academico_programa ES el codigo del programa en el SWA,
+        # asi que programa_id se compara directo con PROGRAMAS_EXCLUIDOS.
         qs = (
             VinculoPersona.objects.filter(tipo_vinculo__nombre__iexact='Estudiante')
             .select_related('persona')
+            .prefetch_related('equivalencias_swa', 'programas_swa')
             .order_by('-id')
         )
-        excluidos = [str(p) for p in PROGRAMAS_EXCLUIDOS]
-        if excluidos:
-            with connection.cursor() as cursor:
-                cursor.execute(
-                    'SELECT id FROM academico_programa WHERE codigo_interno = ANY(%s)',
-                    [excluidos],
-                )
-                ids = [row[0] for row in cursor.fetchall()]
-            if ids:
-                qs = qs.exclude(programa_id__in=ids)
+        if PROGRAMAS_EXCLUIDOS:
+            qs = qs.exclude(programa_id__in=PROGRAMAS_EXCLUIDOS)
         return qs
 
 
@@ -86,44 +136,28 @@ class PersonaPageNumberPagination(PageNumberPagination):
     page_size = 20
 
 
-def _reintegro_personas():
-    """Ids de persona que son reintegro.
-
-    Combina los periodos de matricula REAL (estado 'M') de TODOS los codigos
-    de la persona, los ordena y detecta si hay un gap de >=1 semestre entre
-    periodos consecutivos. De esta forma una persona que se re-admite con un
-    codigo nuevo (reintegro) queda detectada aunque cada codigo por separado
-    no presente gaps.
-
-    El estado 'P' (pagado sin matricula) se excluye porque no representa una
-    matricula real. El resultado se cachea en memoria porque la tabla
-    'historico' de la base SWA no se actualiza.
-    """
-    now = time.time()
-    cached = _reintegro_cache['personas']
-    if cached is not None and now - _reintegro_cache['timestamp'] < _REINTEGRO_CACHE_TTL:
-        return cached
-
-    sql = """
-        SELECT DISTINCT persona FROM (
-            SELECT p.id AS persona, h.periodo,
-                   LAG(h.periodo) OVER (PARTITION BY p.id ORDER BY h.periodo) AS prev
-            FROM estudiante e
-            JOIN persona p ON p.id = e.persona
-            JOIN historico h ON h.estudiante = e.codigo
-            WHERE h.estado = 'M' AND e.persona IS NOT NULL
-        ) t
-        WHERE t.prev IS NOT NULL
-          AND ((t.periodo / 10) * 2 + (t.periodo % 10 - 1))
-              - ((t.prev / 10) * 2 + (t.prev % 10 - 1)) > 1
-    """
-    with connections['produccion'].cursor() as cursor:
-        cursor.execute(sql)
-        personas = {row[0] for row in cursor.fetchall()}
-
-    _reintegro_cache['timestamp'] = now
-    _reintegro_cache['personas'] = personas
-    return personas
+def _reintegro_personas(grupos=None, estudiantes=None):
+    """Interrupciones de matricula por persona canonica y programa."""
+    from .codigos_persona import cargar_grupos
+    if grupos is None:
+        grupos, _, estudiantes = cargar_grupos()
+    por_codigo = {e.codigo: e for e in estudiantes}
+    periodos = {}
+    for h in Historico.objects.using('produccion').filter(estado='M').values(
+            'periodo', 'programa', 'estudiante'):
+        e = por_codigo.get(h['estudiante'])
+        if e is None or e.programa != h['programa']:
+            continue
+        if not periodo_ingreso_valido(h['periodo']):
+            continue
+        pk = grupos[e.persona_id].persona_id if e.persona_id in grupos else e.persona_id
+        periodos.setdefault((pk, e.programa), set()).add(h['periodo'])
+    resultado = set()
+    for clave, valores in periodos.items():
+        semestres = sorted((p // 10) * 2 + p % 10 - 1 for p in valores)
+        if any(b - a > 1 for a, b in zip(semestres, semestres[1:])):
+            resultado.add(clave)
+    return resultado
 
 
 class PersonaViewSet(viewsets.ReadOnlyModelViewSet):
@@ -142,60 +176,53 @@ class PersonaViewSet(viewsets.ReadOnlyModelViewSet):
     pagination_class = PersonaPageNumberPagination
 
     def get_queryset(self):
-        reintegro_personas = _reintegro_personas()
-        codigos_con_M = Historico.objects.filter(estado='M').values('estudiante')
-
-        # Codigo mas reciente (mayor periodo_ingreso) de cada persona que tenga
-        # matricula real (M) y no pertenezca a un programa excluido.
-        codigo_mas_reciente = (
-            EstudianteSwa.objects
-            .filter(persona=OuterRef('persona'))
-            .exclude(programa__in=PROGRAMAS_EXCLUIDOS)
-            .filter(codigo__in=codigos_con_M)
-            .order_by('-periodo_ingreso', '-codigo')
-            .values('codigo')[:1]
-        )
-
-        qs = (
-            self.queryset
-            .filter(codigo=Subquery(codigo_mas_reciente))
-            .annotate(
-                es_reintegro=Case(
-                    When(persona_id__in=reintegro_personas, then=Value(True)),
-                    default=Value(False),
-                    output_field=BooleanField(),
-                )
-            )
-        )
-
-        search = self.request.query_params.get('q', '').strip()
-        if search:
-            codigo_coincide = EstudianteSwa.objects.filter(
-                persona=OuterRef('persona'), codigo__icontains=search
-            )
-            qs = qs.filter(
-                Q(codigo__icontains=search)
-                | Q(persona__nombre__icontains=search)
-                | Q(persona__apellido__icontains=search)
-                | Q(persona__identificacion__icontains=search)
-                | Exists(codigo_coincide)
-            )
-
-        reintegro_filter = self.request.query_params.get('reintegro', '').strip()
-        if reintegro_filter == '1':
-            qs = qs.filter(es_reintegro=True)
-        elif reintegro_filter == '0':
-            qs = qs.filter(es_reintegro=False)
-
-        tipo = self.request.query_params.get('tipo_identificacion', '').strip()
-        if tipo:
-            qs = qs.filter(persona__tipo_identificacion=tipo)
-
+        from .codigos_persona import cargar_grupos, PROGRAMAS_COMPLEMENTARIOS, PROGRAMAS_INGLES
+        from ubicacion.models import AsociacionProgramaSwa
+        grupos, _, estudiantes = cargar_grupos()
+        reintegros = _reintegro_personas(grupos, estudiantes)
+        con_m = set(Historico.objects.using('produccion').filter(estado='M')
+                    .values_list('estudiante', flat=True))
+        relaciones = {}
+        for a in AsociacionProgramaSwa.objects.using('default').filter(
+                motivo_pendiente='', vinculo_erp__isnull=False).select_related('vinculo_erp').order_by('periodo_swa'):
+            relaciones[a.codigo_estudiante] = a
+        aliases = {}
+        for e in estudiantes:
+            pk = grupos[e.persona_id].persona_id if e.persona_id in grupos else e.persona_id
+            aliases.setdefault(pk, []).append(e.codigo)
+        elegidos = {}
         programa = self.request.query_params.get('programa', '').strip()
-        if programa:
-            qs = qs.filter(programa=programa)
-
-        return qs.order_by('persona__apellido', 'persona__nombre')
+        tipo = self.request.query_params.get('tipo_identificacion', '').strip()
+        search = self.request.query_params.get('q', '').strip().casefold()
+        reintegro = self.request.query_params.get('reintegro', '').strip()
+        for e in self.queryset.using('produccion'):
+            if programa and str(e.programa) != programa:
+                continue
+            if e.programa not in PROGRAMAS_COMPLEMENTARIOS and e.codigo not in con_m:
+                continue
+            grupo = grupos.get(e.persona_id)
+            pk = grupo.persona_id if grupo else e.persona_id
+            if tipo and str(grupo.tipo_swa if grupo else e.persona.tipo_identificacion) != tipo:
+                continue
+            textos = [e.persona.nombre, e.persona.apellido, e.persona.identificacion, *aliases.get(pk, [])]
+            if search and not any(search in str(t or '').casefold() for t in textos):
+                continue
+            e.es_reintegro = (pk, e.programa) in reintegros
+            if reintegro in ('0', '1') and e.es_reintegro != (reintegro == '1'):
+                continue
+            e.codigo_persona = str(pk)
+            e.tipo_identificacion_canonico = grupo.tipo_swa if grupo else e.persona.tipo_identificacion
+            e.codigos_estudiante_swa = sorted(set(aliases.get(pk, [e.codigo])))
+            a = relaciones.get(e.codigo)
+            e.programa_principal = a.vinculo_erp.programa_id if a else e.programa
+            e.programa_secundario = a.vinculo_erp.programa_secundario_id if a else None
+            e.periodo_contexto = a.periodo_swa if a else e.periodo_ingreso
+            clave = (pk, e.programa)
+            anterior = elegidos.get(clave)
+            if anterior is None or (e.periodo_ingreso or 0, e.codigo) > (anterior.periodo_ingreso or 0, anterior.codigo):
+                elegidos[clave] = e
+        return sorted(elegidos.values(), key=lambda e: (
+            e.persona.apellido or '', e.persona.nombre or '', e.programa or 0))
 
 
 class ProgramaViewSet(viewsets.ReadOnlyModelViewSet):

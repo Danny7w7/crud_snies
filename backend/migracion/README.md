@@ -1,51 +1,63 @@
 # Migración SWA → ERP
 
-Alcance: **toda persona que tuvo una matrícula en SWA en cualquier periodo** (`historico.estado = 'M'`),
-activa hoy o no. Quien solo tiene prematrícula (`P`) o solo notas pasa a decisión en "Análisis de casos".
+Alcance: **matrículas SWA confirmadas en periodos anteriores a 2026-2**
+(`historico.estado = 'M'`), incluidas las de estudiantes que ya no están activos.
+Quien solo tiene prematrícula (`P`) o notas pasa a decisión en "Análisis de casos".
 Quien solo tiene código de estudiante (inscrito/admitido que nunca se matriculó) queda apartado.
-Aspirantes, terceros y proveedores no entran. SWA es producción y **solo se lee**
-(conexión `read_only`, únicamente `SELECT` / `COPY ... TO STDOUT`).
+Aspirantes, terceros y proveedores no entran. SWA es producción y **solo admite
+`SELECT` sin efectos secundarios**, en autocommit y con lectura protegida desde el
+inicio de la conexión.
 
 ## Bases
 
-`docker compose up -d` (raíz del repo) levanta `db_migracion` en `127.0.0.1:5434` (`erp_migracion`):
+Configura `default` con `DB_HOST` igual a `127.0.0.1` o `::1`, puerto y
+credenciales locales. `DB_NAME` y `MIGRADOR_DESTINO_NOMBRE` deben identificar la
+misma copia nueva. Usa `MIGRADOR_SIN_DOTENV=1` para un perfil local controlado
+y `MIGRADOR_SWA_LOCAL=1` al consultar y cargar desde la instantánea.
 
 | Esquema    | Contenido |
 |------------|-----------|
-| `public`   | Copia del ERP de producción (restaurada desde `db_erp_prod_original` del Docker del ERP). Destino final. |
+| `public`   | Copia local del ERP y tablas auxiliares `ubicacion_*`. |
 | `swa_raw`  | Copia cruda de las tablas académicas de SWA (sin contraseñas; `persona` solo con estudiantes). |
 | `migra`    | Datos depurados, descartes, lotes y mapa SWA → ERP. Se reconstruye en cada depuración. |
 | `revision` | `revision.caso`: casos irregulares que requieren decisión. Las decisiones se conservan. |
 
-Recargar la copia del ERP:
+Respaldar la base anterior y restaurar el dump en una base local nueva con
+`public` vacío:
 
 ```bash
-docker exec crud_snies-db_migracion-1 psql -U admin -d erp_migracion -c "drop schema public cascade; create schema public;"
-docker exec erp_unicorsalud-db_local-1 pg_dump -U admin -d db_erp_prod_original --no-owner --no-privileges -Fc \
-  | docker exec -i crud_snies-db_migracion-1 pg_restore -U admin -d erp_migracion --no-owner --no-privileges
+python manage.py migra_corte --dump-produccion <archivo.dump>
 ```
 
 ## Flujo
 
-1. `python manage.py migra_copiar_swa` → copia SWA a `swa_raw`.
+1. Preparar la instantánea local `swa_raw`. Para una extracción SWA autorizada,
+   `python manage.py migra_copiar_swa --periodo-hasta 20262 <tablas>` usa `SELECT`
+   protegido en el origen y `COPY FROM` en el destino local.
 2. `python manage.py migra_depurar` → aplica las reglas y las decisiones; genera casos y métricas.
 3. Vista `/migracion/casos` → decidir los casos (individual o "aplicar sugerencia" en bloque).
-4. Vista `/migracion` → **Enviar a la copia (ensayo)** (re-depura y carga todo lo LISTA a la copia en una transacción).
-   Equivalente: `python manage.py migra_enviar`. Revertir: `python manage.py migra_revertir <lote>`.
+4. Vista `/migracion` → **Enviar a la copia (ensayo)** para depurar y cargar.
+   Para un lote de un solo periodo, ejecuta
+   `python manage.py migra_enviar --periodo 20261`. Registra y concilia los conteos
+   del lote antes de pasar al siguiente. Revertir: `python manage.py migra_revertir <lote>`.
 
 ## Reglas principales
 
-- **Código:** el ID de la persona en el ERP es su código de estudiante SWA (el de carrera antes que el de idiomas/extensión; entre ellos, el de la matrícula más reciente). Sus demás códigos quedan en cada matrícula (`academico_matricula.codigo`). Solo si se decide en un caso se genera un código nuevo del ERP.
+- **Código:** una persona nueva conserva su ID canónico de persona SWA, elegido por el primer ingreso de carrera.
+  Los códigos estudiantiles se conservan como equivalencias. El alta requiere
+  evidencia de `estado_general` válido. Las identidades en conflicto pasan a revisión.
 - Identidad por documento normalizado; registros `X…X` de SWA son duplicados anulados y se unifican.
 - Nombres: limpieza y separación en primer/segundo nombre y apellidos (partículas DE, DEL, LA…).
-- Tipo de documento: una CC nunca se baja a TI; TI → CC cuando la edad lo indica; POR DEFINIR se resuelve por edad o va a revisión.
+- Tipo de documento: conciliar el código de origen con el catálogo del ERP y revisar los tipos incompatibles.
 - Fecha de nacimiento de SWA solo si es plausible frente al primer ingreso (SWA tiene valores de relleno).
 - Correos de relleno (`@`, `sinemail@…`, `<codigo>@universidad.edu.co`) se descartan.
 - Matrícula = una por persona/programa/periodo (varios códigos se unifican). Notas sin matrícula M en el periodo → caso.
-- Notas: grupos negativos de SWA son habilitación/validación/homologación/curso y reemplazan a la nota regular.
+- Notas: conservar la definitiva confirmada del SWA, incluido cero con respaldo de calificaciones.
+  Si compiten varios intentos de la misma asignatura, conservar la fuente y revisar cuál resultado se publica.
 - Preinscripciones (`P`) y canceladas (`C`) se apartan en `migra.descarte`.
-- Periodo 2026-2 en adelante: matrícula activa y notas en curso (`academico_asignaturamatricula`).
-- Inglés (programas 51 y 52): cada módulo aprobado → `academico_homologacioningles` con motivo `MIGRACION_SWA`.
+- Periodo 2026-2 en adelante: matrículas y notas en espera del cierre.
+- Inglés (programas 51 y 52): trazar la asociación y el módulo de origen.
+  Las homologaciones requieren un motivo reconocido por el ERP.
 
 ## Reporte de anomalías
 
@@ -83,8 +95,8 @@ sin pago o sin prerrequisito, graduados con pendientes y módulos de inglés sin
 `python manage.py migra_pagos_periodo [--periodo 20262] [--excel ruta.xlsx] [--programa 29] [--grupo 3] [--veredicto 2D] [--documento ...]`
 (o la vista `/migracion/pagos`, que exporta con los filtros de la pantalla): quién tiene asignaturas vinculadas en
 el periodo (con o sin nota) sin pago comprobado de matrícula, con los créditos apartados y las anomalías de los
-descuentos. A diferencia del resto, **lee SWA directo** (solo lectura): el periodo en curso cambia a diario.
-La consulta y los veredictos están documentados en `sql/pagos_periodo.sql` (también corre en DBeaver).
+descuentos. El informe diario consulta SWA con la conexión de solo lectura del proyecto.
+La consulta y los veredictos están documentados en `sql/pagos_periodo.sql`.
 
 - Pago comprobado = dinero en una cuenta real. `pago_recibo` en las cuentas del banco 900 "VALORES X CONCEPTOS"
   (9001 saldos a favor, 9003 periodos anteriores, 9004 descuentos, 9005 menor cuantía, 9006 convenios, 9007 becas)
@@ -121,15 +133,8 @@ docker compose -f docker-compose.yml \
   "exec(open('/opt/erp_override/verificar_migracion.py', encoding='utf-8').read())"
 ```
 
-## Envío real (ventana de corte)
+## Respaldo de la copia local
 
-El ERP de producción nunca se escribe desde aquí. En la ventana de mantenimiento (ERP detenido):
-
-1. `pg_dump -Fc` de producción → guardarlo (es la reversión).
-2. `python manage.py migra_corte --dump-produccion <dump> --salida <dump_migrado>`:
-   restaura el dump en la copia, re-depura con las decisiones, envía y genera el dump del esquema `public`.
-   Pide confirmación antes de reemplazar la copia y antes de generar el dump (revisar con `verificar_migracion.py`).
-3. Restaurar `<dump_migrado>` en producción (`pg_restore --clean --if-exists --no-owner`).
-4. En el ERP: `python manage.py crear_usuarios_estudiantes --enviar --reporte <csv>`.
-
-Antes: checklist A–K en verde (incluye ensayo general J y rama del ERP desplegada K).
+Después de conciliar los lotes puedes generar un archivo nuevo con
+`python manage.py migra_corte --salida <respaldo_local.dump>`. Mantén el
+respaldo anterior y los reportes con datos personales en almacenamiento privado.

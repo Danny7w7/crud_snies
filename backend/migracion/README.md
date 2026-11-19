@@ -19,7 +19,7 @@ y `MIGRADOR_SWA_LOCAL=1` al consultar y cargar desde la instantánea.
 |------------|-----------|
 | `public`   | Copia local del ERP y tablas auxiliares `ubicacion_*`. |
 | `swa_raw`  | Copia cruda de las tablas académicas de SWA (sin contraseñas; `persona` solo con estudiantes). |
-| `migra`    | Datos depurados, descartes, lotes y mapa SWA → ERP. Se reconstruye en cada depuración. |
+| `migra`    | Datos depurados y descartes que se regeneran. Conserva los lotes y el mapa SWA → ERP. |
 | `revision` | `revision.caso`: casos irregulares que requieren decisión. Las decisiones se conservan. |
 
 Respaldar la base anterior y restaurar el dump en una base local nueva con
@@ -35,11 +35,97 @@ python manage.py migra_corte --dump-produccion <archivo.dump>
    `python manage.py migra_copiar_swa --periodo-hasta 20262 <tablas>` usa `SELECT`
    protegido en el origen y `COPY FROM` en el destino local.
 2. `python manage.py migra_depurar` → aplica las reglas y las decisiones; genera casos y métricas.
-3. Vista `/migracion/casos` → decidir los casos (individual o "aplicar sugerencia" en bloque).
-4. Vista `/migracion` → **Enviar a la copia (ensayo)** para depurar y cargar.
+3. Si la copia incluye las altas electorales del 28 de octubre de 2026, sigue la
+   [conciliación de IDs](#conciliación-de-los-ids-de-persona-cargados-el-28-de-octubre-de-2026)
+   antes de cargar personas y vínculos. Después de reasignar IDs, vuelve a
+   depurar para que el siguiente lote use los IDs corregidos.
+4. Vista `/migracion/casos` → decidir los casos (individual o "aplicar sugerencia" en bloque).
+5. Vista `/migracion` → **Enviar a la copia (ensayo)** para depurar y cargar.
    Para un lote de un solo periodo, ejecuta
    `python manage.py migra_enviar --periodo 20261`. Registra y concilia los conteos
    del lote antes de pasar al siguiente. Revertir: `python manage.py migra_revertir <lote>`.
+
+## Conciliación de los IDs de persona cargados el 28 de octubre de 2026
+
+El objetivo es restituir el `erp_persona.id` original de SWA a las personas que
+puedan identificarse de manera inequívoca. La auditoría delimitó tres ventanas de
+creación del 28 de octubre de 2026 en `America/Bogota`.
+
+| Ventana de creación | Grupo | Personas |
+|---------------------|-------|---------:|
+| 17:07:17–17:07:18 | Personal | 285 |
+| 17:07:48–17:07:58 | Estudiantes `GENERAL` | 1.005 |
+| 17:08:15–17:08:31 | Egresados | 3.390 |
+| | **Total auditado** | **4.680** |
+
+Las 487 personas preexistentes quedan fuera de la cohorte. De ellas, 13 tienen
+un evento de actualización durante la carga. Las 4.680 altas tienen referencias
+en Padrón, incluso en procesos finalizados. Conserva esas referencias y revisa
+los pagos, inscripciones y otros procesos asociados antes del corte.
+
+### Vista previa y aplicación en una copia intermedia
+
+1. Restaura la copia del ERP en una base PostgreSQL local aislada cuyo nombre
+   empiece por `erp_ids_persona_`. Configura `default` mediante un perfil local
+   con `MIGRADOR_SIN_DOTENV=1` y `MIGRADOR_SWA_LOCAL=1`. `DB_NAME` y
+   `MIGRADOR_DESTINO_NOMBRE` deben indicar el nombre exacto de la copia.
+   Verifica el servidor, el puerto, el nombre real y las tablas auxiliares
+   `public.ubicacion_*`. La depuración inicializa `migra.lote` y `migra.mapa`.
+   En una copia recién restaurada para ensayar solo personas, inicializa el
+   esquema de trabajo con `migracion/sql/01_esquema.sql` en ese destino local.
+2. Verifica la procedencia, la cobertura y la fecha de `swa_raw.persona` en esa
+   copia. La cobertura debe abarcar personal, estudiantes `GENERAL` y egresados.
+   La instantánea local habitual descrita en [Bases](#bases) solo cubre estudiantes.
+   Sigue pendiente verificar una fuente local de SWA con cobertura suficiente
+   para las tres ventanas.
+3. Desde `backend`, ejecuta la vista previa en la copia intermedia.
+
+   ```bash
+   python manage.py conciliar_ids_persona_swa
+   ```
+
+   La vista previa lee `default`, incluida `swa_raw.persona`, y devuelve JSON
+   con conteos por origen y estado y una `huella` SHA-256 de esa copia. La salida
+   contiene datos agregados. Un cambio requiere coincidencia unívoca del
+   documento normalizado, tipo de documento y evidencia de identidad con SWA.
+   Los duplicados, IDs ocupados, equivalencias contradictorias y casos con
+   evidencia insuficiente requieren revisión.
+4. Guarda un respaldo privado de la copia intermedia que incluya `public`,
+   `migra`, `revision` y `swa_raw` antes de escribir. Valida los conteos por
+   ventana, las exclusiones y la huella de la vista previa.
+   Sustituye `NOMBRE_EXACTO` por el nombre completo de la base y `HUELLA_SHA256`
+   por la huella obtenida en esa misma copia.
+
+   ```bash
+   python manage.py conciliar_ids_persona_swa --aplicar --base-intermedia NOMBRE_EXACTO --huella HUELLA_SHA256
+   ```
+
+   El comando verifica el destino y vuelve a calcular la huella antes de aplicar
+   las correspondencias válidas en una transacción. Cambia las referencias de
+   las claves foráneas de `public`, las referencias de `ubicacion_ubicacion`,
+   `ubicacion_equivalenciapersonaswa`, `ubicacion_equivalenciaestudianteswa` y
+   `ubicacion_asociacionprogramaswa`, y las referencias del registro de migración.
+   Registra el ID SWA canónico como equivalencia de la persona reasignada. La
+   operación se identifica en `migra.lote` por `resumen.operacion` con valor
+   `reasignacion_persona_swa`. En `migra.mapa`, la entidad del mismo nombre
+   relaciona la clave anterior, como texto, con el ID canónico en `erp_id`.
+   Conserva las claves primarias de las filas dependientes y los datos de auditoría.
+5. Repite la vista previa. Verifica que los cambios aplicados figuren como ya
+   conciliados y que los casos pendientes sigan identificados. Compara los
+   conteos y los estados de las personas con el respaldo. Comprueba que las
+   referencias reasignadas apunten al ID SWA y que cada fila dependiente conserve
+   su clave primaria. Prueba el acceso en Padrón, los enlaces que usen el ID,
+   Aprenvo y las integraciones que aún usen los IDs anteriores. Si falla alguna
+   comprobación, restaura el respaldo previo en una copia intermedia aislada y
+   repite la validación desde la vista previa. El lote queda excluido de
+   `migra_revertir`.
+
+Antes de un eventual corte en el ERP de producción, exige la aprobación de los
+conteos y las dependencias, una prueba de restauración y la resolución de las
+referencias externas a los IDs anteriores. Cualquier baja o reimportación queda
+sujeta a la recuperación del ID original y a revisión explícita de dependencias
+y del estado activo. Este procedimiento opera exclusivamente sobre copias
+locales del ERP.
 
 ## Reglas principales
 

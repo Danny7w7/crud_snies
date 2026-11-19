@@ -13,6 +13,7 @@ from api.views import ConsultaPasswordPermission
 
 from .carga import enviar, revertir
 from .casos import CATALOGO_CASOS
+from .conciliacion_ids import ENTIDAD_REASIGNACION
 from .conexiones import conectar_destino
 from .depuracion import depurar
 from .metricas import calcular_metricas
@@ -59,7 +60,11 @@ class ResumenView(MigracionView):
             metricas = calcular_metricas(conn.cursor())
         metricas['ultima_depuracion'] = (_uno('SELECT max(fecha) AS f FROM migra.depuracion_log') or {}).get('f')
         metricas['ultima_copia_swa'] = (_uno('SELECT max(fecha) AS f FROM migra.copia_swa_log') or {}).get('f')
-        metricas['lotes'] = _consulta('SELECT id, inicio, fin, estado, resumen, error FROM migra.lote ORDER BY id DESC LIMIT 20')
+        metricas['lotes'] = _consulta("""
+            SELECT id, inicio, fin, estado, resumen, error FROM migra.lote
+            WHERE resumen->>'operacion' IS DISTINCT FROM %s
+            ORDER BY id DESC LIMIT 20
+        """, (ENTIDAD_REASIGNACION,))
         return Response(metricas)
 
 

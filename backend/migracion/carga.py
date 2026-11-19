@@ -25,7 +25,9 @@ from config.destino_migracion import bloqueo_migracion, cursor_migracion
 from ubicacion.models import (AsociacionProgramaSwa, AvanceAsignaturaSwa, CalificacionSwa, EquivalenciaEstudianteSwa,
                              EquivalenciaMatriculaSwa, EquivalenciaPensumSwa, EquivalenciaPersonaSwa)
 
+from .conciliacion_ids import ENTIDAD_REASIGNACION
 from .depuracion import PERIODO_CORTE, _depurar_en_cursor
+from .reasignar_ids_persona import REFERENCIAS_LOGICAS_PERSONA
 
 # Orden inverso de dependencias, usado para revertir.
 ENTIDADES = [
@@ -677,12 +679,7 @@ def enviar(log=print, periodo=None, redepurar=True):
 
 
 REFERENCIAS_LOGICAS = {
-    'erp_persona': [
-        ('ubicacion_ubicacion', 'persona_id'),
-        ('ubicacion_equivalenciapersonaswa', 'persona_erp_id'),
-        ('ubicacion_equivalenciaestudianteswa', 'persona_erp_id'),
-        ('ubicacion_asociacionprogramaswa', 'persona_erp_id'),
-    ],
+    'erp_persona': REFERENCIAS_LOGICAS_PERSONA,
     'erp_vinculopersona': [
         ('ubicacion_equivalenciaestudianteswa', 'vinculo_erp_id'),
         ('ubicacion_asociacionprogramaswa', 'vinculo_erp_id'),
@@ -735,9 +732,14 @@ def _comprobar_dependencias(cur, entidad, tabla, lote):
 def revertir(lote, log=print):
     """Revierte filas del lote que conservan el estado y la propiedad verificados."""
     with bloqueo_migracion() as conexion, cursor_migracion(conexion) as cur:
-        cur.execute('SELECT estado FROM migra.lote WHERE id = %s FOR UPDATE', (lote,))
-        if cur.fetchone() != ('COMPLETADO',):
+        cur.execute("""
+            SELECT estado, resumen->>'operacion' FROM migra.lote WHERE id = %s FOR UPDATE
+        """, (lote,))
+        registro = cur.fetchone()
+        if registro is None or registro[0] != 'COMPLETADO':
             raise ValueError('Solo se pueden revertir lotes completados.')
+        if registro[1] == ENTIDAD_REASIGNACION:
+            raise ValueError('Para revertir una reasignación de IDs restaura el respaldo previo de esa copia.')
         borrados = {}
         for entidad, tabla in ENTIDADES:
             relacion = sql.Identifier(tabla)

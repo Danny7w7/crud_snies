@@ -487,6 +487,8 @@ def _paso_personas(cur, rev):
                 try:
                     estado_general = resolver_estado_persona(miembros)
                 except ValueError:
+                    estado_general = None
+                if estado_general is None:
                     decision, corr = rev.caso(
                         'ESTADO_GENERAL_PENDIENTE', nid, 'persona', 'ALTA',
                         'El ERP requiere evidencia del estado general de la persona.',
